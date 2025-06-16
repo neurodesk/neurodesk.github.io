@@ -1,7 +1,7 @@
 ---
 title: "How to cite us"
 linkTitle: "Citation Guide"
-weight: 2
+weight: 4
 aliases:
 - /docs/how-to-cite-us
 description: >
