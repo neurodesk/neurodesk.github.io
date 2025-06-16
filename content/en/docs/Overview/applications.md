@@ -1,7 +1,7 @@
 ---
 title: "Applications"
 linkTitle: "Applications"
-weight: 1
+weight: 
 type: applications
 aliases:
 - /applications
