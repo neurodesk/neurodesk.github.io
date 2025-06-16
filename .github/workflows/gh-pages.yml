@@ -68,7 +68,7 @@ jobs:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
-          if [[ "${{ github.repository }}" == "NeuroDesk/neurodesk.github.io" ]]; then
+          if [[ "${{ github.repository }}" == "neurodesk/neurodesk.github.io" ]]; then
             echo "Building for production domain: https://www.neurodesk.org/"
             hugo \
               --minify \
@@ -89,7 +89,7 @@ jobs:
           fi
 
       - name: Add custom domain
-        if: github.repository == 'NeuroDesk/neurodesk.github.io'
+        if: github.repository == 'neurodesk/neurodesk.github.io'
         run: cp ./static/CNAME ./public/CNAME
 
       - name: Upload artifact
