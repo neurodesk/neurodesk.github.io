@@ -24,6 +24,8 @@ sudo vi /etc/dnf/automatic.conf
 # check if automatic updates are downloaded and applied
 
 tmux new -s cvmfs
+# return to session: tmux a -t cvmfs
+
 
 sudo sed -i 's/Listen 80/Listen 127.0.0.1:8080/' /etc/httpd/conf/httpd.conf
 
