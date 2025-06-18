@@ -41,6 +41,7 @@ sudo systemctl start squid
 sudo systemctl enable httpd
 sudo systemctl enable squid
 
+#YOU NEED TO ADD YOUR GEO IP data here!
 echo 'CVMFS_GEO_ACCOUNT_ID=APPLY_FOR_ONE_THIS_IS_a_SIX_DIGIT_NUMBER' | sudo tee -a /etc/cvmfs/server.local
 echo 'CVMFS_GEO_LICENSE_KEY=APPLY_FOR_ONE_THIS_IS_a_password' | sudo tee -a /etc/cvmfs/server.local
 sudo chmod 600 /etc/cvmfs/server.local
@@ -62,11 +63,11 @@ sudo cvmfs_server add-replica -o $USER http://stratum0.neurodesk.cloud.edu.au/cv
 
 # CVMFS will store everything in /srv/cvmfs so make sure there is enough space or create a symlink to a bigger storage volume
 # e.g.:
-<!-- cd /storage
-sudo mkdir -p cvmfs-storage/srv/
-cd /srv/
-sudo mv cvmfs/ /storage/cvmfs-storage/srv/
-sudo ln -s /storage/cvmfs-storage/srv/cvmfs/ -->
+#cd /storage
+#sudo mkdir -p cvmfs-storage/srv/
+#cd /srv/
+#sudo mv cvmfs/ /storage/cvmfs-storage/srv/
+#sudo ln -s /storage/cvmfs-storage/srv/cvmfs/ -->
 
 
 sudo cvmfs_server snapshot neurodesk.ardc.edu.au
