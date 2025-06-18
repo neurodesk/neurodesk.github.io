@@ -24,11 +24,15 @@ Use the official [example notebook template](https://github.com/Neurodesk/exampl
 
 Each notebook should contain:
 
-- A clear title and short description
-- An overview of the tool or workflow demonstrated
+- A clear title and short description - aim for a short title that will fit in the left menu
+- An overview of the tool or workflow demonstrated 
 - The container/tool version used
 - Code cells with explanatory comments
 - Example data (or guidance on how to access it)
+
+{{< alert title="Python packages" >}}
+please consult the python packages included in the base image [see list here](https://github.com/neurodesk/neurodesktop/blob/main/Dockerfile). If you are using python packages different than these, be sure to `pip install` them in the workflow
+{{< /alert >}}
 
 ### 2. Follow best practices
 
