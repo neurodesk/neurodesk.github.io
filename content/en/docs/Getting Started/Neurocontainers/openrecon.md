@@ -15,7 +15,7 @@ export PATH=$PATH:~/.local/lib/python3.12/site-packages/bin
 export PATH=$PATH:~/.local/bin
 ```
 
-## 1) add the installation of the Python MRD server to any recipe in [https://github.com/NeuroDesk/neurocontainers](https://github.com/NeuroDesk/neurocontainers/tree/main/recipes)
+## 1) add the installation of the Python MRD server to any recipe in [https://github.com/neurodesk/neurocontainers](https://github.com/neurodesk/neurocontainers/tree/main/recipes)
 Make sure to adjust invertcontrast.py to your pipeline needs (or replace/rename other files from the [Python MRD server](https://github.com/kspaceKelvin/python-ismrmrd-server):
 ```bash
 - include: macros/openrecon/neurodocker.yaml
@@ -25,7 +25,7 @@ here is an example: https://github.com/NeuroDesk/neurocontainers/tree/main/recip
 
 Then build the recipe:
 ```
-sf-login openreconexample
+sf-login openreconexample --architecture x86_64
 ```
 
 ## 2) test the tool inside the container on its own first and then test through MRD server 
