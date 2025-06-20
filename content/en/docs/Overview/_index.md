@@ -18,7 +18,7 @@ We recommend watching [this excellent short video](https://www.youtube.com/watch
 To read more about Docker containers, visit [the Docker webpage](https://www.docker.com/resources/what-container)  
 
 #### More information: 
-- A PowerPoint presentation including dynamic navigation and interactive buttons: [Neurodesk Overview SlideShow](https://osf.io/hmucp/files/osfstorage/68525cb813f936397deb7068) - and [PDF version of the presentation](https://osf.io/xp6jy)
+- A PowerPoint presentation including dynamic navigation and interactive buttons: [Neurodesk Overview SlideShow](https://osf.io/f2n7a) - and [PDF version of the presentation](https://osf.io/ca8rw)
 - A 2 minute video explaining Neurodesk: [Neurodesk in 2 minutes](https://www.youtube.com/watch?v=JLv_5fycugw)
 - A 4 minute video getting started with Neurodesk: [Neurodesk in 4 minutes](https://www.youtube.com/watch?v=BffOZcV2oaY&ab_channel=NeuroDesk)
 - An online interactive demo you can try RIGHT NOW in your browser: https://play.neurodesk.org/
