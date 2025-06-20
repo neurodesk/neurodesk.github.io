@@ -18,3 +18,5 @@ We regularly update Neurodesktop for optimal performance and updated software. C
 See below for a 14 minute tutorial on getting started. 
 {{< youtube 2ATgTOsiGdY >}}
 <!-- Click [here](https://www.youtube.com/watch?v=2ATgTOsiGdY&list=PLXHdMkqf4kf_ch9quScSTX8YYaSnqnmqX&index=6) to watch a 14 minute tutorial video from eResearch 2021 -->
+
+You can also view this PowerPoint presentation that includes dynamic navigation and interactive buttons: [Neurodesk Overview SlideShow](https://osf.io/hmucp/files/osfstorage/68525cb813f936397deb7068) - and [PDF version of the presentation](https://osf.io/xp6jy)
