@@ -16,6 +16,7 @@ Neurodesk provides a containerised data analysis environment to facilitate repro
 
 More information: 
 - [A Neurodesk Overview](/docs/overview)
+- A PowerPoint presentation including dynamic navigation and interactive buttons: [Neurodesk Overview](static/docs/overview/20250618-Neurodesk-overview.ppsx)
 - A 2 minute video explaining what Neurodesk is: [Neurodesk in 2 minutes](https://www.youtube.com/watch?v=JLv_5fycugw)
 - An online interactive demo you can try RIGHT NOW in your browser: https://play.neurodesk.org/
 
