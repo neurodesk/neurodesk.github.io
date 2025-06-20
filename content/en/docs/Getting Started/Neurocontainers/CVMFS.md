@@ -61,11 +61,15 @@ These CVMFS Stratum 1 servers are hosted by the Open Science Grid and every serv
 - Illinois, USA:             s1fnal-cvmfs.openhtc.io:8080     -> cvmfs-s1fnal.opensciencegrid.org:8000
 - Sao Paulo, Brazil:         s1sampa-cvmfs.openhtc.io:8080    -> sampacs01.if.usp.br:8000
 - Nebraska, USA:             s1osggoc-cvmfs.openhtc.io:8080   -> cvmfs-s1goc.opensciencegrid.org:8000
-- Netherlands, Europe:       s1nikhef-cvmfs.openhtc.io:8080   -> cvmfs01.nikhef.nl:8000
 - New York, US:              s1bnl-cvmfs.openhtc.io:8080      -> cvmfs-s1bnl.opensciencegrid.org:8000
+
+This server is currently down:
+- Netherlands, Europe:       s1nikhef-cvmfs.openhtc.io:8080   -> cvmfs01.nikhef.nl:8000
 
 This CVMFS Stratum 1 server is hosted by ARDC Nectar Cloud and also has a Cloudflare CDN alias.
 - Brisbane, Queensland, Australia: s1brisbane-cvmfs.openhtc.io -> cvmfs-brisbane.neurodesk.org
+- Sydney, New South Wales, Australia: s1sydney-cvmfs.openhtc.io -> cvmfs-sydney.neurodesk.org
+
 
 This CVMFS Stratum 1 server is hosted by Pawseys Nimbus Cloud and also has a Cloudflare CDN alias.
 - Perth, Western Australia, Australia: s1perth-cvmfs.openhtc.io -> cvmfs-perth.neurodesk.org
@@ -76,9 +80,9 @@ This CVMFS Stratum 1 server is hosted by AWS:
 This CMVFS Stratum 1 server is hosted by Jetstream:
 - Indiana, US: cvmfs-jetstream.neurodesk.org -> 149.165.172.188 
 
-Then we have a Cloudfront CDN setup on AWS, which works by having one geolocation-steered domain:
-cvmfs-geoproximity.neurodesk.org:
+Then we have a one geolocation-steered domain: cvmfs-geoproximity.neurodesk.org
 - 153.02 (Longitude),-27.46 (Latitude) -> cvmfs-brisbane.neurodesk.org
+- 151.2073 (Longitude),-33.8678 (Latitude) -> cvmfs-sydney.neurodesk.org
 - 115.86,-31.95 -> cvmfs-perth.neurodesk.org
 - -88.30,41.84 -> cvmfs-s1fnal.opensciencegrid.org
 - -96.66,40.83 -> cvmfs-s1goc.opensciencegrid.org
@@ -88,8 +92,6 @@ cvmfs-geoproximity.neurodesk.org:
 - -86.45,39.22 -> cvmfs-jetstream.neurodesk.org
 
 - Every location has a health check attached to it and doesn't forward to it if the destination is not working.
-
-This domain is then used as a Cloudfront origin and can be accessed under cvmfs.neurodesk.org
 
 Then we have 3 direct URLS without CDNs as well that are geolocation-steered:
 cvmfs1.neurodesk.org:
