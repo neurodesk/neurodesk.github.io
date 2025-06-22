@@ -191,10 +191,10 @@ Choose the module you want to update for example you want to update mrtrix3/3.0.
 ```
 
 # Examples for specific HPCs:
-## Greatlakes - Univiersity of Michigan
+## Greatlakes - University of Michigan
 ```
 module load singularity
-# no change to a directory with enough storage, e.g. /nfs/turbo/username
+# now change to a directory with enough storage, e.g. /nfs/turbo/username
 git clone https://github.com/NeuroDesk/neurocommand.git 
 cd neurocommand 
 pip3 install -r neurodesk/requirements.txt --user 
@@ -207,3 +207,15 @@ echo "module load singularity" >> ~/.bashrc
 echo "module use $PWD/local/containers/modules/" >> ~/.bashrc
 echo "export SINGULARITY_BINDPATH=/nfs/,/scratch/" >> ~/.bashrc
 ```
+
+```
+# Start new Jupyter notebook by entering "load singularity" in the Module Commands field:
+![image](https://github.com/user-attachments/assets/755d1b46-9676-450f-880e-445ffe90dd8d)
+
+!pip install jupyterlmod
+
+# Restart the kernel by clicking Kernel -> Restart Kernel
+
+import module
+await module.load('niimath')
+
