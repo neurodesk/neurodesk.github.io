@@ -192,6 +192,7 @@ Choose the module you want to update for example you want to update mrtrix3/3.0.
 
 # Examples for specific HPCs:
 ## Greatlakes - University of Michigan
+### Setup on a desktop
 ```
 module load singularity
 # now change to a directory with enough storage, e.g. /nfs/turbo/username
@@ -208,14 +209,16 @@ echo "module use $PWD/local/containers/modules/" >> ~/.bashrc
 echo "export SINGULARITY_BINDPATH=/nfs/,/scratch/" >> ~/.bashrc
 ```
 
-```
-# Start new Jupyter notebook by entering "load singularity" in the Module Commands field:
+### Setup on with a jupyter notebook
+Start new Jupyter notebook by entering "load singularity" in the Module Commands field:
 ![image](https://github.com/user-attachments/assets/755d1b46-9676-450f-880e-445ffe90dd8d)
 
+Then run these commands:
+```
 !pip install jupyterlmod
 
 # Restart the kernel by clicking Kernel -> Restart Kernel
 
 import module
 await module.load('niimath')
-
+```

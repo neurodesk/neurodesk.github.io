@@ -46,3 +46,15 @@ export neurodesk_singularity_opts="--home $HOME:/home"
 ```
 
 If you are missing an application, please contact mail.neurodesk@gmail.com and ask for the neurodesk installation to be updated on Bunya :)
+
+### Using this inside a jupyter notebook
+You need to install this in addtion:
+```
+pip install jupyterlmod
+```
+
+Then start a notebook and run these commands:
+```
+import module
+await module.load('niimath')
+```
