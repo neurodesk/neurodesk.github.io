@@ -31,7 +31,12 @@ description: >
 For optimal performance, ensure you are using Singularity version 3.x:
 ```bash
 module load singularity/3.5.0
-``` 
+#or
+module load singularity
+#or 
+module load apptainer
+```
+If this doens't work it might already be loaded. Just run `singularity` and check. 
 
 2. Load aria2 (Optional)
 To speed up container downloads, you can optionally install or load aria2c:
@@ -83,10 +88,10 @@ bash containers.sh --all
 ```bash
 module use $PWD/local/containers/modules/
 ```
-- It may be a good idea to add this to your .bashrc if it works. When adding to your .bashrc you will need to replace $PWD to point to the correct path, i.e.
+- It may be a good idea to add this to your .bashrc if it works. When adding to your .bashrc you will need to replace $PWD to point to the correct path, i.e. the output of this
  
 ```bash
-module use ~/neurocommand/local/containers/modules/
+echo "module use $PWD/local/containers/modules/"
 ```
 
 - It is very important to also set the SINGULARITY_BINDPATH or the APPTAINER_BINDPATH variable in your .bashrc. This variable must contain a comma-separated list of directories you want to access with the Neurodesk tools. 
@@ -183,4 +188,22 @@ bash containers.sh
 Choose the module you want to update for example you want to update mrtrix3/3.0.2 module with the eddy_cuda fix:
 ```bash
 ~/neurocommand/local/fetch_containers.sh mrtrix3 3.0.2 20221108 mrview $@
+```
+
+# Examples for specific HPCs:
+## Greatlakes - Univiersity of Michigan
+```
+module load singularity
+# no change to a directory with enough storage, e.g. /nfs/turbo/username
+git clone https://github.com/NeuroDesk/neurocommand.git 
+cd neurocommand 
+pip3 install -r neurodesk/requirements.txt --user 
+bash build.sh --cli
+bash containers.sh
+export SINGULARITY_BINDPATH=`pwd -P`
+bash containers.sh itksnap
+# now select a version of itksnap to install. For this copy and paste the installation
+echo "module load singularity" >> ~/.bashrc
+echo "module use $PWD/local/containers/modules/" >> ~/.bashrc
+echo "export SINGULARITY_BINDPATH=/nfs/,/scratch/" >> ~/.bashrc
 ```
