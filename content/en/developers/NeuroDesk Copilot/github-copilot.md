@@ -19,7 +19,7 @@ This guide provides detailed instructions on how to set up and use GitHub Copilo
 
 ###  Step 2: Use chat interface
 
-1. Open the Chat feature in NeuroDesk and type your query or command. Examples:
+1. Open the Chat feature in NeuroDesk in the left-hand bottom of the list and type your query or command. Examples:
    - **“Explain how to apply a Fourier Transform in NumPy.”**
    - **“Help me debug my data-loading function.”**  
 2. Press Enter. NeuroDesk Copilot will respond with explanations, tips, or suggested code.
@@ -28,8 +28,9 @@ This guide provides detailed instructions on how to set up and use GitHub Copilo
 
 ###  Step 3: Code completion
 
-1. Begin typing your code within a cell in NeuroDesk. As you type, Copilot provides inline suggestions. You can accept suggestions by pressing **Tab** key. 
-2. If the suggestion isn’t relevant, continue typing or press **Escape** to dismiss it.  
+1. Click on the Python [conda env:base] to open a new python file 
+2. Begin typing your code within a cell in NeuroDesk. As you type, Copilot provides inline suggestions. You can accept suggestions by pressing **Tab** key. 
+3. If the suggestion isn’t relevant, continue typing or press **Escape** to dismiss it.  
 
 ![Code completion](/static/developers/LLM_support/completion.png)
 
