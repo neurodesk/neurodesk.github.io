@@ -211,7 +211,8 @@ echo "export SINGULARITY_BINDPATH=/nfs/,/scratch/" >> ~/.bashrc
 
 ### Setup on with a jupyter notebook
 Start new Jupyter notebook by entering "load singularity" in the Module Commands field:
-![image](https://github.com/user-attachments/assets/755d1b46-9676-450f-880e-445ffe90dd8d)
+
+![image](https://github.com/user-attachments/assets/8c54a2a5-57db-4e43-9504-5c4b5e1278c1)
 
 Then run these commands:
 ```
