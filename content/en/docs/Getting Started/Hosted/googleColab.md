@@ -11,7 +11,7 @@ description: >
 
 
 {{< alert color="warning">}}
-WARNING: Google disabled a crucial feature necessary for running containers, and Neurodesk containers currently do not work on Google Colab.
+WARNING: Google disabled a crucial feature necessary for running containers, and Neurodesk containers currently do not run on Google Colab.
 {{< /alert >}}
 
 Open a notebook in Google Colab and run the following commands to set up the Neurodesk environment:

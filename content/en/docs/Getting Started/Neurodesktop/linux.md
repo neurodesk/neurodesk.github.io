@@ -287,12 +287,4 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 ![image](https://user-images.githubusercontent.com/4021595/135449288-6c3e9bbd-fe5f-4f43-aa4a-8a798ba629e6.png)
 
-## Connecting/attaching to a running Neurodesktop session via a plain shell
-You can start a neurodesktop container using docker or the neurodeskapp. If you want to connect to this running session using a plain shell you can do this as well:
-```
-docker ps
-# note the name of the running container, e.g. neurodeskapp-49977
 
-# now connect to this container
-docker exec --user=jovyan -ti neurodeskapp-49977 bash
-```
