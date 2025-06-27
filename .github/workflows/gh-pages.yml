@@ -52,9 +52,6 @@ jobs:
         id: pages
         uses: actions/configure-pages@v2
 
-      # - name: Set baseURL
-      #   run: sed -i "s|https://www.neurodesk.org/|${{ steps.pages.outputs.base_url }}/|g" config.toml
-
       - name: Install dependencies
         run: | 
           npm install
@@ -106,7 +103,7 @@ jobs:
         uses: umbrelladocs/action-linkspector@v1  
         with:
           fail_on_error: true
-          reporter: github-check
+          reporter: github-pr-review
           config_file: .linkspector.yml
           filter_mode: nofilter
           github_token: ${{ secrets.github_token }}
