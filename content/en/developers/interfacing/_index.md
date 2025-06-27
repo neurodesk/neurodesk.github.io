@@ -116,7 +116,7 @@ send_command() {
         echo "  Attempt $attempt..."
         
         output=$(echo "[\"stdin\", \"$cmd\\r\\n\"]" | \
-            gtimeout 10 websocat --text \
+            timeout 10 websocat --text \
             "wss://$API_URL/user/$USER/terminals/websocket/$TERMINAL_NAME" \
             -H "Authorization: token $USER_TOKEN" 2>/dev/null | \
             grep '^\["stdout"' | \
@@ -137,6 +137,7 @@ send_command() {
     return 1
 }
 send_command "touch test.txt"
+send_command "ls"
 send_command "ml fsl; fslmaths"
 ```
 
