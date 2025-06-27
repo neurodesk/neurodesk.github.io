@@ -7,7 +7,7 @@ description: >
 ---
 
 # Connecting/attaching to a running Neurodesktop session via a plain shell
-You can start a neurodesktop container using docker or the neurodeskapp. If you want to connect to this running session using a plain shell you can do this as well:
+You can start a neurodesktop container using docker or the neurodeskapp. If you want to connect to this running session using a shell you can do this as well:
 ```
 docker ps
 # note the name of the running container, e.g. neurodeskapp-49977
@@ -15,9 +15,6 @@ docker ps
 # now connect to this container
 docker exec --user=jovyan -ti neurodeskapp-49977 bash
 ```
-
-JUPYTERHUB_USER=stebo85
-JPY_API_TOKEN=4a2d3b12b9a04e19921e1ee38fae7995
 
 # API interface to Jupyter
 Install necessary tools, e.g. for macos
@@ -39,7 +36,6 @@ Now you can interface with Jupyter through:
 USER=$JUPYTERHUB_USER
 USER_TOKEN=$JPY_API_TOKEN
 API_URL="play-europe.neurodesk.org"
-NAMESPACE="jupyter"
 
 TERMINAL_RESPONSE=$(curl -k -s -X POST \
     -H "Authorization: token $USER_TOKEN" \
