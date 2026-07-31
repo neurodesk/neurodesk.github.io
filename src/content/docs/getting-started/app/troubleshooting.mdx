@@ -1,0 +1,199 @@
+---
+title: Troubleshooting
+description: Solutions for common Neurodesk App issues.
+sidebar:
+  order: 2
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+## Docker permission denied
+
+If you see `/var/run/docker.sock: connect: permission denied`:
+
+<Steps>
+
+1. **Add your user to the `docker` group** (this creates the group first if it does not exist):
+
+   ```bash
+   getent group docker >/dev/null || sudo groupadd docker
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
+
+2. **Set the socket permissions** so only `root` and members of the `docker` group can access it:
+
+   ```bash
+   sudo chown root:docker /var/run/docker.sock
+   sudo chmod 660 /var/run/docker.sock
+   ```
+
+   This sets the socket to `rw-rw----`, removing access for all other users. You must be in the `docker` group (step 1) for this to work.
+
+3. **Log out and back in** (or reboot) for the group change to take full effect. The `newgrp` command above applies it to the current shell only.
+
+</Steps>
+
+## AppArmor sandbox error (Ubuntu 24.04)
+
+If you see `FATAL:setuid_sandbox_host.cc(158)] The SUID sandbox helper binary was found, but is not configured correctly`, create the file `/etc/apparmor.d/neurodeskapp` with this content:
+
+```txt
+# This profile allows everything and only exists to give the
+# application a name instead of having the label "unconfined"
+
+abi <abi/4.0>,
+include <tunables/global>
+
+profile neurodeskapp "/opt/NeurodeskApp/neurodeskapp" flags=(unconfined) {
+  userns,
+
+  # Site-specific additions and overrides. See local/README for details.
+  include if exists <local/neurodeskapp>
+}
+```
+
+Then restart your computer and launch the app again.
+
+## Running with Podman on restricted Linux systems
+
+:::caution
+This is an **advanced** guide for getting the Neurodesk App working with **Podman** (instead of Docker) on locked-down Linux machines, for example hosts that use **Active Directory (AD)** accounts, an **NFS-mounted** home or data directory, and where image pulls through the App tend to time out. On a standard desktop with Docker or rootful Podman you should **not** need any of this.
+
+The steps below were validated with **Podman 3.4.4 on Ubuntu 22**. Replace every `<placeholder>` with your own values.
+:::
+
+### 1. Install the Podman shim script
+
+Some environments need a wrapper around `podman` to fix an NFS volume-mount bug and to sanitise the UID/GID that the App passes to the container.
+
+Create the directory if it does not already exist:
+
+```bash
+mkdir -p ~/.local/bin
+```
+
+Then create a file named `~/.local/bin/podman` with the following content. This shim will be found on `PATH` before the real `podman` binary:
+
+```bash
+#!/bin/bash
+
+CURRENT_UID=$(id -u)
+CURRENT_GID=$(id -g)
+
+NEW_ARGS=()
+for arg in "$@"; do
+    # 1. Fix the NFS volume-mount bug by appending the overlay override option (:O)
+    if [[ "$arg" == *"/nfs/<mount>"* ]]; then
+        arg="${arg//\/nfs\/<mount>:\/data/\/nfs\/<mount>:\/data:O}"
+    fi
+
+    # 2. Sanitize the network IDs
+    if [[ "$arg" == *"NB_UID=${CURRENT_UID}"* ]]; then
+        arg="${arg//NB_UID=${CURRENT_UID}/NB_UID=1000}"
+    fi
+    if [[ "$arg" == *"NB_GID=${CURRENT_GID}"* ]]; then
+        arg="${arg//NB_GID=${CURRENT_GID}/NB_GID=100}"
+    fi
+    NEW_ARGS+=("$arg")
+done
+
+exec /usr/bin/podman "${NEW_ARGS[@]}"
+```
+
+Then make it executable:
+
+```bash
+chmod +x ~/.local/bin/podman
+```
+
+:::note
+Replace `<mount>` with your NFS mount point. If you are **not** using an NFS mount, you can omit the overlay (`:O`) fix entirely.
+
+The UID/GID sanitising is only needed for **non-person AD accounts** that are not assigned a UID/GID. If your organisation uses AD with a normal person account that has an assigned UID and GID, you most likely do **not** need this and can skip the shim.
+:::
+
+If you do need the UID workaround, add your account to `/etc/subuid` and `/etc/subgid` (this is why the shim above uses `1000`):
+
+```
+# /etc/subuid
+<USERNAME>:1000:65536
+
+# /etc/subgid
+<USERNAME>:100000:65536
+```
+
+### 2. Download the image over the CLI
+
+Because pulls through the App can time out, pull and re-tag the image from a terminal first (run this as the user who will launch the App):
+
+```bash
+podman pull ghcr.io/neurodesk/neurodesktop/neurodesktop:<version>
+podman tag ghcr.io/neurodesk/neurodesktop/neurodesktop:<version> docker.io/vnmd/neurodesktop:<version>
+```
+
+Then stop any lingering Podman processes (for example a hung pull) and Neurodesk containers, and migrate Podman. The App creates containers named `neurodeskapp` or `neurodeskapp-<port>`:
+
+```bash
+# Stop any running Neurodesk containers
+podman stop neurodeskapp 2>/dev/null
+podman rm -f neurodeskapp 2>/dev/null
+# Force-kill any hung podman or neurodeskapp processes
+pkill -9 -u <USERNAME> -f "podman|neurodeskapp"
+podman system migrate
+```
+
+### 3. Point the launcher at the shim
+
+Edit the application shortcut so it uses your `~/.local/bin` `PATH`:
+
+```bash
+sudo nano /usr/share/applications/neurodeskapp.desktop
+```
+
+Set the `Exec` line to:
+
+```
+Exec=bash -c "PATH=\"$HOME/.local/bin:$PATH\" /opt/NeurodeskApp/neurodeskapp" %U
+```
+
+:::note
+Type this line out by hand rather than copy-pasting. Invisible characters and whitespace from a copy can break the launcher.
+:::
+
+Then launch the App from the application menu (the shortcut), **not** from the CLI.
+
+### 4. Recovering from a broken volume or incompatible storage
+
+If a session fails to start, delete the broken home volume and try again:
+
+```bash
+# Stop any running Neurodesk containers
+podman stop neurodeskapp 2>/dev/null
+podman rm -f neurodeskapp 2>/dev/null
+# Force-kill any hung processes
+pkill -9 -u $USER -f "podman|neurodeskapp"
+
+# Delete the broken home volume
+podman volume rm neurodesk-home
+```
+
+If Podman's storage database is incompatible (for example after a Podman upgrade), reset it:
+
+```bash
+podman system reset -f
+```
+
+:::danger[Warning]
+`podman system reset -f` will delete all existing Podman machines, containers, and their data. Back up any important data stored inside Podman containers before running this command.
+
+Then set the path in the Neurodesk App settings.
+:::
+
+If that still does not work, remove the stale storage config:
+
+```bash
+sudo rm -f /home/$USER/.config/containers/storage.conf
+```
+
+Then re-pull and re-tag the image (step 2 above), run `podman system migrate`, and launch again via the shortcut.

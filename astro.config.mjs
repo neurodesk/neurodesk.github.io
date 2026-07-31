@@ -16,13 +16,16 @@ export default defineConfig({
 		'/getting-started/hosted/googlecolab': '/getting-started/hosted/google/',
 		'/getting-started/hosted/nectar': '/getting-started/installations/nectar/',
 		'/getting-started/linux-and-hpc': '/getting-started/neurocommand/linux-and-hpc/',
+		'/getting-started/local': '/getting-started/app/',
 		'/getting-started/local/examples': '/getting-started/installations/ubuntu2404/',
+		'/getting-started/local/neurodeskapp': '/getting-started/app/neurodeskapp/',
 		'/getting-started/neurocommand/hpc': '/getting-started/neurocommand/linux-and-hpc/',
 		'/getting-started/neurocommand/linux': '/getting-started/neurocommand/linux-and-hpc/',
 		'/getting-started/neurocontainers/googlecolab': '/getting-started/hosted/google/',
 		'/getting-started/neurodesktop/hpc': '/getting-started/neurocommand/linux-and-hpc/',
 		'/getting-started/neurodesktop/nectar': '/getting-started/installations/nectar/',
-		'/getting-started/neurodesktop/neurodeskapp': '/getting-started/local/neurodeskapp/',
+		'/getting-started/neurodesktop/neurodeskapp': '/getting-started/app/neurodeskapp/',
+		'/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskapp/',
 		'/getting-started/neurodesktop/play': '/getting-started/hosted/play/',
 		'/getting-started/neurodesktop/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
 		'/getting-started/pyneurodesk': '/getting-started/neurocommand/pyneurodesk/',
@@ -115,7 +118,8 @@ export default defineConfig({
 		'/tutorials/structural_imaging/freesurfer': '/redirects/tutorials-to-neurodeskedu/',
 		'/tutorials/structural_imaging/structuralconnectivity': '/redirects/tutorials-to-neurodeskedu/',
 		'/tutorials/tutorial-template': '/developers/documentation/creating-website-content/',
-		'docs/getting-started/local/neurodeskapp': '/getting-started/local/neurodeskapp/',
+		'/docs/getting-started/local': '/getting-started/app/',
+		'/docs/getting-started/local/neurodeskapp': '/getting-started/app/neurodeskapp/',
 	},
 	integrations: [
 		starlight({
@@ -148,6 +152,7 @@ export default defineConfig({
 						{ label: 'Overview', link: '/overview/' },
 						{ label: 'Acknowledgement', link: '/overview/acknowledgement/' },
 						{ label: 'Applications', link: '/overview/applications/' },
+						{ label: 'Awards', link: '/overview/awards/' },
 						{ label: 'Code of conduct', link: '/overview/code-of-conduct/' },
 						{ label: 'Discussion forum', link: '/overview/discussion-forum/' },
 						{ label: 'Donate', link: '/overview/donate/' },
@@ -165,9 +170,9 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', link: '/getting-started/' },
 						{
-							label: 'Local',
+							label: 'App',
 							collapsed: true,
-							items: [{ autogenerate: { directory: 'getting-started/local' } }],
+							items: [{ autogenerate: { directory: 'getting-started/app' } }],
 						},
 						{
 							label: 'Hosted',
@@ -177,7 +182,10 @@ export default defineConfig({
 						{
 							label: 'Neurodesktop',
 							collapsed: true,
-							items: [{ autogenerate: { directory: 'getting-started/neurodesktop' } }],
+							items: [
+								{ autogenerate: { directory: 'getting-started/neurodesktop' } },
+								{ label: 'Neurodesk App', link: '/getting-started/app/neurodeskapp/' },
+							],
 						},
 						{
 							label: 'Neurocommand',

@@ -5,6 +5,26 @@ sidebar:
   order: 7
 ---
 
+## User locations &mdash; past 28 days
+
+This Google Analytics map shows where Neurodesk users were recorded during the past 28 days.
+
+<iframe title="Neurodesk users by location during the past 28 days" src="https://lookerstudio.google.com/embed/reporting/1b5d3da0-7a67-4440-bc3c-95bd6fd94f18/page/2VKTD" frameborder="0" style="border:0; width: 100%; min-height: 600px;"></iframe>
+
+## Cumulative user metrics &mdash; all time
+
+The chart and map show cumulative Neurodesk users since tracking began. The table below lists new and cumulative users by month.
+
+<div class="user-metrics not-content" data-user-metrics-url="/data/user-metrics.json" data-user-metrics-map="/vendor/world.svg">
+  <span class="user-metrics__status">Loading user statistics...</span>
+</div>
+
+<script src="/js/user-metrics.js" defer></script>
+
+## Neurodesk App download metrics
+
+![Neurodesk App downloads per release and operating system](/docs/overview/neurodeskapp_metrics.png)
+
 ## Repository metrics
 
 <div class="repo-grid not-content">
@@ -73,10 +93,35 @@ sidebar:
   </a>
 </div>
 
-## User metrics
+## NeurodeskEDU usage
 
-<iframe src="https://lookerstudio.google.com/embed/reporting/1b5d3da0-7a67-4440-bc3c-95bd6fd94f18/page/2VKTD" frameborder="0" style="border:0; width: 100%; min-height: 600px;"></iframe>
+<div class="ga4-service-usage not-content" data-ga4-service-usage-url="/data/user-metrics.json" data-ga4-service-usage-ids="neurodeskedu" data-ga4-service-usage-intro="These statistics are generated from Google Analytics 4 for the NeurodeskEDU path.">
+  <p>These statistics are generated from Google Analytics 4 for the NeurodeskEDU path.</p>
+  <span class="user-metrics__status">Loading service usage statistics...</span>
+</div>
 
-## Uptime
+## Play usage
 
-Live status: [stats.uptimerobot.com/NBE38IZWZM](https://stats.uptimerobot.com/NBE38IZWZM)
+<div class="ga4-service-usage not-content" data-ga4-service-usage-url="/data/user-metrics.json" data-ga4-service-usage-ids="play-america,play-europe,play-australia" data-ga4-service-usage-intro="These statistics are generated from Google Analytics 4 and reported separately for each tracked Play server.">
+  <p>These statistics are generated from Google Analytics 4 and reported separately for each tracked Play server.</p>
+  <span class="user-metrics__status">Loading service usage statistics...</span>
+</div>
+
+## Webapp usage metrics
+
+<div class="ga4-service-usage not-content" data-ga4-service-usage-url="/data/user-metrics.json" data-ga4-service-usage-ids="webapp-calmar,webapp-dicompare,webapp-musclemap,webapp-qsmbly,webapp-seedseg,webapp-sct,webapp-vesselboost" data-ga4-service-usage-intro="These statistics are generated from Google Analytics 4 for each hosted Neurodesk webapp, separated by the tracked host.">
+  <p>These statistics are generated from Google Analytics 4 for each hosted Neurodesk webapp, separated by the tracked host.</p>
+  <span class="user-metrics__status">Loading service usage statistics...</span>
+</div>
+
+<script src="/js/ga4-service-usage.js" defer></script>
+
+## Uptime metrics
+
+<div class="uptime-metrics not-content" data-uptime-metrics-url="https://stats.uptimerobot.com/api/getMonitorList/NBE38IZWZM">
+  <span class="user-metrics__status">Loading uptime metrics...</span>
+</div>
+
+<script src="/js/uptime-metrics.js" defer></script>
+
+Live status page: [stats.uptimerobot.com/NBE38IZWZM](https://stats.uptimerobot.com/NBE38IZWZM)

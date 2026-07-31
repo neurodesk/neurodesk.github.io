@@ -572,5 +572,5 @@ Make sure to set the new version before submitting:
 
 ```bash
 ssh sherlock
-sbatch -p normal -c 4 --mem=32G --time=04:00:00 --job-name=neurodesktop-update --wrap 'export VERSION="2026-04-28"; cd ${GROUP_HOME}/neurodesk; export APPTAINER_TMPDIR=$SCRATCH/apptainer_temp; mkdir -p $APPTAINER_TMPDIR; apptainer pull docker://ghcr.io/neurodesk/neurodesktop/neurodesktop:${VERSION}; rm ${GROUP_HOME}/neurodesk/neurodesktop_latest.sif; ln -s ${GROUP_HOME}/neurodesk/neurodesktop_${VERSION}.sif ${GROUP_HOME}/neurodesk/neurodesktop_latest.sif'
+sbatch -p normal -c 4 --mem=32G --time=04:00:00 --job-name=neurodesktop-update --wrap 'set -e; VERSION="2026-06-28"; : "${GROUP_HOME:?GROUP_HOME is not set}" "${SCRATCH:?SCRATCH is not set}"; cd "${GROUP_HOME}/neurodesk"; export APPTAINER_TMPDIR="${SCRATCH}/apptainer_temp"; mkdir -p "${APPTAINER_TMPDIR}"; image="${GROUP_HOME}/neurodesk/neurodesktop_${VERSION}.sif"; tmp="${GROUP_HOME}/neurodesk/.neurodesktop_${VERSION}.${SLURM_JOB_ID:-$$}.sif"; link="${GROUP_HOME}/neurodesk/neurodesktop_latest.sif"; link_tmp="${link}.${SLURM_JOB_ID:-$$}.tmp"; trap "rm -f \"${tmp}\" \"${link_tmp}\"" EXIT; rm -f "${tmp}" "${link_tmp}"; apptainer pull "${tmp}" "docker://ghcr.io/neurodesk/neurodesktop:${VERSION}"; test -s "${tmp}"; mv -f "${tmp}" "${image}"; ln -s "${image}" "${link_tmp}"; mv -f "${link_tmp}" "${link}"'
 ```

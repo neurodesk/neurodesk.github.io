@@ -17,6 +17,9 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.39.2
         version: 0.39.2(astro@6.3.6(@types/node@24.12.4)(rollup@4.60.4))
+      '@svg-maps/world':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/react':
         specifier: ^19.2.15
         version: 19.2.15
@@ -741,6 +744,9 @@ packages:
 
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
+
+  '@svg-maps/world@2.0.0':
+    resolution: {integrity: sha512-VmYYnyygJ5Zhr48xPqukFBoq4aCBgVNIjBzqBnWKXSdHhrRK3pntdvbCa8lMsxwVCFzEw9a+smIMEGI2sC1xcQ==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -2647,6 +2653,8 @@ snapshots:
       '@types/hast': 3.0.4
 
   '@shikijs/vscode-textmate@10.0.2': {}
+
+  '@svg-maps/world@2.0.0': {}
 
   '@types/babel__core@7.20.5':
     dependencies:

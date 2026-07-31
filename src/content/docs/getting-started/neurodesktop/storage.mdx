@@ -81,7 +81,13 @@ When running Neurodesktop locally, there are two storage locations to be aware o
 
 - **Home directory** (`/home/jovyan`): This is the Linux filesystem inside the Docker container. Files saved here will persist across container restarts (thanks to a Docker volume), but will be lost if you remove the container or its volumes. Think of this as your working space, not your safe storage.
 
-- **Neurodesktop storage** (`/neurodesktop-storage`): This is a direct link to a folder on your host computer (`C:/neurodesktop-storage` on Windows, `~/neurodesktop-storage` on Mac/Linux). Files saved here live on your actual filesystem, outside of Docker. They will persist regardless of what happens to the container.
+- **Neurodesktop storage** (`/neurodesktop-storage`): This is a direct link to a folder on your host computer. Files saved here live on your actual filesystem, outside of Docker. They will persist regardless of what happens to the container.
+
+| Location | Path |
+| --- | --- |
+| Inside Neurodesk | `/neurodesktop-storage` |
+| Host machine (macOS/Linux) | `~/neurodesktop-storage` |
+| Host machine (Windows) | `C:/neurodesktop-storage` |
 
 :::tip[Important]
 Always save data you want to keep to `/neurodesktop-storage` (the "Storage" folder on the desktop). Files saved elsewhere inside Neurodesktop may be lost when updating or recreating the container.
@@ -97,7 +103,7 @@ You can also mount additional directories by adding another `-v` parameter set (
 The mountpoint inside Neurodesktop needs to be named `/data`, otherwise the applications will not see the files without modifying the `SINGULARITY_BINDPATH` variable in your `.bashrc`.
 :::
 
-If you are using the Neurodesk App, you can set an additional storage location through the [settings](/getting-started/local/neurodeskapp/#add-a-custom-data-directory).
+If you are using the Neurodesk App, you can set an additional storage location through the [settings](/getting-started/app/neurodeskapp/#add-a-custom-data-directory).
 
 If you are starting Neurodesk through the command line, here is an example for Windows adding another storage directory:
 

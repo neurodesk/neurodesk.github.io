@@ -1,7 +1,7 @@
 // Mirrors data/neurodesktop.toml in the Hugo source.
 // Update the version here when bumping Neurodesktop releases.
 
-export const jupyterNeurodeskVersion = '2026-04-28';
+export const jupyterNeurodeskVersion = '2026-07-11';
 
 export const ports = {
 	rdp: '-p 3390:3389',

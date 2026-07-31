@@ -15,7 +15,7 @@ Neurodesk Play provides instant access to our neuroimaging analysis environment 
 - Collaborate with colleagues using a consistent environment.
 
 :::note
-Neurodesk Play is free but comes with resource limits. For more intensive workloads, consider [installing Neurodesk locally](/getting-started/local/) or using one of our [other hosting options](/getting-started/hosted/).
+Neurodesk Play is free but comes with resource limits. For more intensive workloads, consider [installing Neurodesk locally](/getting-started/app/) or using one of our [other hosting options](/getting-started/hosted/).
 :::
 
 ## Launch Neurodesk Play
@@ -49,10 +49,38 @@ The tool below automatically detects the fastest server for your location. Click
 
 <script src="/js/play-latency.js" defer></script>
 
+## Usage acknowledgments
+
+When using these services for research, please include the appropriate acknowledgment:
+
+**🇺🇸 US (Jetstream2 / NSF)**
+
+> "This research was supported by Jetstream2 (NSF award #2005506), which is supported by the National Science Foundation. Jetstream2 is a cloud computing resource managed by the Indiana University Pervasive Technology Institute and part of the ACCESS project."
+
+**🇪🇺 Europe (EGI / CESNET-MCC)**
+
+> "Enabled through services and resources provided by the EGI Federation with the dedicated support of CESNET-MCC. Computational resources were provided by the e-INFRA CZ project (ID:90254), supported by the Ministry of Education, Youth and Sports of the Czech Republic."
+
+**🇦🇺 Australia (ARDC / Nectar)**
+
+> "This research was supported by use of the Nectar Research Cloud, a collaborative Australian research platform supported by the NCRIS-funded Australian Research Data Commons (ARDC)."
+
 ## Data transfer
 
 We provide several methods to transfer your files in and out of Neurodesk Play, including drag-and-drop and cloud storage integration.
 [View Data Transfer Documentation →](/getting-started/neurodesktop/storage)
+
+## Shared directories for courses and workshops
+
+Neurodesk Play can provide shared directories for educational use. These directories are mounted inside Play sessions under `/data/groups/<group-name>` or `/data/teaching/<educator-github-username>` and can be configured for different teaching and project needs.
+
+- **Educator-managed course material:** educators can write to a directory under `/data/teaching/<educator-github-username>`, while all other users have read-only access.
+- **Project groups:** a defined group of users can share a directory where every group member has read+write access under `/data/groups/<group-name>`.
+- **Teaching teams:** multiple educators can have write access to a shared directory under `/data/groups/<group-name>`, while everyone else has read-only access.
+
+This is useful for distributing workshop datasets, notebooks, examples, or course material without asking every participant to copy files into their own home directory. It also makes it very easy to provide the solutions of a previous session to all users so learners can catch up to the rest of the class.
+
+If you need such a setup, please reach out to mail.neurodesk@gmail.com with information on when your course runs and how much storage you need.
 
 ## SSH connection
 
@@ -139,18 +167,3 @@ It is possible to connect to Play instances using SSH, including from VS Code Re
 
 </Steps>
 
-## Usage acknowledgments
-
-When using these services for research, please include the appropriate acknowledgment:
-
-**🇺🇸 US (Jetstream2 / NSF)**
-
-> "This research was supported by Jetstream2 (NSF award #2005506), which is supported by the National Science Foundation. Jetstream2 is a cloud computing resource managed by the Indiana University Pervasive Technology Institute and part of the ACCESS project."
-
-**🇪🇺 Europe (EGI / CESNET-MCC)**
-
-> "Enabled through services and resources provided by the EGI Federation with the dedicated support of CESNET-MCC. Computational resources were provided by the e-INFRA CZ project (ID:90254), supported by the Ministry of Education, Youth and Sports of the Czech Republic."
-
-**🇦🇺 Australia (ARDC / Nectar)**
-
-> "This research was supported by use of the Nectar Research Cloud, a collaborative Australian research platform supported by the NCRIS-funded Australian Research Data Commons (ARDC)."

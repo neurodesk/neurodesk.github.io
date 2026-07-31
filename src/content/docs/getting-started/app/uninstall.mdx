@@ -1,0 +1,47 @@
+---
+title: Uninstalling
+description: How to uninstall the Neurodesk App.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+<TabItem label="macOS">
+
+Find `NeurodeskApp.app` in Finder (in `/Applications` or `~/Applications`) and move it to Trash (<kbd>Cmd</kbd>+<kbd>Delete</kbd>). Then remove application data:
+
+```bash
+rm -rf ~/Library/neurodeskapp
+rm -rf ~/Library/Application\ Support/neurodeskapp
+```
+
+</TabItem>
+<TabItem label="Windows">
+
+Go to **Start Menu > Settings > Apps** and uninstall Neurodesk App.
+
+To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\neurodeskapp`. The AppData directory is hidden, so enable hidden items in Windows Explorer under **View > Show > Hidden Items**.
+
+</TabItem>
+<TabItem label="Linux">
+
+```bash
+# Debian / Ubuntu
+sudo apt-get purge neurodeskapp
+sudo rm /usr/bin/neurodeskapp
+rm -rf ~/.config/neurodeskapp
+
+# Fedora / RHEL / SUSE
+sudo rpm -e neurodeskapp
+sudo rm /usr/bin/neurodeskapp
+rm -rf ~/.config/neurodeskapp
+
+# Arch-based
+sudo pacman -Rs neurodeskapp-bin    # -Rs removes all orphaned deps
+rm -rf ~/.config/neurodeskapp
+```
+
+</TabItem>
+</Tabs>

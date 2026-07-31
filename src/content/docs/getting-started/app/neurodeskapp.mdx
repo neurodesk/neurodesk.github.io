@@ -1,0 +1,194 @@
+---
+title: Neurodesk App
+description: A cross-platform desktop application for Neurodesk, the easiest way to use Neurodesktop.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Step 1: Download and install
+
+Download the Neurodesk App for your operating system, then follow the install instructions below.
+
+<Tabs syncKey="os">
+<TabItem label="macOS">
+
+**Download:**
+
+- [macOS Apple silicon (M1/M2/M3/M4)](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-macOS-arm64.dmg)
+- [macOS Intel](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-macOS-x64.dmg)
+
+**Install:**
+Double-click the downloaded `.dmg` file and drag NeurodeskApp into your Applications folder. To open it, right-click `NeurodeskApp.app` and select "Open".
+
+Alternatively, install with Homebrew:
+
+```bash
+brew install neurodesk/homebrew-neurodesk/neurodeskapp
+```
+
+</TabItem>
+<TabItem label="Windows">
+
+**Download:**
+
+- [Windows Installer](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Windows.exe)
+
+:::note[Microsoft Edge]
+On Microsoft Edge, follow these steps to download the executable file:
+
+![Microsoft Edge download steps](/docs/getting-started/neurodeskapp/neurodeskapp-edge-download.png)
+:::
+
+**Install:**
+Double-click the downloaded `.exe` file. Windows will show an "Unknown publisher" warning because the installer is not code-signed. This is expected: the installer is an official release from the [neurodesk-app GitHub repository](https://github.com/neurodesk/neurodesk-app/releases). Click "Yes" to proceed, then accept the licence agreement and click "Finish".
+
+</TabItem>
+<TabItem label="Linux">
+
+**Download:**
+
+| Distribution | x64 | arm64 |
+| --- | --- | --- |
+| Debian / Ubuntu | [.deb (x64)](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Debian-x64.deb) | [.deb (arm64)](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Debian-arm64.deb) |
+| Fedora / RHEL / SUSE | [.rpm (x64)](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Fedora-x64.rpm) | [.rpm (arm64)](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Fedora-arm64.rpm) |
+| Arch-based | [AUR package](https://aur.archlinux.org/packages/neurodeskapp-bin) | |
+
+**Install:**
+Replace `<arch>` in the following commands with the architecture of the file you downloaded (x64 or arm64).
+
+```bash
+# Debian / Ubuntu
+sudo apt install -f ./NeurodeskApp-Setup-Debian-<arch>.deb
+
+# Fedora / RHEL / SUSE
+sudo rpm -i NeurodeskApp-Setup-Fedora-<arch>.rpm
+
+# Arch-based
+yay neurodesk
+```
+
+</TabItem>
+</Tabs>
+
+:::note[Already have GitHub Store installed?]
+Search [GitHub Store](https://komistore.app/) for `Neurodesk-app` to install directly. This works on all operating systems.
+
+![Neurodesk App in GitHub Store](/docs/getting-started/neurodeskapp/github-store.png)
+:::
+
+### Minimum system requirements
+
+- At least 8 GB free disk space for the Neurodesktop base image
+- A container engine (see Step 2 below)
+
+## Step 2: Set up a container engine
+
+The Neurodesk App needs a container engine to run neuroimaging tools. Which engine you use depends on whether you have admin (root) privileges on your system.
+
+![Engine selection screen showing Docker, Podman, and TinyRange options](/docs/getting-started/neurodeskapp/engine-options.png)
+
+<Tabs>
+<TabItem label="Docker (recommended)">
+
+**Requires:** admin/root access on your machine.
+
+If you already have Docker installed, skip to [Step 3](#step-3-launch-the-app). Otherwise, install Docker:
+
+- [Docker Desktop for Windows](https://docs.docker.com/docker-for-windows/install/)
+- [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
+- [Docker Engine for Linux](https://docs.docker.com/engine/install/)
+
+Verify your installation:
+
+```bash
+docker --version
+docker run hello-world
+```
+
+**Apple silicon users:** enable Rosetta support in Docker Desktop settings for best performance.
+
+</TabItem>
+<TabItem label="Podman">
+
+**Requires:** admin/root access on your machine.
+
+Podman is a drop-in replacement for Docker. Install it using your system's package manager or from [podman.io](https://podman.io/docs/installation).
+
+</TabItem>
+<TabItem label="TinyRange (no admin needed)">
+
+**Use this if you do NOT have admin/root access.**
+
+TinyRange is included with the Neurodesk App, so no separate install is needed on Windows and Linux.
+
+**macOS only:** you also need to install QEMU:
+
+```bash
+brew install qemu
+```
+
+Verify with:
+
+```bash
+qemu-system-aarch64 --version
+```
+
+</TabItem>
+</Tabs>
+
+## Step 3: Launch the app
+
+Open the Neurodesk App from your operating system's application menu, or run `neurodeskapp` from the command line.
+
+On the Welcome Page you have two options:
+
+- **Open Local Neurodesk** starts a Neurodesk session on your machine.
+- **Connect to remote Neurodesk server** connects to an existing Neurodesk server running elsewhere.
+
+![Start session](/docs/getting-started/neurodeskapp/neurodesk-desktop.png)
+
+### Local sessions
+
+Click "Open Local Neurodesk" to launch a local session. This opens a JupyterLab interface with two ways to use Neurodesk:
+
+- Click the **NeurodeskApp** icon to launch the full desktop interface in a new window.
+- Use the **command line** in JupyterLab and load tools via the module system in the left sidebar.
+
+![Connect to local](/docs/getting-started/neurodeskapp/connect-to-local.png)
+
+### Remote sessions
+
+Click "Connect to remote Neurodesk server" to connect to a server running elsewhere.
+
+Select one of the provided servers in the list, or enter the URL of the server and press <kbd>Enter</kbd> to connect.
+
+![Connect to server](/docs/getting-started/neurodeskapp/connect-to-server.png)
+
+## Data storage
+
+For a full overview of how data storage works in Neurodesk (default paths, cloud storage, transferring files), see [Data Storage](/getting-started/neurodesktop/storage/#local-storage).
+
+### Add a custom data directory
+
+In Settings, select "Additional Directory" in the sidebar, click "Change" to choose a local directory, then click "Apply & restart". The directory will appear at `/home/jovyan/data` inside the app.
+
+![Additional Directory settings interface](/docs/getting-started/neurodeskapp/additional_dir.png)
+
+:::danger[macOS with Podman]
+To mount an external drive, run these commands once:
+
+```bash
+podman machine reset -f
+podman machine init --rootful --now -v /Volumes:/Volumes -v $HOME:$HOME podman-machine-default
+```
+
+**Warning:** `podman machine reset -f` will delete all existing Podman machines, containers, and their data. Back up any important data stored inside Podman containers before running this command.
+
+Then set the path in the Neurodesk App settings.
+:::
+
+:::tip
+If you use conda environments to install packages or kernels, see the [conda tutorial](/edu/tutorials/programming/conda.html).
+:::
