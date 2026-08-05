@@ -137,6 +137,9 @@ export default defineConfig({
 				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' } },
 				{ tag: 'link', attrs: { rel: 'manifest', href: '/favicons/site.webmanifest' } },
 			],
+			components: {
+				ThemeSelect: './src/components/ThemeSelect.astro',
+			},
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/NeuroDesk' },
 				{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/neurodesk-org/' },
