@@ -136,15 +136,25 @@ Every logo above is currently PNG. There are no vector (SVG) masters, so the log
 
 ## Colour palette
 
-Download the official Neurodesk colour palette for design use:
+The palette is published in several formats so you do not need paid software to use it.
 
-- [Download Neurodesk colour palette (Illustrator format)](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-color-palette.ai)
+| Format | Opens in | Download |
+|---|---|---|
+| PowerPoint | PowerPoint, Keynote, Google Slides, LibreOffice | [`.pptx`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.pptx) |
+| Adobe swatches | Illustrator, Photoshop, InDesign, Affinity, Figma | [`.ase`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.ase) |
+| GIMP palette | GIMP, Inkscape, Krita | [`.gpl`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.gpl) |
+| CSS custom properties | any text editor, for web work | [`.css`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.css) |
+| JSON | scripts and build tooling | [`.json`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.json) |
+| Illustrator swatches | Illustrator only — the original file | [`.ai`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-color-palette.ai) |
+
+**Hex is canonical.** The RGB column below is derived from it.
 
 ### Primary colours
 
 | Colour name   | Hex code  | RGB code         | Usage           |
 | ------------- | --------- | ---------------- | --------------- |
 | Seafoam green | `#6aa329` | `(106, 163, 41)` | Primary actions |
+| Logo ink      | `#101806` | `(16, 24, 6)`    | The dark used in the logo artwork |
 
 ### Secondary colours
 
@@ -186,14 +196,57 @@ Avoid the following incorrect variations:
 - `Neuro Desk` — space in the middle
 - `neurodesk` in running prose, titles, or headings, where **Neurodesk** is correct
 
+## Icons and favicons
+
+The icon mark on its own, plus a complete favicon set.
+
+### Source icons
+
+| File | What it is |
+|---|---|
+| [`neurodesk-icon.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon.svg) | The icon mark — outlined, no font dependency. Everything else derives from this. |
+| [`neurodesk-icon-solid.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-solid.svg) | Solid dark box and brain |
+| [`neurodesk-icon-outline.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-outline.svg) | White / outline treatment |
+| [`neurodesk-icon-green-circle.png`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-green-circle.png) | White box and brain in a green circle |
+
+### Favicon set
+
+[`.ico`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon.ico) ·
+[16px](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon-16.png) ·
+[32px](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon-32.png) ·
+[Apple touch](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-apple-touch-icon.png) ·
+[Android 192](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-android-chrome-192.png) ·
+[Android 512](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-android-chrome-512.png) ·
+[Windows tile](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-mstile-150.png) ·
+[Safari pinned tab](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-safari-pinned-tab.svg) ·
+[web manifest](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk.webmanifest)
+
+These are stored under this repository's naming convention rather than the filenames
+browsers expect. Copy them out and rename to whatever your framework wants —
+[`icons/README.md`](https://github.com/neurodesk/media/blob/main/icons/README.md) has the
+mapping.
+
 ## Typography
 
 ### Font families for website
 
-- **Logo:** [Scirich](https://github.com/micmas/Scirich-font)
+- **Logo:** Scirich — see below
 - **Headings:** Pontano
 - **Body text:** Pontano
 - **Code blocks:** Menlo
+
+### Scirich Regular
+
+Scirich is a modified version of [Aldrich](https://fonts.google.com/specimen/Aldrich) by
+Matt McInerney, adapted and renamed by Michèle Masson-Trottier. It is licensed under the
+[SIL Open Font License 1.1](https://raw.githubusercontent.com/neurodesk/media/main/font/LICENSE.txt), as is the original.
+
+- [Download `Scirich-Regular.ttf`](https://raw.githubusercontent.com/neurodesk/media/main/font/Scirich-Regular.ttf) — installable font
+- [Download `Scirich-Regular.sfd`](https://raw.githubusercontent.com/neurodesk/media/main/font/Scirich-Regular.sfd) — FontForge source, for editing
+- Upstream: [micmas/Scirich-font](https://github.com/micmas/Scirich-font)
+
+If you redistribute it, the OFL requires you to include the full licence, avoid the
+reserved name "Aldrich", attribute the original designer, and describe your changes.
 
 When exporting a logo or figure to SVG, convert text to paths so it renders correctly for people who do not have these fonts installed.
 
