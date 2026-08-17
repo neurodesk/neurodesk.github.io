@@ -1559,6 +1559,20 @@ site-search button[data-open-modal] {
 	align-content: start;
 }
 
+.ab-grid-toolbar {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.ab-grid-toolbar-count {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
 .ab-card {
 	border: 1px solid var(--sl-color-gray-5);
 	border-radius: 0.5rem;
@@ -1730,4 +1744,19 @@ site-search button[data-open-modal] {
 
 .ab-empty p {
 	margin-bottom: 0.75rem;
+}
+
+a.add-tool-button {
+	padding: 0.35rem 0.5rem;
+    border: 1px outset var(--sl-color-accent-high);
+    border-radius: 5px;
+    color: var(--sl-color-accent-low);
+    background-color: var(--sl-color-accent);
+    text-decoration: none;
+}
+
+a.add-tool-button:hover {
+	background-color: var(--sl-color-accent-low);
+	color: var(--sl-color-accent-high);
+	border: 2px outset var(--sl-color-accent);
 }

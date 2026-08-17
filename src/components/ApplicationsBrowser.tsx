@@ -126,9 +126,7 @@ function AppCard({ app }: { app: GroupedApp }) {
       </div>
 
       <div className="ab-card-body">
-        {app.description && (
-          <p className="ab-card-desc">{app.description}</p>
-        )}
+        {app.description && <p className="ab-card-desc">{app.description}</p>}
 
         <DetailRow label="Categories">
           <div className="ab-badge-list">
@@ -352,8 +350,19 @@ export default function ApplicationsBrowser() {
             </div>
           </aside>
           <div className="ab-grid">
-            <h3 className="text-md font-semibold">{filtered.length} Tools</h3>
-
+            <div className="ab-grid-toolbar">
+              <h3 className="ab-grid-toolbar-count">
+                {filtered.length} Tools
+              </h3>
+              <a
+                href="/developers/new-tools/"
+                className="add-tool-button"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Suggest new tool
+              </a>
+            </div>
             {filtered.map((app) => (
               <AppCard key={app.name} app={app} />
             ))}
