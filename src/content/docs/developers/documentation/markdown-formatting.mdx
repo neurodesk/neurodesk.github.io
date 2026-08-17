@@ -1,0 +1,279 @@
+---
+title: Markdown and Formatting Reference
+description: Markdown and MDX syntax available when writing Neurodesk documentation pages.
+sidebar:
+  label: Markdown Reference
+  order: 3
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+This page is a reference for the syntax available when writing pages. Keep it open while you write;
+for the contribution process itself see
+[Contribute Content](/developers/documentation/creating-website-content/).
+
+Pages are written in **Markdown** (`.md`) or **MDX** (`.mdx`). MDX is Markdown plus the ability to
+import and use components. Use `.md` unless you need a component, then switch the extension to
+`.mdx` — no other change is required.
+
+## Frontmatter
+
+Every page starts with a frontmatter block. `title` is required; `description` is used for search
+results and social previews and should be filled in.
+
+```yaml
+---
+title: My Page
+description: A short summary of the page.
+sidebar:
+  label: Short Label
+  order: 2
+---
+```
+
+## Text
+
+Text can be **bold**, *italic*, or ~~strikethrough~~, and you can add
+[links](https://neurodesk.org/).
+
+```markdown
+**bold**, *italic*, ~~strikethrough~~, [links](https://neurodesk.org/)
+```
+
+Organise content with headings, starting at level 2 — the page title is the level 1 heading, so a
+page should never contain another `#`.
+
+```markdown
+## Section
+
+### Subsection
+
+#### Smaller subsection
+```
+
+Headings at levels 2 and 3 appear automatically in the "On this page" table of contents.
+
+## Code blocks
+
+Add the language after the opening fence to get syntax highlighting:
+
+````markdown
+```python
+import numpy as np
+a = np.array([1, 2])
+b = np.array([3, 4])
+print(a + b)
+```
+````
+
+Which renders as:
+
+```python
+import numpy as np
+a = np.array([1, 2])
+b = np.array([3, 4])
+print(a + b)
+```
+
+For shell commands use `bash`:
+
+```bash
+ml fsl
+bet input.nii.gz output.nii.gz
+```
+
+For output or plain text with no language, use `text`:
+
+```text
+[4 6]
+```
+
+You can also add inline code snippets, e.g. `var foo = "bar";`, with single backticks.
+
+### Extra code block features
+
+Code blocks support titles, line highlighting, and diff markers:
+
+````markdown
+```python title="example.py" {2}
+a = 1
+b = 2  # this line is highlighted
+```
+````
+
+## Images
+
+Store images in the [`public/`](https://github.com/neurodesk/neurodesk.github.io-astro/tree/main/public)
+directory, mirroring the structure of your content file. Adjust screenshots to a reasonable size
+before committing them.
+
+Anything in `public/` is served from the site root, so **leave `public` out of the path** when you
+link to it:
+
+```markdown
+![filename](/learning-resources/tutorials/subject/tutorial1/filename.png)
+```
+
+For example, an image used by
+`src/content/docs/learning-resources/tutorials/electrophysiology/eeg_mne-python.md` would be stored
+at `public/learning-resources/tutorials/electrophysiology/eeg_mne-python/EEGtut1.png` and referenced
+as:
+
+```markdown
+![EEGtut1](/learning-resources/tutorials/electrophysiology/eeg_mne-python/EEGtut1.png)
+```
+
+Always write meaningful alt text in the square brackets — it is what screen readers announce.
+
+## Asides
+
+Draw attention to important information with asides. Four types are available:
+
+:::note
+This is a note.
+:::
+
+:::tip
+This is a tip.
+:::
+
+:::caution
+This is a caution.
+:::
+
+:::danger
+This is a danger notice.
+:::
+
+```markdown
+:::note
+This is a note.
+:::
+```
+
+Add a custom title in square brackets:
+
+:::note[Why fork the repository?]
+This is a note with a custom title.
+:::
+
+```markdown
+:::note[Why fork the repository?]
+This is a note with a custom title.
+:::
+```
+
+Regular blockquotes still work too:
+
+> This is a quote block.
+
+## Tables
+
+| Neuroscientist         | Notable work                                         | Lifetime   |
+| ---------------------- | ---------------------------------------------------- | ---------- |
+| Santiago Ramón y Cajal | Investigations on microscopic structure of the brain | 1852, 1934 |
+| Rita Levi-Montalcini   | Discovery of nerve growth factor (NGF)               | 1909, 2012 |
+| Anne Treisman          | Feature integration theory of attention              | 1935, 2018 |
+
+```markdown
+| Column | Column |
+| ------ | ------ |
+| Cell   | Cell   |
+```
+
+## Lists
+
+An unordered list:
+
+- Rstudio
+- JASP
+- SPSS
+
+An ordered list:
+
+1. Collect data
+2. Try to install analysis software
+3. Cry a little
+
+A task list:
+
+- [x] Install Neurodesktop
+- [x] Analyse data
+- [ ] Take a vacation
+
+A nested list — indent by two spaces:
+
+- EEG file extensions
+  - `.eeg`, `.vhdr`, `.vmrk`
+  - `.edf`
+  - `.bdf`
+- MEG file extensions
+  - `.ds`
+  - `.fif`
+  - `.sqd`
+
+:::caution[Lists break easily]
+If you need a paragraph, image, or code block *inside* a list item, indent it to line up with the
+item's text. Content placed at the left margin ends the list, and any following numbers restart the
+numbering.
+:::
+
+## Components
+
+These require the `.mdx` extension and an import at the top of the file, below the frontmatter.
+
+### Steps
+
+Numbers a sequence of instructions:
+
+```mdx
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. First do this.
+2. Then do this.
+
+</Steps>
+```
+
+<Steps>
+
+1. First do this.
+2. Then do this.
+
+</Steps>
+
+### Tabs
+
+Useful for per-platform instructions. Give tab groups the same `syncKey` and they switch together:
+
+```mdx
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">macOS instructions</TabItem>
+  <TabItem label="Linux">Linux instructions</TabItem>
+  <TabItem label="Windows">Windows instructions</TabItem>
+</Tabs>
+```
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">macOS instructions</TabItem>
+  <TabItem label="Linux">Linux instructions</TabItem>
+  <TabItem label="Windows">Windows instructions</TabItem>
+</Tabs>
+
+Starlight provides more components — cards, file trees, badges, link buttons — documented in the
+[Starlight components reference](https://starlight.astro.build/components/using-components/).
+
+## Linking between pages
+
+Use root-relative paths with a trailing slash, not relative file paths:
+
+```markdown
+[Local Development](/developers/documentation/local-development/)
+```
+
+Broken internal links fail the production build, so run `pnpm build` before opening a pull request —
+see [Local Development](/developers/documentation/local-development/).
