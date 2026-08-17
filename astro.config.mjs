@@ -211,7 +211,7 @@ export default defineConfig({
 					],
 				},
 				{
-					label: 'Developers',
+					label: 'For developers',
 					collapsed: true,
 					items: [
 						{ label: 'Overview', link: '/developers/' },

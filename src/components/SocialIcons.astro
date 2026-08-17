@@ -3,10 +3,10 @@
 import Default from '@astrojs/starlight/components/SocialIcons.astro';
 
 const links = [
-	{ label: 'Getting Started', href: '/getting-started/', priority: 'low' },
-	{ label: 'Learning Resources', href: '/edu/', priority: 'mid' },
-	{ label: 'Developers', href: '/developers/', priority: 'high' },
-	{ label: 'Contact', href: '/contact/', priority: 'lowest' },
+	{ label: 'Getting started', href: '/getting-started/', priority: 'low' },
+	{ label: 'Learning resources', href: '/edu/', priority: 'mid' },
+	{ label: 'For developers', href: '/developers/', priority: 'high' },
+	{ label: 'Get in touch', href: '/contact/', priority: 'lowest' },
 	{ label: 'GitHub', href: 'https://github.com/NeuroDesk', priority: 'high', external: true },
 ];
 
@@ -34,7 +34,7 @@ const current = Astro.url.pathname;
 	.nav-links {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: 1.75rem;
 	}
 	.nav-links a {
 		color: var(--sl-color-text);
