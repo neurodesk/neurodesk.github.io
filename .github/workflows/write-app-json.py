@@ -1,8 +1,9 @@
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -13,6 +14,9 @@ APPS_JSON_URL = (
     "https://raw.githubusercontent.com/neurodesk/neurocommand/refs/heads/main/neurodesk/apps.json"
 )
 ZENODO_DEPOSITIONS_URL = "https://zenodo.org/api/deposit/depositions"
+README_BASE_URL = (
+    "https://raw.githubusercontent.com/neurodesk/neurocontainers/main/recipes"
+)
 CONNECT_TIMEOUT_SECONDS = 5
 READ_TIMEOUT_SECONDS = 30
 
@@ -54,6 +58,89 @@ def fetch_apps_menu_entries(session: requests.Session) -> Dict:
         return response.json()
     except ValueError as exc:
         raise Exception("Failed to decode apps.json response as JSON.") from exc
+
+
+def fetch_app_descriptions(session: requests.Session, app_names: List[str]) -> Dict[str, str]:
+    """
+    Fetch README.md from neurocontainers/recipes/{app}/ for each unique app
+    name and extract the description paragraph(s) after the section title.
+
+    Returns a dict mapping app name -> description string.
+    """
+    descriptions: Dict[str, str] = {}
+    for name in app_names:
+        url = f"{README_BASE_URL}/{name}/README.md"
+        try:
+            resp = session.get(
+                url, timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS)
+            )
+            if resp.status_code == 404:
+                continue
+            resp.raise_for_status()
+        except requests.RequestException:
+            continue
+
+        desc = parse_readme_description(resp.text)
+        if desc:
+            descriptions[name] = desc
+
+    print(
+        f"Fetched descriptions for {len(descriptions)}/{len(app_names)} apps",
+        flush=True,
+    )
+    return descriptions
+
+
+def parse_readme_description(readme_text: str) -> Optional[str]:
+    """
+    Extract the description from a neurocontainers README.md.
+
+    The format is:
+        ----------------------------------
+        ## app/version ##
+        Description paragraph(s) here.
+
+        Example:
+        ```
+        ...
+        ```
+
+    We capture lines after the ``## ... ##`` title until we hit a line that
+    starts a new section (``Example:``, ``---``, a code fence, ``More
+    documentation``, ``To setup``, ``Licensing``, or another ``## ``).
+    """
+    lines = readme_text.splitlines()
+
+    # Find the section-title line (## ... ##)
+    start = None
+    for i, line in enumerate(lines):
+        if re.match(r"^##\s+.+\s+##\s*$", line):
+            start = i + 1
+            break
+
+    if start is None:
+        return None
+
+    # Stop markers: things that typically end the description block
+    stop_pattern = re.compile(
+        r"^(##\s|```|Example|---+$|More documentation|To setup|Licensing|Usage)",
+        re.IGNORECASE,
+    )
+
+    desc_lines: List[str] = []
+    for line in lines[start:]:
+        stripped = line.strip()
+        if stop_pattern.match(stripped):
+            break
+        desc_lines.append(stripped)
+
+    # Trim leading/trailing blank lines, collapse to single string
+    text = "\n".join(desc_lines).strip()
+    # Collapse multiple blank lines into one space for a compact description
+    text = re.sub(r"\n{2,}", " ", text)
+    text = re.sub(r"\n", " ", text)
+    text = re.sub(r"\s{2,}", " ", text)
+    return text if text else None
 
 
 def get_deposition_license(deposition: Dict) -> str:
@@ -177,11 +264,15 @@ def write_to_file(zenodo_token, filename):
     app_list = get_apps(menu_entries)
     print(f"Found {len(app_list)} apps in neurocommand/apps.json", flush=True)
 
-    # Write application, categories, doi, and doi_url to applist.json file
+    # Collect unique app names and fetch their README descriptions
+    unique_app_names = sorted(set(app.rsplit("_", 2)[0] for app in app_list))
+    descriptions = fetch_app_descriptions(session, unique_app_names)
+
+    # Write application, categories, doi, doi_url, and description to applist.json
     val = []
     for app in app_list:
-
-        categories = get_app_categories(menu_entries, app.split("_")[0])
+        app_name = app.rsplit("_", 2)[0]
+        categories = get_app_categories(menu_entries, app_name)
 
         found_doi = False
         for deposition in all_depositions:
@@ -203,11 +294,16 @@ def write_to_file(zenodo_token, filename):
                 entry = {"application": app, "categories": categories, "doi": doi, "doi_url": doi_url}
                 if license_id:
                     entry["license"] = license_id
+                if app_name in descriptions:
+                    entry["description"] = descriptions[app_name]
                 val.append(entry)
                 found_doi = True
                 break
         if not found_doi:
-            val.append({"application": app, "categories": categories})
+            entry = {"application": app, "categories": categories}
+            if app_name in descriptions:
+                entry["description"] = descriptions[app_name]
+            val.append(entry)
     print(f"Writing {len(val)} entries to {filename}", flush=True)
     my_dict = {"list": val}
     with open(filename, "w") as fp:

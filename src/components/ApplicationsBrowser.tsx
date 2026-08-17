@@ -6,6 +6,7 @@ interface AppListEntry {
   doi?: string;
   doi_url?: string;
   license?: string;
+  description?: string;
 }
 
 interface AppVersion {
@@ -18,6 +19,7 @@ interface AppVersion {
 
 interface GroupedApp {
   name: string;
+  description?: string;
   categories: string[];
   versions: AppVersion[];
 }
@@ -27,11 +29,9 @@ function parseApplication(entry: AppListEntry): {
   version: string;
   buildDate: string;
 } {
-  const parts = entry.application.rsplit
-    ? entry.application.split("_")
-    : entry.application.split("_");
+  const parts = entry.application.split("_");
 
-  // Format: name_version_YYYYMMDD — use rsplit logic (last 2 segments)
+  // Format: name_version_YYYYMMDD — last 2 segments are version and build date
   if (parts.length >= 3) {
     const buildDateRaw = parts[parts.length - 1];
     const version = parts[parts.length - 2];
@@ -75,6 +75,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
     } else {
       map.set(name, {
         name,
+        description: entry.description,
         categories: [...entry.categories],
         versions: [versionEntry],
       });
@@ -125,6 +126,10 @@ function AppCard({ app }: { app: GroupedApp }) {
       </div>
 
       <div className="ab-card-body">
+        {app.description && (
+          <p className="ab-card-desc">{app.description}</p>
+        )}
+
         <DetailRow label="Categories">
           <div className="ab-badge-list">
             {app.categories.length > 0 ? (
@@ -250,6 +255,7 @@ export default function ApplicationsBrowser() {
         const q = searchQuery.toLowerCase();
         const searchable = [
           app.name,
+          app.description || "",
           ...app.categories,
           ...app.versions.map((v) => v.version),
         ]
