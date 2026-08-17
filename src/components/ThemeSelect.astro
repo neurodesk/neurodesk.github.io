@@ -1,7 +1,5 @@
 ---
-// Replaces Starlight's dropdown theme picker with a single button that cycles
-// auto → light → dark. Reuses the same `starlight-theme` localStorage key and
-// theme-application logic so it stays compatible with Starlight's FOUC guard.
+// Starlight ThemeSelect override: single button cycling auto → light → dark.
 import { Icon } from '@astrojs/starlight/components';
 ---
 
@@ -46,13 +44,11 @@ import { Icon } from '@astrojs/starlight/components';
         btn.setAttribute('aria-label', `Theme: ${labels[theme]}. Click to change.`);
       }
     });
-    // Keep any default Starlight pickers in sync (no-op if none present).
     if ((window as any).StarlightThemeProvider) {
       (window as any).StarlightThemeProvider.updatePickers(theme);
     }
   }
 
-  // React to system colour-scheme changes while in auto mode.
   matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
     if (loadTheme() === 'auto') applyTheme('auto');
   });
@@ -88,7 +84,6 @@ import { Icon } from '@astrojs/starlight/components';
     color: var(--sl-color-white);
     background-color: var(--sl-color-gray-6);
   }
-  /* Show only the icon for the current preference. */
   theme-toggle svg {
     display: none;
   }
@@ -97,7 +92,6 @@ import { Icon } from '@astrojs/starlight/components';
   theme-toggle[data-theme-pref='dark'] svg.dark {
     display: inline-block;
   }
-  /* Sensible default before JS sets the preference attribute. */
   theme-toggle:not([data-theme-pref]) svg.auto {
     display: inline-block;
   }
