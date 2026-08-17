@@ -6,4 +6,33 @@ sidebar:
   order: 0
 ---
 
-This section covers how to contribute to the Neurodesk documentation: writing new content, running the site locally, and configuring search indexing.
+import { Steps } from '@astrojs/starlight/components';
+
+This section covers how to contribute to the Neurodesk documentation. The site is built with
+[Astro](https://docs.astro.build/) and the [Starlight](https://starlight.astro.build/) theme, and
+pages are written in Markdown or MDX under `src/content/docs/`.
+
+## Where to start
+
+The pages below are ordered the way you will need them:
+
+<Steps>
+
+1. **[Contribute Content](/developers/documentation/creating-website-content/)** — fork the
+   repository, create a branch, write your page, and open a pull request. Start here.
+
+2. **[Local Development](/developers/documentation/local-development/)** — install Node.js and pnpm
+   and run the site on your machine so you can preview changes as you write.
+
+3. **[Markdown Reference](/developers/documentation/markdown-formatting/)** — the syntax and
+   components available when writing a page. Keep this open while you work.
+
+</Steps>
+
+[Indexing with Algolia](/developers/documentation/algolia-indexing/) covers site search
+configuration. That is a maintainer task and is not needed to contribute content.
+
+## Just fixing a typo?
+
+You do not need any of this. Open the page on GitHub, click the pencil icon, make your change, and
+propose it as a pull request from the browser.

@@ -120,6 +120,7 @@ export default defineConfig({
 		'/tutorials/tutorial-template': '/developers/documentation/creating-website-content/',
 		'/docs/getting-started/local': '/getting-started/app/',
 		'/docs/getting-started/local/neurodeskapp': '/getting-started/app/neurodeskapp/',
+		'/developers/documentation/local-hugo-docsy': '/developers/documentation/local-development/',
 	},
 	integrations: [
 		starlight({

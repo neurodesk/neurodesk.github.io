@@ -1,0 +1,342 @@
+---
+title: Running the Neurodesk Site Locally (Astro + Starlight)
+description: How to preview and edit the Neurodesk website on your own machine.
+sidebar:
+  label: Local Development
+  order: 2
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+The Neurodesk website is built with [Astro](https://docs.astro.build/) using the
+[Starlight](https://starlight.astro.build/) documentation theme. This page covers how to run it
+locally so you can preview your changes before opening a pull request.
+
+:::note[Clone the repository first]
+This page assumes you already have a local copy of the repository. If you do not,
+[Contribute Content](/developers/documentation/creating-website-content/) covers forking, cloning,
+and branching — do that first, then come back here.
+:::
+
+## 1. Prerequisites
+
+- [Node.js](https://nodejs.org/) 20 or newer
+- [pnpm](https://pnpm.io/installation) — the package manager this project uses
+
+Install Node.js **first**: pnpm is a Node program and will fail with `env: node: No such file or
+directory` if no runtime is present.
+
+### Installing Node.js
+
+Check what you already have:
+
+```bash
+node --version
+```
+
+If that prints `v20` or higher, skip to [Installing pnpm](#installing-pnpm). If it prints
+`command not found`, install Node using whichever option suits your system:
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">
+    With [Homebrew](https://brew.sh/):
+
+    ```bash
+    brew install node
+    ```
+
+    Without Homebrew, download the macOS LTS installer from
+    [nodejs.org](https://nodejs.org/) and run it.
+  </TabItem>
+  <TabItem label="Linux">
+    Your distribution's package may be older than Node 20. Check first:
+
+    ```bash
+    # Debian / Ubuntu
+    sudo apt install nodejs npm
+
+    # Fedora
+    sudo dnf install nodejs
+    ```
+
+    If the packaged version is too old, use [nvm](https://github.com/nvm-sh/nvm), which installs
+    Node into your home directory and lets you switch versions per project:
+
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    # then open a new terminal
+    nvm install 20
+    nvm use 20
+    ```
+  </TabItem>
+  <TabItem label="Windows">
+    With [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/):
+
+    ```powershell
+    winget install OpenJS.NodeJS.LTS
+    ```
+
+    Otherwise download the Windows LTS installer from [nodejs.org](https://nodejs.org/).
+  </TabItem>
+</Tabs>
+
+### Installing pnpm
+
+Try Corepack first — it ships with some Node builds and pins pnpm per project:
+
+```bash
+corepack enable
+corepack prepare pnpm@latest --activate
+```
+
+If that reports `command not found`, Corepack is not bundled with your Node build. Use one of these
+instead — **pick a single method**, not several:
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">
+    With Homebrew:
+
+    ```bash
+    brew install pnpm
+    ```
+
+    Or the standalone installer:
+
+    ```bash
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+    ```
+  </TabItem>
+  <TabItem label="Linux">
+    The standalone installer:
+
+    ```bash
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+    ```
+
+    Or, if you already have npm:
+
+    ```bash
+    npm install -g pnpm
+    ```
+  </TabItem>
+  <TabItem label="Windows">
+    In PowerShell:
+
+    ```powershell
+    Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression
+    ```
+
+    Or with winget:
+
+    ```powershell
+    winget install pnpm.pnpm
+    ```
+  </TabItem>
+</Tabs>
+
+:::caution[Reload your shell afterwards]
+Every one of these methods changes your `PATH`, and the change only applies to **new** terminal
+sessions. Either open a new terminal, or reload your current one:
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">
+    ```bash
+    source ~/.zshrc   # or ~/.bashrc if you use bash
+    ```
+  </TabItem>
+  <TabItem label="Linux">
+    ```bash
+    source ~/.bashrc  # or ~/.zshrc if you use zsh
+    ```
+  </TabItem>
+  <TabItem label="Windows">
+    Close and reopen PowerShell.
+  </TabItem>
+</Tabs>
+:::
+
+:::note
+The standalone installer bundles its own Node runtime; Homebrew, winget, and npm do not. Installing
+pnpm through more than one method leaves duplicate copies on your `PATH` — harmless, but pick one if
+you want to keep things tidy.
+:::
+
+Verify both before continuing:
+
+```bash
+node --version
+pnpm --version
+```
+
+Only move on once both print a version number. Run the remaining commands one at a time — if you
+paste them as a block, later commands run before the earlier ones have finished.
+
+## 2. Install dependencies
+
+From the root of your cloned repository:
+
+```bash
+pnpm install
+```
+
+This reads `pnpm-lock.yaml` and installs the exact dependency versions the site is built with. You
+only need to repeat this when dependencies change (for example after pulling in a branch that
+updates `package.json`).
+
+## 3. Start the dev server
+
+```bash
+pnpm dev
+```
+
+Your local site will be available at [http://localhost:4321](http://localhost:4321).
+
+The dev server watches your files and hot-reloads the browser as you save, so you can keep it
+running while you edit. Press `Ctrl+C` in the terminal to stop it (this is `Ctrl+C` on macOS too,
+not `Cmd+C`).
+
+:::tip
+If port 4321 is already in use, start the server on a different port with
+`pnpm dev --port 4322`.
+:::
+
+## 4. Build and preview the production site
+
+Before opening a pull request, it is worth confirming that the site builds cleanly. The dev server
+is more forgiving than the production build, so this step catches broken links and invalid
+frontmatter that you would otherwise only see in CI.
+
+<Steps>
+
+1. Build the static site into `dist/`:
+
+   ```bash
+   pnpm build
+   ```
+
+2. Serve that build locally:
+
+   ```bash
+   pnpm preview
+   ```
+
+3. Open the URL printed in your terminal and check your pages.
+
+</Steps>
+
+If the build fails, the error message names the file and line to fix. Common causes are a broken
+internal link, a missing image in `public/`, or an MDX component that was used without being
+imported. See the [Markdown Reference](/developers/documentation/markdown-formatting/) for correct
+syntax.
+
+## 5. Where things live
+
+| Path | Contents |
+| ---- | -------- |
+| `src/content/docs/` | All documentation pages (`.md` and `.mdx`). The file path becomes the URL. |
+| `src/components/` | Reusable Astro and React components used inside pages. |
+| `src/styles/` | Custom CSS layered on top of the Starlight theme. |
+| `public/` | Static assets served as-is: images, icons, downloads. |
+| `astro.config.mjs` | Site config, sidebar structure, and redirects. |
+
+## 6. Adding a page to the sidebar
+
+Most sections of the sidebar are generated automatically from the directory structure in
+`astro.config.mjs`, so a new file in an existing folder appears without any extra configuration.
+Control its position and label from the page's own frontmatter:
+
+```yaml
+---
+title: My New Page
+description: A short summary used for search results and social previews.
+sidebar:
+  label: Short Label
+  order: 2
+---
+```
+
+If you add a whole new top-level section, add it to the `sidebar` array in `astro.config.mjs`.
+
+## 7. Changing a page's URL
+
+The URL of a page follows its path under `src/content/docs/`. If you rename or move a file, add an
+entry to the `redirects` map in `astro.config.mjs` so existing links keep working:
+
+```js
+redirects: {
+  '/old/path': '/new/path/',
+}
+```
+
+## Troubleshooting
+
+**`env: node: No such file or directory`** (or `'node' is not recognized` on Windows) — pnpm is
+installed but Node.js is not. pnpm cannot run without a Node runtime; see
+[Installing Node.js](#installing-nodejs) above.
+
+**`pnpm: command not found`** — pnpm is not installed, or it is installed but not yet on your
+`PATH`. Work through [Installing pnpm](#installing-pnpm), then open a new terminal so the updated
+`PATH` takes effect.
+
+**`corepack: command not found`** — Corepack is not bundled with your Node build. This is expected
+on Homebrew and some distro builds; use one of the other pnpm install methods instead.
+
+**Install fails with an engine or version error** — check `node --version`. Node 20 or newer is
+required; older releases will fail on some dependencies.
+
+**Changes do not appear in the browser** — stop the dev server, delete the Astro cache, and start
+again:
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">
+    ```bash
+    rm -rf node_modules/.astro
+    pnpm dev
+    ```
+  </TabItem>
+  <TabItem label="Linux">
+    ```bash
+    rm -rf node_modules/.astro
+    pnpm dev
+    ```
+  </TabItem>
+  <TabItem label="Windows">
+    ```powershell
+    Remove-Item -Recurse -Force node_modules\.astro
+    pnpm dev
+    ```
+  </TabItem>
+</Tabs>
+
+**A stale or corrupted install** — remove and reinstall dependencies:
+
+<Tabs syncKey="os">
+  <TabItem label="macOS">
+    ```bash
+    rm -rf node_modules
+    pnpm install
+    ```
+  </TabItem>
+  <TabItem label="Linux">
+    ```bash
+    rm -rf node_modules
+    pnpm install
+    ```
+  </TabItem>
+  <TabItem label="Windows">
+    ```powershell
+    Remove-Item -Recurse -Force node_modules
+    pnpm install
+    ```
+  </TabItem>
+</Tabs>
+
+**`pnpm install` fails with a permissions error** — you may be running it outside the repository, or
+in a directory you do not own. Confirm you are in the repository root (the folder containing
+`package.json`) and that you own it. Do not run `pnpm install` with `sudo`.
+
+## Need help?
+
+If you get stuck, open a
+[discussion](https://github.com/orgs/neurodesk/discussions) or an
+[issue](https://github.com/neurodesk/neurodesk.github.io-astro/issues) and we will help you out.

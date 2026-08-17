@@ -1,34 +1,46 @@
 ---
 title: Contribute to Neurodesk.org
-description: A brief guide for contributing new content in Markdown through GitHub.
+description: How to propose new content or changes to the Neurodesk website through GitHub.
 sidebar:
   label: Contribute Content
-  order: 2
+  order: 1
 ---
 
 import { Steps } from '@astrojs/starlight/components';
 
-This applies if you wish to submit a new tutorial or amend content on a page. Our website is mostly written in Markdown (`.md` files). We include the basics of writing in Markdown on this page.
+This page walks through the process of submitting a new tutorial or amending an existing page, from
+forking the repository to opening a pull request.
 
-## Table of contents
+Two companion pages cover the details:
 
-- [Create your own copy of *neurodesk/neurodesk.github.io* repository](#create-your-own-copy-of-neurodeskneurodeskgithubio-repository-where-you-will-be-able-to-make-modifications)
-- [Create your content or make your modifications](#create-your-content-or-make-your-modifications)
-- [Contribute your new content to the official documentation](#contribute-your-new-content-to-the-official-documentation)
-- [Formatting guidelines](#formatting-guidelines)
-- [Code blocks](#code-blocks)
-- [Images](#images)
-- [Alerts and warnings](#alerts-and-warnings)
-- [Tables](#tables)
-- [Lists](#lists)
+- [Local Development](/developers/documentation/local-development/) — install the tools and preview
+  the site in your browser.
+- [Markdown Reference](/developers/documentation/markdown-formatting/) — the syntax and components
+  available when writing a page.
 
-### Create your own copy of *neurodesk/neurodesk.github.io* repository where you will be able to make modifications
+## The short version
+
+If you have contributed to a GitHub project before, this will be familiar:
+
+<Steps>
+
+1. Fork [neurodesk.github.io-astro](https://github.com/neurodesk/neurodesk.github.io-astro) and clone your fork.
+2. Create a branch.
+3. Add or edit pages under `src/content/docs/`, and images under `public/`.
+4. Preview with `pnpm dev`.
+5. Commit, push, and open a pull request.
+
+</Steps>
+
+The rest of this page explains each step.
+
+## 1. Fork the repository
 
 Begin by creating a copy of our documentation that you can edit:
 
 <Steps>
 
-1. Visit the GitHub repository for the [Neurodesk documentation](https://github.com/neurodesk/neurodesk.github.io).
+1. Visit the GitHub repository for the [Neurodesk documentation](https://github.com/neurodesk/neurodesk.github.io-astro).
 2. [**Fork**](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the repository.
 
 </Steps>
@@ -43,276 +55,157 @@ You will now have your own copy of the documentation that you can alter without 
 
 ![Sync status](/learning-resources/tutorials/tutorial-template/3_synced.png)
 
----
+## 2. Clone your fork
 
-### Create your content or make your modifications
+[**Clone**](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)
+your fork to a location of your choice. This step is the same on macOS, Windows, and Linux.
 
-1. [**Clone**](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) your forked version of our documentation to a location of your choice on your computer.
-
-This step is the same for macOS, Windows, and Linux.
-
-#### Using SSH
+Using SSH:
 
 ```bash
-git clone --recurse-submodules git@github.com:neurodesk/neurodesk.github.io.git
+git clone git@github.com:<your-username>/neurodesk.github.io-astro.git
 ```
 
-#### Using HTTPS
+Or using HTTPS:
 
 ```bash
-git clone --recurse-submodules https://github.com/neurodesk/neurodesk.github.io.git
-```
-
-#### If you cloned without --recurse-submodules
-
-Run the following command to pull submodules:
-
-```bash
-git submodule update --init --recursive --remote
+git clone https://github.com/<your-username>/neurodesk.github.io-astro.git
 ```
 
 The URL for the repository can be copied by clicking on the button highlighted below:
 
 ![Repo URL](/learning-resources/tutorials/tutorial-template/4_clone.png)
 
-2. Now, you can open your copy of `neurodesk.github.io` using the editor of your choice (we recommend [VS Code](https://code.visualstudio.com/)). Before making changes to the current repository, the best practice is to create a new [branch](https://www.atlassian.com/git/tutorials/using-branches) to avoid version conflicts.
+Open your copy using the editor of your choice — we recommend
+[VS Code](https://code.visualstudio.com/).
 
-   - Create a branch:
+## 3. Create a branch
 
-     ```bash
-     git branch tutorial-template
-     ```
-
-   - Check out the branch you want to use for the addition or changes you'd like to make:
-
-     ```bash
-     git checkout tutorial-template
-     ```
-
-   - Confirm you are in the right branch:
-
-     ```bash
-     git branch
-     ```
-
-   ![Branch check](/learning-resources/tutorials/tutorial-template/5_branch.png)
-
-3. Within your cloned environment, navigate to where you'd like to make your changes.
-
-   For example, if you'd like to create new tutorial content, go to `neurodesk.github.io/content/en/tutorials-examples/tutorials/` and then navigate to the subfolder you believe your tutorial belongs in (e.g. `/functional_imaging`).
-
-4. Create a new, appropriately named Markdown file to house your content (e.g. for a tutorial about physiology, you might call it `physio.md`). Images need to be stored in the [`/static`](https://github.com/neurodesk/neurodesk.github.io/tree/main/static) directory. Please mirror the same directory structure as for your Markdown files.
-
-5. Open this file and populate it with your content. You're also welcome to look at other tutorials already documented on our website for inspiration.
-
----
-
-### Contribute your new content to the official documentation
+Before making changes, create a new [branch](https://www.atlassian.com/git/tutorials/using-branches)
+so your work stays separate from `main`. Name it after what you are doing.
 
 <Steps>
 
-1. Once you are happy with your content, to avoid merge conflicts, rebase your branch with the *main* branch, which should be synced with *neurodesk/neurodesk.github.io:main* (on GitHub check if your repo is synced and locally checkout the *main* branch and run `git pull`).
+1. Create and switch to the branch in one command:
+
+   ```bash
+   git checkout -b tutorial-template
+   ```
+
+2. Confirm you are on it — the current branch is marked with an asterisk:
+
+   ```bash
+   git branch
+   ```
+
+   ![Branch check](/learning-resources/tutorials/tutorial-template/5_branch.png)
+
+</Steps>
+
+## 4. Set up the local preview
+
+Install the tools and start the dev server so you can see your changes as you write. Full
+instructions, including how to install Node.js and pnpm, are in
+[Local Development](/developers/documentation/local-development/).
+
+Once set up, it is two commands:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Leave the server running at [http://localhost:4321](http://localhost:4321) while you work; it
+reloads as you save.
+
+## 5. Write your content
+
+<Steps>
+
+1. Navigate to where your content belongs. All pages live under `src/content/docs/`, and a file's
+   path there becomes its URL.
+
+   For example, a new tutorial goes in `src/content/docs/learning-resources/tutorials/`, inside the
+   subfolder that best fits your topic (e.g. `/functional-imaging`).
+
+2. Create an appropriately named file — for a tutorial about physiology, `physio.md`. Use the `.mdx`
+   extension instead if you want to use components such as `<Steps>` or `<Tabs>`.
+
+3. Add frontmatter at the very top of the file:
+
+   ```yaml
+   ---
+   title: My Tutorial
+   description: A short summary used for search results and social previews.
+   ---
+   ```
+
+4. Write your content. See the
+   [Markdown Reference](/developers/documentation/markdown-formatting/) for the available syntax, and
+   look at existing tutorials for inspiration.
+
+5. Store any images in `public/`, mirroring the folder structure of your content file. Reference
+   them without the `public` prefix, e.g. `/learning-resources/tutorials/my-tutorial/image.png`.
+
+</Steps>
+
+## 6. Open a pull request
+
+<Steps>
+
+1. Confirm the site still builds. This catches broken links and invalid frontmatter that the dev
+   server tolerates:
+
+   ```bash
+   pnpm build
+   ```
+
+2. To avoid merge conflicts, bring your branch up to date with `main` (on GitHub check that your
+   fork is synced, then locally check out `main` and run `git pull`):
 
    ```bash
    git rebase main
    ```
 
-   You might have to correct some merge conflicts, but [VS Code](https://learn.microsoft.com/en-us/visualstudio/version-control/git-resolve-conflicts?view=vs-2022) makes it easy.
+   You might have to resolve some merge conflicts, but [VS Code](https://learn.microsoft.com/en-us/visualstudio/version-control/git-resolve-conflicts?view=vs-2022) makes it easy.
 
-2. [Commit](https://github.com/git-guides/git-commit) all your changes and [push](https://github.com/git-guides/git-push) these local commits to GitHub.
+3. [Commit](https://github.com/git-guides/git-commit) your changes and
+   [push](https://github.com/git-guides/git-push) them to GitHub:
 
-3. Navigate to your forked version of the repository on GitHub and switch branches for the one with your additions.
+   ```bash
+   git add .
+   git commit -m "Document PhysIO tutorial"
+   git push origin tutorial-template
+   ```
+
+4. Navigate to your fork on GitHub and switch to the branch with your additions.
 
    ![Switching branches](/learning-resources/tutorials/tutorial-template/6_switchbranch.png)
 
-4. Now, you can preview the changes before contributing them upstream. For this, if this is your first time to run the Action build, click on the "Actions" tab and enable the Actions ("I understand my tutorials..."). You can run the workflow by clicking on each of them in the left sidebar.
-
-   ![Run GitHub workflow](/learning-resources/tutorials/tutorial-template/7_run_github_workflow.png)
-
-5. Then you need to open the settings of the repository and check that Pages points to `gh-pages`, and when clicking on the link, the site should be there.
-
-6. To contribute your changes, click "Compare & pull request" and then ["Create pull request"](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
+5. Click "Compare & pull request", then ["Create pull request"](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
 
    ![Contribute](/learning-resources/tutorials/tutorial-template/8_contribute.png)
 
-7. Give your pull request a title (e.g. "Document PhysIO tutorial"), leave a comment briefly describing what you have done, and then create the pull request.
+6. Give your pull request a title (e.g. "Document PhysIO tutorial"), leave a comment briefly
+   describing what you have done, and create it.
 
-8. Someone from the Neurodesk team will review and accept your changes, which will appear on our website soon.
+7. Someone from the Neurodesk team will review your changes, and they will appear on our website
+   once merged.
 
 </Steps>
 
+:::note[Contributing without a local setup]
+Small changes — fixing a typo, correcting a link — can be made entirely in the GitHub web interface
+using the pencil icon on any page's source file, without cloning anything. You will not get a
+rendered preview this way, so keep such edits small and let the reviewer check the result.
+:::
+
 Thanks so much for taking the time to contribute content to the Neurodesk community. If you have any feedback on the process, please let us know on [GitHub discussions](https://github.com/orgs/neurodesk/discussions).
-
----
-
-### Formatting guidelines
-
-As seen throughout this tutorial, you can embellish your text using Markdown conventions; text can be **bold**, *italic*, or ~~strikethrough~~. You can also add [links](https://neurodesk.org/), and you can organise your content with headers, starting at level 2 (the page title is a level 1 header):
-
-## Level 2 heading
-
-You can also include progressively smaller subheadings:
-
-### Level 3 heading
-
-Some more detailed information.
-
-#### Level 4 heading
-
-Even more detailed information.
-
-### Code blocks
-
-You can add code blocks to your content as follows:
-
-```none
-# Some example code
-import numpy as np
-a = np.array([1, 2])
-b = np.array([3, 4])
-print(a+b)
-```
-
-Or add syntax highlighting to your code blocks:
-
-```go
-# Some example code
-import numpy as np
-a = np.array([1, 2])
-b = np.array([3, 4])
-print(a+b)
-```
-
-Advanced code or command line formatting:
-
-```bash
-# Some example code
-import numpy as np
-a = np.array([1, 2])
-b = np.array([3, 4])
-print(a+b)
-[4 6]
-```
-
-You can also add code snippets, e.g. `var foo = "bar";`, which will be shown inline.
-
----
-
-### Images
-
-To add screenshots and images to your content, create a subfolder in [`/static`](https://github.com/neurodesk/neurodesk.github.io/tree/main/static) with the same file structure as in your content Markdown file. Add your screenshot to this folder, keeping in mind that you may want to adjust your screenshot to a reasonable size before uploading. You can then embed these images in your tutorial using the following convention:
-
-For a `filename.png` in a `/content/en/tutorials-examples/subject/tutorial1/markdownfile.md` use:
-
-```markdown
-![filename](/static/...<fullpathhere>.../filename.png 'filename')
-```
-
-For example, `EEGtut1.png` in `/content/en/tutorials-examples/tutorials/electrophysiology/eeg_mne-python.md` would be:
-
-```markdown
-![EEGtut1](/static/learning-resources/tutorials/electrophysiology/eeg_mne-python/EEGtut1.png 'EEGtut1')
-```
-
----
-
-### Alerts and warnings
-
-You can grab the reader's attention to particularly important information with quote blocks, alerts, and warnings:
-
-> This is a quote block.
-
-:::note
-This is an alert.
-:::
-
-:::note[Note]
-This is an alert with a title.
-:::
-
-:::caution
-This is a warning.
-:::
-
-:::caution[Warning]
-This is a warning with a title.
-:::
-
-You can also segment information as follows:
-
----
-
-There's a horizontal rule above and below this.
-
----
-
-Or add page information:
-
-:::note
-This is a placeholder. Replace it with your own content.
-:::
-
----
-
-### Tables
-
-You may want to order information in a table as follows:
-
-| Neuroscientist           | Notable work                                         | Lifetime    |
-| ------------------------ | ---------------------------------------------------- | ----------- |
-| Santiago Ramón y Cajal   | Investigations on microscopic structure of the brain | 1852, 1934  |
-| Rita Levi-Montalcini     | Discovery of nerve growth factor (NGF)               | 1909, 2012  |
-| Anne Treisman            | Feature integration theory of attention              | 1935, 2018  |
-
----
-
-### Lists
-
-You may want to organise information in a list as follows.
-
-Here is an unordered list:
-
-- Rstudio
-- JASP
-- SPSS
-
-And an ordered list:
-
-1. Collect data
-2. Try to install analysis software
-3. Cry a little
-
-And an unordered task list:
-
-- [x] Install Neurodesktop
-- [x] Analyse data
-- [ ] Take a vacation
-
-And a "mixed" task list:
-
-- [ ] writing
-- ?
-- [ ] more writing probably
-
-And a nested list:
-
-- EEG file extensions
-  - `.eeg`, `.vhdr`, `.vmrk`
-  - `.edf`
-  - `.bdf`
-  - `.set`, `.fdt`
-  - `.smr`
-- MEG file extensions
-  - `.ds`
-  - `.fif`
-  - `.sqd`
-  - `.raw`
-  - `.kdf`
 
 ## Need help?
 
 If you have questions or would like feedback before submitting:
 
-- Open a [discussion](https://github.com/neurodesk/neurodesk.github.io/discussions)
+- Open a [discussion](https://github.com/orgs/neurodesk/discussions)
 
 We appreciate your contribution to the Neurodesk community and reproducible science.
