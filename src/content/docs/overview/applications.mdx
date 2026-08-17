@@ -3,6 +3,8 @@ title: Applications
 description: List of applications included in Neurodesk.
 ---
 
+import ApplicationsBrowser from '../../../components/ApplicationsBrowser.tsx';
+
 Below is a list of the neurocontainer applications included in the most recent Neurodesk release.
 
 To use these applications through the Neurodesk platform, find the correct instructions for getting started by selecting your computing environment details in the widget on our [home page](https://neurodesk.org#startup).
@@ -23,6 +25,4 @@ For more information on data synchronisation, visit our [Storage section](/getti
 For guides and tutorials, refer to the respective [tutorials and examples](/edu/).
 :::
 
-:::caution[Applications list]
-The interactive applications list widget from the Hugo site has not yet been ported. In the meantime, view the full list on the [live site](/applications/).
-:::
+<ApplicationsBrowser client:load />
