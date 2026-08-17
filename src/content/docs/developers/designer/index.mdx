@@ -6,6 +6,8 @@ sidebar:
   order: 5
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 # Neurodesk Design Style Guide
 
 This style guide provides clear standards to ensure visual consistency across all Neurodesk platforms and materials.
@@ -14,9 +16,48 @@ This style guide provides clear standards to ensure visual consistency across al
 
 Neurodesk is a community-oriented open-source solution for neuroimaging analysis with four guiding principles: accessibility, portability, flexibility and, overarchingly, reproducibility. This guide ensures visual consistency across all Neurodesk products and documentation.
 
+## Where these files live
+
+All Neurodesk visual assets are stored in the [`neurodesk/media`](https://github.com/neurodesk/media) repository, which is the single source of truth. This page explains how to use them; the repository holds the files themselves.
+
+If an asset is missing, or you need a variant that doesn't exist, [open an issue](https://github.com/neurodesk/media/issues/new/choose) rather than editing an existing file.
+
+## Licensing and permitted use
+
+Two different sets of terms apply, and the distinction matters.
+
+| What | Terms |
+|---|---|
+| Figures, diagrams, and screenshots | [CC BY 4.0](https://github.com/neurodesk/media/blob/main/LICENSE) — reuse freely with attribution |
+| The Neurodesk **name and logo** | Project marks — **not** CC BY |
+
+Attribution string: `Neurodesk (https://neurodesk.org), CC BY 4.0`
+
+### You may, without asking
+
+- Use an unmodified logo to link to neurodesk.org or a Neurodesk repository.
+- Use an unmodified logo in slides, posters, papers, or blog posts that describe, teach, review, or cite Neurodesk.
+- State truthfully that your tool, pipeline, or course uses or supports Neurodesk.
+- Scale the logo proportionally, and choose whichever variant reads best on your background.
+
+### Please ask first
+
+Open an issue on [`neurodesk/media`](https://github.com/neurodesk/media/issues/new/choose), or email [mail.neurodesk@gmail.com](mailto:mail.neurodesk@gmail.com), before you:
+
+- Change the logo's colours, proportions, typography, or artwork.
+- Combine it with another mark into a new lockup.
+- Use it on merchandise, event branding, or in a domain name.
+- Use it in a way that could imply Neurodesk endorses or certifies your product.
+
+Neurodesk is a community project and generally says yes — asking is mostly so we know it is happening.
+
+Full detail is in [BRAND.md](https://github.com/neurodesk/media/blob/main/BRAND.md).
+
 ## Logo usage
 
-Below are official Neurodesk logos available for download. Please refer to the examples below for acceptable usage.
+Below are the official Neurodesk logos. Every file links to its copy in the media repository.
+
+The chequerboard behind each preview marks the transparent areas of the PNG — the logos have no background of their own. Light chequers are used for the standard variants and dark ones for the `-on-dark` variants, matching the background each was drawn for.
 
 ---
 
@@ -26,27 +67,66 @@ Use these logos on light or neutral backgrounds.
 
 #### Simple logo
 
-![Neurodesk logo](/logos/neurodesk.png)
-[Download PNG](/logos/neurodesk.png)
-
-![Neurodesk.org logo](/logos/neurodesk.org.png)
-[Download PNG](/logos/neurodesk.org.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo.png" alt="Neurodesk logo" width="113" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo.png">Download PNG</a>
+    </figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo.png" alt="Neurodesk.org logo" width="137" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 #### Inclusivity and Pride logo
 
-![Neurodesk Pride logo](/logos/neurodesk-pride.png)
-[Download PNG](/logos/neurodesk-pride.png)
-
-![Neurodesk.org Pride logo](/logos/neurodesk.org-pride.png)
-[Download PNG](/logos/neurodesk.org-pride.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-pride.png" alt="Neurodesk Pride logo" width="113" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-pride.png">Download PNG</a>
+    </figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-pride.png" alt="Neurodesk.org Pride logo" width="137" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-pride.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 #### Horizontal format logo
 
-![Neurodesk horizontal logo](/logos/neurodesk_horizontal.png)
-[Download PNG](/logos/neurodesk_horizontal.png)
-
-![Neurodesk.org horizontal logo](/logos/neurodesk.org_horizontal.png)
-[Download PNG](/logos/neurodesk.org_horizontal.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-horizontal.png" alt="Neurodesk horizontal logo" width="321" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-horizontal.png">Download PNG</a>
+    </figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-horizontal.png" alt="Neurodesk.org horizontal logo" width="373" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-horizontal.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 ---
 
@@ -56,19 +136,45 @@ These logos are optimised for use on dark backgrounds.
 
 ##### Simple logo
 
-![Neurodesk on dark](/logos/neurodesk-on-dark.png)
-[Download PNG](/logos/neurodesk-on-dark.png)
-
-![Neurodesk.org on dark](/logos/neurodesk.org-on-dark.png)
-[Download PNG](/logos/neurodesk.org-on-dark.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#101806; background-image:conic-gradient(#101806 25%, #26331a 0 50%, #101806 0 75%, #26331a 0); background-size:16px 16px; border-color:#2a3a20;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-on-dark.png" alt="Neurodesk on dark" width="113" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-on-dark.png">Download PNG</a>
+    </figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#101806; background-image:conic-gradient(#101806 25%, #26331a 0 50%, #101806 0 75%, #26331a 0); background-size:16px 16px; border-color:#2a3a20;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-on-dark.png" alt="Neurodesk.org on dark" width="137" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-on-dark.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 ##### Inclusivity and Pride logo
 
-![Neurodesk Pride on dark](/logos/neurodesk-pride-on-dark.png)
-[Download PNG](/logos/neurodesk-pride-on-dark.png)
-
-![Neurodesk.org Pride on dark](/logos/neurodesk.org-pride-on-dark.png)
-[Download PNG](/logos/neurodesk.org-pride-on-dark.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#101806; background-image:conic-gradient(#101806 25%, #26331a 0 50%, #101806 0 75%, #26331a 0); background-size:16px 16px; border-color:#2a3a20;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-pride-on-dark.png" alt="Neurodesk Pride on dark" width="113" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-logo-pride-on-dark.png">Download PNG</a>
+    </figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#101806; background-image:conic-gradient(#101806 25%, #26331a 0 50%, #101806 0 75%, #26331a 0); background-size:16px 16px; border-color:#2a3a20;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-pride-on-dark.png" alt="Neurodesk.org Pride on dark" width="137" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-logo-pride-on-dark.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 ---
 
@@ -76,36 +182,70 @@ These logos are optimised for use on dark backgrounds.
 
 **No image**
 
-![Neurodesk.org without logo](/logos/neurodesk.org-no-logo.png)
-[Download PNG](/logos/neurodesk.org-no-logo.png)
+<div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+  <figure style="margin:0; text-align:center;">
+    <div style="display:flex; align-items:center; justify-content:center; height:180px; padding:1rem; box-sizing:border-box; border:1px solid var(--sl-color-gray-5); border-radius:0.5rem; background-color:#ffffff; background-image:conic-gradient(#ffffff 25%, #e3e3e3 0 50%, #ffffff 0 75%, #e3e3e3 0); background-size:16px 16px; border-color:#d1d3d4;">
+      <img src="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-wordmark.png" alt="Neurodesk.org wordmark" width="245" height="140" style="height:140px; width:auto; max-width:100%;" />
+    </div>
+    <figcaption style="margin-top:0.5rem; font-size:0.875rem;">
+      <a href="https://raw.githubusercontent.com/neurodesk/media/main/logo/png/neurodesk-org-wordmark.png">Download PNG</a>
+    </figcaption>
+  </figure>
+</div>
 
 ---
 
+### Which variant should I use?
+
+| Context | Variant |
+|---|---|
+| Light or neutral background | the standard variant |
+| Dark background | the `-on-dark` variant |
+| Wide header, one line of space | the `-horizontal` variant |
+| You want the web address visible | the `neurodesk-org-` prefix |
+| Pride and inclusivity contexts | the `-pride` variant |
+
+<Aside type="caution" title="Raster only">
+Every logo above is currently PNG. There are no vector (SVG) masters, so the logo cannot be scaled cleanly for a large-format poster or a print run. If you need the logo at print size, [open an issue](https://github.com/neurodesk/media/issues/new/choose) before scaling a PNG up.
+</Aside>
+
 ## Colour palette
 
-You can download the official Neurodesk colour palette file for design use:
+The palette is published in several formats so you do not need paid software to use it.
 
-- [Download Neurodesk Colour Palette (AI format)](/logos/Neurodesk-color-palette.ai)
+| Format | Opens in | Download |
+|---|---|---|
+| PowerPoint | PowerPoint, Keynote, Google Slides, LibreOffice | [`.pptx`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.pptx) |
+| Adobe swatches | Illustrator, Photoshop, InDesign, Affinity, Figma | [`.ase`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.ase) |
+| GIMP palette | GIMP, Inkscape, Krita | [`.gpl`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.gpl) |
+| CSS custom properties | any text editor, for web work | [`.css`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.css) |
+| JSON | scripts and build tooling | [`.json`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-palette.json) |
+| Illustrator swatches | Illustrator only — the original file | [`.ai`](https://raw.githubusercontent.com/neurodesk/media/main/palette/neurodesk-color-palette.ai) |
+
+**Hex is canonical.** The RGB column below is derived from it.
 
 ### Primary colours
 
-| Colour name   | Hex code  | RGB code          | Usage           |
-| ------------- | --------- | ----------------- | --------------- |
-| Seafoam green | `#6aa329` | `(106, 163, 41)`  | Primary actions |
+| Colour name   | Hex code  | RGB code         | Usage           |
+| ------------- | --------- | ---------------- | --------------- |
+| Seafoam green | `#6aa329` | `(106, 163, 41)` | Primary actions |
+| Logo ink      | `#101806` | `(16, 24, 6)`    | The dark used in the logo artwork |
 
 ### Secondary colours
 
-| Colour name        | Hex code  | RGB code          | Usage                          |
-| ------------------ | --------- | ----------------- | ------------------------------ |
-| Black              | `#0c0e0a` | `(5, 8, 2)`       | Regular text, menu bar         |
-| Darkest green      | `#161c10` | `(16, 24, 6)`     | Successful selection           |
-| Muted olive green  | `#1e2a16` | `(26, 41, 10)`    | Accent background              |
-| Dark olive green   | `#4f7b38` | `(79, 122, 31)`   | Selected buttons, hyperlinks   |
-| Light green        | `#b7d886` | `(181, 224, 133)` | Hover over a button            |
-| Lighter green      | `#d3e7b6` | `(211, 237, 182)` |                                |
-| Verdant haze       | `#e6f1d6` | `(230, 245, 214)` | Unselected buttons             |
-| Pale lime green    | `#f0f7e7` | `(240, 249, 231)` |                                |
-| White              | `#ffffff` | `(255, 255, 255)` |                                |
+| Colour name       | Hex code  | RGB code          | Usage                        |
+| ----------------- | --------- | ----------------- | ---------------------------- |
+| Black             | `#0c0e0a` | `(12, 14, 10)`    | Regular text, menu bar       |
+| Darkest green     | `#161c10` | `(22, 28, 16)`    | Successful selection         |
+| Muted olive green | `#1e2a16` | `(30, 42, 22)`    | Accent background            |
+| Dark olive green  | `#4f7b38` | `(79, 123, 56)`   | Selected buttons, hyperlinks |
+| Light green       | `#b7d886` | `(183, 216, 134)` | Hover over a button          |
+| Lighter green     | `#d3e7b6` | `(211, 231, 182)` |                              |
+| Verdant haze      | `#e6f1d6` | `(230, 241, 214)` | Unselected buttons           |
+| Pale lime green   | `#f0f7e7` | `(240, 247, 231)` |                              |
+| White             | `#ffffff` | `(255, 255, 255)` |                              |
+
+Hex codes are authoritative; the RGB column is derived from them. Do not sample colours from a rendered logo — anti-aliasing gives slightly different values.
 
 ## Naming and capitalisation guidelines
 
@@ -114,7 +254,7 @@ To ensure consistency in our branding, please follow the guidelines below when r
 ### Correct usage
 
 - **Neurodesk**: capitalise only the first letter.
-  - `neurodesk` or `NEURODESK` may be used if better suited to the context.
+  - `neurodesk` or `NEURODESK` may be used where the surrounding style calls for it, such as an all-caps heading or a lowercase URL.
 - Use **"Neurodesk"** to refer to the overall project, platform, or community.
 - Use consistent casing in product names:
   - **Neurodesktop**
@@ -126,18 +266,57 @@ To ensure consistency in our branding, please follow the guidelines below when r
 
 Avoid the following incorrect variations:
 
-- neuroDesk
-- neurodesk in titles or headings
-- neurodesk
+- `neuroDesk` — internal capital
+- `NeuroDesk` — internal capital
+- `Neuro Desk` — space in the middle
+- `neurodesk` in running prose, titles, or headings, where **Neurodesk** is correct
+
+## Icons and favicons
+
+The icon mark on its own, plus a complete favicon set.
+
+### Source icons
+
+| File | What it is |
+|---|---|
+| [`neurodesk-icon.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon.svg) | The icon mark — outlined, no font dependency. Everything else derives from this. |
+| [`neurodesk-icon-solid.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-solid.svg) | Solid dark box and brain |
+| [`neurodesk-icon-outline.svg`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-outline.svg) | White / outline treatment |
+| [`neurodesk-icon-green-circle.png`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-icon-green-circle.png) | White box and brain in a green circle |
+
+### Favicon set
+
+[`.ico`](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon.ico) ·
+[16px](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon-16.png) ·
+[32px](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-favicon-32.png) ·
+[Apple touch](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-apple-touch-icon.png) ·
+[Android 192](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-android-chrome-192.png) ·
+[Android 512](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-android-chrome-512.png) ·
+[Windows tile](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-mstile-150.png) ·
+[Safari pinned tab](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk-safari-pinned-tab.svg) ·
+[web manifest](https://raw.githubusercontent.com/neurodesk/media/main/icons/neurodesk.webmanifest)
+
+These are stored under this repository's naming convention rather than the filenames
+browsers expect. Copy them out and rename to whatever your framework wants —
+[`icons/README.md`](https://github.com/neurodesk/media/blob/main/icons/README.md) has the
+mapping.
 
 ## Typography
 
-### Font families for website
+### Scirich Regular
 
-- **Logo:** [Scirich](https://github.com/micmas/Scirich-font)
-- **Headings:** Pontano
-- **Body text:** Pontano
-- **Code blocks:** Menlo
+Scirich is a modified version of [Aldrich](https://fonts.google.com/specimen/Aldrich) by
+Matt McInerney, adapted and renamed by Michèle Masson-Trottier. It is licensed under the
+[SIL Open Font License 1.1](https://raw.githubusercontent.com/neurodesk/media/main/font/LICENSE.txt), as is the original.
+
+- [Download `Scirich-Regular.ttf`](https://raw.githubusercontent.com/neurodesk/media/main/font/Scirich-Regular.ttf) — installable font
+- [Download `Scirich-Regular.sfd`](https://raw.githubusercontent.com/neurodesk/media/main/font/Scirich-Regular.sfd) — FontForge source, for editing
+- Upstream: [micmas/Scirich-font](https://github.com/micmas/Scirich-font)
+
+If you redistribute it, the OFL requires you to include the full licence, avoid the
+reserved name "Aldrich", attribute the original designer, and describe your changes.
+
+When exporting a logo or figure to SVG, convert text to paths so it renders correctly for people who do not have Scirich installed.
 
 ## Template presentations
 
@@ -149,5 +328,9 @@ To request access, please email [mail.neurodesk@gmail.com](mailto:mail.neurodesk
 
 ### Poster template
 
-- [Download Neurodesk Vertical Poster Template (.pptx)](/template-presentations/Neurodesk-vertical-poster.potx)
-- [Download Neurodesk Horizontal Poster Template (.pptx)](/template-presentations/Neurodesk-horizontal-poster.potx)
+- [Download Neurodesk vertical poster template (.potx)](https://raw.githubusercontent.com/neurodesk/media/main/templates/neurodesk-poster-vertical.potx)
+- [Download Neurodesk horizontal poster template (.potx)](https://raw.githubusercontent.com/neurodesk/media/main/templates/neurodesk-poster-horizontal.potx)
+
+## Contributing an asset
+
+To add a figure, diagram, or screenshot to the shared library, see [CONTRIBUTING.md](https://github.com/neurodesk/media/blob/main/CONTRIBUTING.md) in the media repository. In short: use the naming convention, commit a vector master where one exists, keep files under the size limits, and update the folder's README table.
