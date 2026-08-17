@@ -139,12 +139,9 @@ export default defineConfig({
 				{ tag: 'link', attrs: { rel: 'manifest', href: '/favicons/site.webmanifest' } },
 			],
 			components: {
+				SocialIcons: './src/components/SocialIcons.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},
-			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/NeuroDesk' },
-				{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/neurodesk-org/' },
-			],
 			editLink: {
 				baseUrl: 'https://github.com/NeuroDesk/neurodesk.github.io/edit/main/',
 			},

@@ -1,0 +1,75 @@
+---
+// Starlight SocialIcons override: header section links, then Starlight's own social icons.
+import Default from '@astrojs/starlight/components/SocialIcons.astro';
+
+const links = [
+	{ label: 'Getting Started', href: '/getting-started/', priority: 'low' },
+	{ label: 'Learning Resources', href: '/edu/', priority: 'mid' },
+	{ label: 'Developers', href: '/developers/', priority: 'high' },
+	{ label: 'Contact', href: '/contact/', priority: 'lowest' },
+	{ label: 'GitHub', href: 'https://github.com/NeuroDesk', priority: 'high', external: true },
+];
+
+const current = Astro.url.pathname;
+---
+
+<nav class="nav-links" aria-label="Sections">
+	{
+		links.map(({ label, href, priority, external }) => (
+			<a
+				href={href}
+				class={`p-${priority}`}
+				aria-current={!external && current.startsWith(href) ? 'page' : undefined}
+				{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+			>
+				{label}
+			</a>
+		))
+	}
+</nav>
+
+<Default {...Astro.props}><slot /></Default>
+
+<style>
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.nav-links a {
+		color: var(--sl-color-text);
+		font-size: var(--sl-text-sm);
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.nav-links a:hover {
+		color: var(--sl-color-text-accent);
+	}
+	.nav-links a[aria-current='page'] {
+		color: var(--sl-color-white);
+	}
+
+	/* In the mobile menu footer the links stay visible and wrap. */
+	:global(.mobile-preferences) .nav-links {
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+	}
+
+	/* In the header, shed entries as room runs out, least useful first. */
+	@media (max-width: 95rem) {
+		:global(.header) .nav-links a.p-lowest {
+			display: none;
+		}
+	}
+	@media (max-width: 85rem) {
+		:global(.header) .nav-links a.p-low {
+			display: none;
+		}
+	}
+	@media (max-width: 75rem) {
+		:global(.header) .nav-links a.p-mid {
+			display: none;
+		}
+	}
+</style>
