@@ -62,25 +62,22 @@ def fetch_apps_menu_entries(session: requests.Session) -> Dict:
 
 def fetch_app_descriptions(session: requests.Session, app_names: List[str]) -> Dict[str, str]:
     """
-    Fetch README.md from neurocontainers/recipes/{app}/ for each unique app
-    name and extract the description paragraph(s) after the section title.
+    Fetch the description for each unique app from neurocontainers.
+
+    Tries ``recipes/{app}/README.md`` first.  If that returns 404, falls back
+    to the ``readme`` field inside ``recipes/{app}/build.yaml``.
 
     Returns a dict mapping app name -> description string.
     """
     descriptions: Dict[str, str] = {}
     for name in app_names:
-        url = f"{README_BASE_URL}/{name}/README.md"
-        try:
-            resp = session.get(
-                url, timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS)
-            )
-            if resp.status_code == 404:
-                continue
-            resp.raise_for_status()
-        except requests.RequestException:
+        readme_text = _fetch_readme_md(session, name)
+        if readme_text is None:
+            readme_text = _fetch_readme_from_build_yaml(session, name)
+        if readme_text is None:
             continue
 
-        desc = parse_readme_description(resp.text)
+        desc = parse_readme_description(readme_text)
         if desc:
             descriptions[name] = desc
 
@@ -89,6 +86,70 @@ def fetch_app_descriptions(session: requests.Session, app_names: List[str]) -> D
         flush=True,
     )
     return descriptions
+
+
+def _fetch_readme_md(session: requests.Session, name: str) -> Optional[str]:
+    """Return the raw README.md text, or None on 404 / error."""
+    url = f"{README_BASE_URL}/{name}/README.md"
+    try:
+        resp = session.get(
+            url, timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS)
+        )
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        return resp.text
+    except requests.RequestException:
+        return None
+
+
+def _fetch_readme_from_build_yaml(session: requests.Session, name: str) -> Optional[str]:
+    """
+    Fetch ``build.yaml`` and extract the ``readme:`` field value.
+
+    The field is a YAML multi-line scalar (``|`` or ``|-``).  Rather than
+    adding a PyYAML dependency we extract it with a simple regex/parser:
+    find the ``readme:`` key, then collect all subsequent indented lines.
+    """
+    url = f"{README_BASE_URL}/{name}/build.yaml"
+    try:
+        resp = session.get(
+            url, timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS)
+        )
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    return _extract_yaml_readme_field(resp.text)
+
+
+def _extract_yaml_readme_field(yaml_text: str) -> Optional[str]:
+    """
+    Pull the ``readme`` block-scalar value out of a YAML file without
+    a YAML parser.  Handles ``readme: |``, ``readme: |-``, and
+    ``readme: |+`` style block scalars.
+    """
+    lines = yaml_text.splitlines()
+    start = None
+    for i, line in enumerate(lines):
+        if re.match(r"^readme:\s*[|>]", line):
+            start = i + 1
+            break
+    if start is None:
+        return None
+
+    # Collect indented continuation lines
+    content_lines: List[str] = []
+    for line in lines[start:]:
+        # A non-empty, non-indented line ends the block scalar
+        if line and not line[0].isspace():
+            break
+        # Strip the leading indentation (typically 2 spaces)
+        content_lines.append(line.lstrip())
+
+    return "\n".join(content_lines) if content_lines else None
 
 
 def parse_readme_description(readme_text: str) -> Optional[str]:
@@ -114,7 +175,7 @@ def parse_readme_description(readme_text: str) -> Optional[str]:
     # Find the section-title line (## ... ##)
     start = None
     for i, line in enumerate(lines):
-        if re.match(r"^##\s+.+\s+##\s*$", line):
+        if re.match(r"^##\s+.+##\s*$", line):
             start = i + 1
             break
 

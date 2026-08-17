@@ -1621,9 +1621,7 @@ site-search button[data-open-modal] {
 	line-height: 1.45;
 	color: var(--sl-color-gray-2);
 	display: -webkit-box;
-	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
-	overflow: scroll;
 }
 
 .ab-detail-row {
