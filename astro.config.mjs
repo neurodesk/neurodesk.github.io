@@ -152,7 +152,6 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', link: '/overview/' },
 						{ label: 'Acknowledgement', link: '/overview/acknowledgement/' },
-						{ label: 'Applications', link: '/overview/applications/' },
 						{ label: 'Awards', link: '/overview/awards/' },
 						{ label: 'Code of conduct', link: '/overview/code-of-conduct/' },
 						{ label: 'Discussion forum', link: '/overview/discussion-forum/' },
@@ -209,6 +208,20 @@ export default defineConfig({
 							items: [{ autogenerate: { directory: 'getting-started/agents' } }],
 						},
 					],
+				},
+				{
+					label: 'Applications',
+					link: '/overview/applications/',
+				},
+				{
+					label: 'NeurodeskEDU',
+					link: 'https://neurodesk.org/edu/',
+					attrs: { target: '_blank', rel: 'noopener noreferrer' },
+				},
+				{
+					label: 'Webapps',
+					link: 'https://webapps.neurodesk.org/',
+					attrs: { target: '_blank', rel: 'noopener noreferrer' },
 				},
 				{
 					label: 'For developers',
