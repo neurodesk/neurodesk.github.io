@@ -11,7 +11,8 @@ export default defineConfig({
 		'/applications': '/overview/applications/',
 		'/developers/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/add_tool': '/developers/new-tools/',
-		'/developers/new_tools/manual_build': '/developers/new-tools/new-tool/',
+		'/developers/new_tools/manual_build': '/developers/new-tools/',
+		'/developers/new-tools/new-tool': '/developers/new-tools/',
 		'/getting-started/hosted/bunya': '/getting-started/installations/bunya/',
 		'/getting-started/hosted/googlecolab': '/getting-started/hosted/google/',
 		'/getting-started/hosted/nectar': '/getting-started/installations/nectar/',
@@ -150,7 +151,7 @@ export default defineConfig({
 					label: 'Overview',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/overview/' },
+						{ label: 'What is Neurodesk?', link: '/overview/' },
 						{ label: 'Acknowledgement', link: '/overview/acknowledgement/' },
 						{ label: 'Awards', link: '/overview/awards/' },
 						{ label: 'Code of conduct', link: '/overview/code-of-conduct/' },
@@ -168,7 +169,7 @@ export default defineConfig({
 					label: 'Getting started',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/getting-started/' },
+						{ label: 'Choose your setup', link: '/getting-started/' },
 						{
 							label: 'App',
 							collapsed: true,
@@ -227,12 +228,12 @@ export default defineConfig({
 					label: 'For developers',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/developers/' },
+						{ label: 'Start here', link: '/developers/' },
 						{
 							label: 'Architecture',
 							collapsed: true,
 							items: [
-								{ label: 'Overview', link: '/developers/architecture/' },
+								{ label: 'Architecture at a glance', link: '/developers/architecture/' },
 								{ label: 'Neurodesk components', link: '/developers/architecture/neurodesk-components/' },
 								{ label: 'Neurodesk dev', link: '/developers/architecture/neurodesk-dev/' },
 								{ label: 'Release process', link: '/developers/architecture/release-process/' },
@@ -245,25 +246,18 @@ export default defineConfig({
 								},
 							],
 						},
-						{
-							label: 'Contributors',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/contributors' } }],
-						},
-						{
-							label: 'Designer',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/designer' } }],
-						},
+						{ label: 'Contributors', link: '/developers/contributors/' },
+						{ label: 'Designer guide', link: '/developers/designer/' },
 						{
 							label: 'Documentation',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/documentation' } }],
 						},
+						{ label: 'Interfacing', link: '/developers/interfacing/' },
 						{
-							label: 'Interfacing',
+							label: 'Managing tools',
 							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/interfacing' } }],
+							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
 						},
 						{
 							label: 'Neurocontainer copilot',
@@ -274,11 +268,6 @@ export default defineConfig({
 							label: 'Neurodesk copilot',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/neurodesk-copilot' } }],
-						},
-						{
-							label: 'New tools',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
 						},
 					],
 				},
