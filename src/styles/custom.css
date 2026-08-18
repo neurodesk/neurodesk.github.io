@@ -156,10 +156,11 @@ site-search button[data-open-modal] {
 	content: none;
 }
 
-/* The date itself: small and quiet. */
+/* The date: a step up from the body text so it anchors each release, but well
+   short of a full heading. */
 .release-item > summary {
-	padding: 0.4rem 0.85rem;
-	font-size: var(--sl-text-sm);
+	padding: 0.4rem 0.85rem 0.15rem;
+	font-size: var(--sl-text-base);
 }
 
 /* One size throughout. The wrapper carries Starlight's heading size, so it has
@@ -187,6 +188,15 @@ site-search button[data-open-modal] {
 
 .release-item > summary .sl-heading-wrapper {
 	margin: 0;
+}
+
+/* Pull the first block under the date right up against it. */
+.release-item > summary + * {
+	margin-top: 0.1rem;
+}
+
+.release-item > summary + * :is(.sl-heading-wrapper, h2, h3, h4):first-child {
+	margin-top: 0;
 }
 
 .release-item :is(p, li) {
