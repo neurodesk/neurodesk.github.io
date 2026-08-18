@@ -11,22 +11,28 @@ const links = [
 ];
 
 const current = Astro.url.pathname;
+
+// The header section links are shown on the home page only. Every other page has
+// the left sidebar, which covers the same top-level navigation.
+const isHome = current === '/' || current === '';
 ---
 
-<nav class="nav-links" aria-label="Sections">
-	{
-		links.map(({ label, href, priority, external }) => (
-			<a
-				href={href}
-				class={`p-${priority}`}
-				aria-current={!external && current.startsWith(href) ? 'page' : undefined}
-				{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-			>
-				{label}
-			</a>
-		))
-	}
-</nav>
+{
+	isHome && (
+		<nav class="nav-links" aria-label="Sections">
+			{links.map(({ label, href, priority, external }) => (
+				<a
+					href={href}
+					class={`p-${priority}`}
+					aria-current={!external && current.startsWith(href) ? 'page' : undefined}
+					{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+				>
+					{label}
+				</a>
+			))}
+		</nav>
+	)
+}
 
 <Default {...Astro.props}><slot /></Default>
 
