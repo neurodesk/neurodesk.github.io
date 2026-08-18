@@ -286,6 +286,10 @@ export default defineConfig({
 					label: 'Contact',
 					link: '/contact/',
 				},
+				{
+					label: 'Donate',
+					link: '/overview/donate/',
+				},
 			],
 			customCss: ['./src/styles/custom.css'],
 		}),
