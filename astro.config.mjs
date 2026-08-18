@@ -246,16 +246,14 @@ export default defineConfig({
 								},
 							],
 						},
+						{ label: 'Contributors', link: '/developers/contributors/' },
+						{ label: 'Designer guide', link: '/developers/designer/' },
 						{
 							label: 'Documentation',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/documentation' } }],
 						},
-						{
-							label: 'New tools',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
-						},
+						{ label: 'Interfacing', link: '/developers/interfacing/' },
 						{
 							label: 'Neurocontainer copilot',
 							collapsed: true,
@@ -266,11 +264,8 @@ export default defineConfig({
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/neurodesk-copilot' } }],
 						},
-						// Single-page entries last, so expandable sections are not
-						// interleaved with plain links.
-						{ label: 'Contributors', link: '/developers/contributors/' },
-						{ label: 'Designer guide', link: '/developers/designer/' },
-						{ label: 'Interfacing', link: '/developers/interfacing/' },
+						{ label: 'New tools', link: '/developers/new-tools/' },
+						{ label: 'Update a tool', link: '/developers/new-tools/update-tool/' },
 					],
 				},
 				{

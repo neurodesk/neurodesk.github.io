@@ -1760,3 +1760,25 @@ a.add-tool-button:hover {
 	color: var(--sl-color-accent-high);
 	border: 2px outset var(--sl-color-accent);
 }
+
+/* -------------------------------------------------------------------------
+   Sidebar: even out single-page links against sibling group headers.
+
+   Starlight styles collapsible group labels bold and white, but a plain link
+   sitting at the same level renders muted and regular weight. Where a list
+   mixes the two (e.g. "For developers" holds both Architecture and
+   Contributors), the alternating weights read as broken rather than
+   hierarchical. This matches the links to their siblings.
+
+   Scoped with :has() so it only applies in lists that actually contain a
+   group; lists made up entirely of plain links are left alone.
+   ------------------------------------------------------------------------- */
+.sidebar-content ul:has(> li > details) > li > a {
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+/* Keep the current page's highlight winning over the rule above. */
+.sidebar-content ul:has(> li > details) > li > a[aria-current='page'] {
+	color: var(--sl-color-text-invert);
+}
