@@ -1,0 +1,39 @@
+---
+/**
+ * Starlight PageSidebar override.
+ *
+ * Starlight always prepends an "Overview" entry to the table of contents,
+ * pointing at `#_top` (the page <h1>). On a page that opens with introductory
+ * prose it reads as a link to that intro. On a page that jumps straight into a
+ * level 2 heading it advertises a section that does not exist, which is what
+ * made it look broken on e.g. /overview/metrics/.
+ *
+ * Drop the entry when there is nothing above the first heading, keep it when
+ * there is. Detected from the page's raw body, so it stays correct as pages are
+ * edited and needs no per-page frontmatter flag.
+ *
+ * Overriding PageSidebar rather than TableOfContents because Starlight renders
+ * two tables of contents - desktop and mobile - and this covers both.
+ */
+import Default from '@astrojs/starlight/components/PageSidebar.astro';
+
+const route = Astro.locals.starlightRoute;
+const body = route.entry?.body ?? '';
+
+// Everything above the first level 2 heading, minus the things that never
+// render as visible prose.
+const intro = body
+	.split(/^##\s/m)[0]
+	.replace(/^(?:import|export)\s[\s\S]*?(?:;|\n)/gm, '')
+	.replace(/<!--[\s\S]*?-->/g, '')
+	.trim();
+
+if (route.toc && intro.length === 0) {
+	Astro.locals.starlightRoute = {
+		...route,
+		toc: { ...route.toc, items: route.toc.items.filter((item) => item.slug !== '_top') },
+	};
+}
+---
+
+<Default {...Astro.props}><slot /></Default>

@@ -140,6 +140,7 @@ export default defineConfig({
 				{ tag: 'link', attrs: { rel: 'manifest', href: '/favicons/site.webmanifest' } },
 			],
 			components: {
+				PageSidebar: './src/components/PageSidebar.astro',
 				SocialIcons: './src/components/SocialIcons.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},
