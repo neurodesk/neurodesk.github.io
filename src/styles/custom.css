@@ -133,23 +133,58 @@ site-search button[data-open-modal] {
 	display: none;
 }
 
-/* Release history reads as a changelog, not a document outline: keep every
-   heading level at body size and let weight alone carry the hierarchy. */
+/* ---------------------------------------------------------------------------
+   Release history only (.release-item). Reads as a dense changelog rather than
+   a document outline: one type size throughout, weight carrying the hierarchy,
+   and tight vertical rhythm. The FAQ collapsibles above keep Starlight's
+   roomier defaults.
+   --------------------------------------------------------------------------- */
+
+/* No disclosure chevron in front of the date - the open/closed state is already
+   clear from the accent border and the content below. */
+.release-item > summary::before,
+.release-item[open] > summary::before {
+	content: none;
+}
+
+/* The date itself: small and quiet. */
+.release-item > summary {
+	padding: 0.4rem 0.85rem;
+	font-size: var(--sl-text-sm);
+}
+
 .release-item :is(h2, h3, h4) {
-	font-size: var(--sl-text-base);
+	font-size: var(--sl-text-sm);
 	font-weight: 600;
-	line-height: 1.5;
+	line-height: 1.4;
 	color: var(--sl-color-white);
 }
 
-.release-item > *:not(summary) :is(h2, h3, h4) {
-	margin-block: 1rem 0.35rem;
+/* Tighten the gaps between a release, its subheadings and its bullets. */
+.release-item {
+	margin: 0.25rem 0;
 }
 
-/* Body copy inside a release stays unemphasised so the headings stand out. */
+.release-item > *:not(summary) :is(h2, h3, h4) {
+	margin-block: 0.6rem 0.2rem;
+}
+
+.release-item > *:last-child {
+	padding-bottom: 0.6rem;
+}
+
 .release-item :is(p, li) {
 	font-size: var(--sl-text-sm);
 	font-weight: 400;
+	line-height: 1.45;
+}
+
+.release-item ul {
+	margin-block: 0.2rem;
+}
+
+.release-item li + li {
+	margin-top: 0.1rem;
 }
 
 :is(.faq-item, .release-item) > summary::before {
