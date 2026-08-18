@@ -255,6 +255,11 @@ export default defineConfig({
 						},
 						{ label: 'Interfacing', link: '/developers/interfacing/' },
 						{
+							label: 'Managing tools',
+							collapsed: true,
+							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
+						},
+						{
 							label: 'Neurocontainer copilot',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/neurocontainer-copilot' } }],
@@ -264,8 +269,6 @@ export default defineConfig({
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/neurodesk-copilot' } }],
 						},
-						{ label: 'New tools', link: '/developers/new-tools/' },
-						{ label: 'Update a tool', link: '/developers/new-tools/update-tool/' },
 					],
 				},
 				{
