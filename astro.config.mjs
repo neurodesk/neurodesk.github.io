@@ -150,7 +150,7 @@ export default defineConfig({
 					label: 'Overview',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/overview/' },
+						{ label: 'What is Neurodesk?', link: '/overview/' },
 						{ label: 'Acknowledgement', link: '/overview/acknowledgement/' },
 						{ label: 'Awards', link: '/overview/awards/' },
 						{ label: 'Code of conduct', link: '/overview/code-of-conduct/' },
@@ -168,7 +168,7 @@ export default defineConfig({
 					label: 'Getting started',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/getting-started/' },
+						{ label: 'Choose your setup', link: '/getting-started/' },
 						{
 							label: 'App',
 							collapsed: true,
@@ -227,12 +227,12 @@ export default defineConfig({
 					label: 'For developers',
 					collapsed: true,
 					items: [
-						{ label: 'Overview', link: '/developers/' },
+						{ label: 'Start here', link: '/developers/' },
 						{
 							label: 'Architecture',
 							collapsed: true,
 							items: [
-								{ label: 'Overview', link: '/developers/architecture/' },
+								{ label: 'Architecture at a glance', link: '/developers/architecture/' },
 								{ label: 'Neurodesk components', link: '/developers/architecture/neurodesk-components/' },
 								{ label: 'Neurodesk dev', link: '/developers/architecture/neurodesk-dev/' },
 								{ label: 'Release process', link: '/developers/architecture/release-process/' },
@@ -245,26 +245,14 @@ export default defineConfig({
 								},
 							],
 						},
-						{
-							label: 'Contributors',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/contributors' } }],
-						},
-						{
-							label: 'Designer',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/designer' } }],
-						},
+						{ label: 'Contributors', link: '/developers/contributors/' },
+						{ label: 'Designer guide', link: '/developers/designer/' },
 						{
 							label: 'Documentation',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/documentation' } }],
 						},
-						{
-							label: 'Interfacing',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/interfacing' } }],
-						},
+						{ label: 'Interfacing', link: '/developers/interfacing/' },
 						{
 							label: 'Neurocontainer copilot',
 							collapsed: true,
