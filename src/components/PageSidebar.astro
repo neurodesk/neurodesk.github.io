@@ -10,7 +10,8 @@
  *
  * Drop the entry when there is nothing above the first heading, keep it when
  * there is. Detected from the page's raw body, so it stays correct as pages are
- * edited and needs no per-page frontmatter flag.
+ * edited and needs no per-page frontmatter flag. A page can force the issue
+ * either way with `tocOverview: true | false` in its frontmatter.
  *
  * Overriding PageSidebar rather than TableOfContents because Starlight renders
  * two tables of contents - desktop and mobile - and this covers both.
@@ -28,7 +29,10 @@ const intro = body
 	.replace(/<!--[\s\S]*?-->/g, '')
 	.trim();
 
-if (route.toc && intro.length === 0) {
+const override = (route.entry?.data as { tocOverview?: boolean } | undefined)?.tocOverview;
+const showOverview = override ?? intro.length > 0;
+
+if (route.toc && !showOverview) {
 	Astro.locals.starlightRoute = {
 		...route,
 		toc: { ...route.toc, items: route.toc.items.filter((item) => item.slug !== '_top') },

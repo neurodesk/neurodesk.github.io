@@ -107,6 +107,51 @@ site-search button[data-open-modal] {
 :is(.faq-item, .release-item) > summary::-webkit-details-marker { display: none; }
 :is(.faq-item, .release-item) > summary::marker { content: ''; }
 
+/* Release dates are authored as level 2 headings inside <summary> so they reach
+   the table of contents. Strip the heading's own typography so it still reads
+   as the collapsible's label rather than a page section. */
+:is(.faq-item, .release-item) > summary .sl-heading-wrapper {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+:is(.faq-item, .release-item) > summary :is(h1, h2, h3, h4) {
+	margin: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+	border: 0;
+	padding: 0;
+}
+
+/* Starlight appends a chain-link anchor to every heading. On a collapsible
+   label it renders as a stray mark before the date, so hide it here. */
+:is(.faq-item, .release-item) > summary .sl-anchor-link {
+	display: none;
+}
+
+/* Release history reads as a changelog, not a document outline: keep every
+   heading level at body size and let weight alone carry the hierarchy. */
+.release-item :is(h2, h3, h4) {
+	font-size: var(--sl-text-base);
+	font-weight: 600;
+	line-height: 1.5;
+	color: var(--sl-color-white);
+}
+
+.release-item > *:not(summary) :is(h2, h3, h4) {
+	margin-block: 1rem 0.35rem;
+}
+
+/* Body copy inside a release stays unemphasised so the headings stand out. */
+.release-item :is(p, li) {
+	font-size: var(--sl-text-sm);
+	font-weight: 400;
+}
+
 :is(.faq-item, .release-item) > summary::before {
 	content: '';
 	width: 0.5rem;
