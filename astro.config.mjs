@@ -11,7 +11,8 @@ export default defineConfig({
 		'/applications': '/overview/applications/',
 		'/developers/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/add_tool': '/developers/new-tools/',
-		'/developers/new_tools/manual_build': '/developers/new-tools/new-tool/',
+		'/developers/new_tools/manual_build': '/developers/new-tools/',
+		'/developers/new-tools/new-tool': '/developers/new-tools/',
 		'/getting-started/hosted/bunya': '/getting-started/installations/bunya/',
 		'/getting-started/hosted/googlecolab': '/getting-started/hosted/google/',
 		'/getting-started/hosted/nectar': '/getting-started/installations/nectar/',
@@ -245,14 +246,16 @@ export default defineConfig({
 								},
 							],
 						},
-						{ label: 'Contributors', link: '/developers/contributors/' },
-						{ label: 'Designer guide', link: '/developers/designer/' },
 						{
 							label: 'Documentation',
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/documentation' } }],
 						},
-						{ label: 'Interfacing', link: '/developers/interfacing/' },
+						{
+							label: 'New tools',
+							collapsed: true,
+							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
+						},
 						{
 							label: 'Neurocontainer copilot',
 							collapsed: true,
@@ -263,11 +266,11 @@ export default defineConfig({
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'developers/neurodesk-copilot' } }],
 						},
-						{
-							label: 'New tools',
-							collapsed: true,
-							items: [{ autogenerate: { directory: 'developers/new-tools' } }],
-						},
+						// Single-page entries last, so expandable sections are not
+						// interleaved with plain links.
+						{ label: 'Contributors', link: '/developers/contributors/' },
+						{ label: 'Designer guide', link: '/developers/designer/' },
+						{ label: 'Interfacing', link: '/developers/interfacing/' },
 					],
 				},
 				{
