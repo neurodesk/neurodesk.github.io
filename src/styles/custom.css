@@ -107,6 +107,117 @@ site-search button[data-open-modal] {
 :is(.faq-item, .release-item) > summary::-webkit-details-marker { display: none; }
 :is(.faq-item, .release-item) > summary::marker { content: ''; }
 
+/* Release dates are authored as level 2 headings inside <summary> so they reach
+   the table of contents. Strip the heading's own typography so it still reads
+   as the collapsible's label rather than a page section. */
+:is(.faq-item, .release-item) > summary .sl-heading-wrapper {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+:is(.faq-item, .release-item) > summary :is(h1, h2, h3, h4) {
+	margin: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+	border: 0;
+	padding: 0;
+}
+
+/* Starlight sets heading size and the 1.5em heading gap on the wrapper div
+   (.sl-heading-wrapper.level-hN), not on the heading itself, so the wrapper is
+   what has to be overridden - a rule on the h2 alone just inherits the big
+   size back from its parent. */
+:is(.faq-item, .release-item) > summary .sl-heading-wrapper {
+	font-size: inherit;
+	line-height: inherit;
+}
+
+/* Starlight appends a chain-link anchor to every heading. On a collapsible
+   label it renders as a stray mark before the date, so hide it here. */
+:is(.faq-item, .release-item) > summary .sl-anchor-link {
+	display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Release history only (.release-item). Reads as a dense changelog rather than
+   a document outline: one type size throughout, weight carrying the hierarchy,
+   and tight vertical rhythm. The FAQ collapsibles above keep Starlight's
+   roomier defaults.
+   --------------------------------------------------------------------------- */
+
+/* No disclosure chevron in front of the date - the open/closed state is already
+   clear from the accent border and the content below. */
+.release-item > summary::before,
+.release-item[open] > summary::before {
+	content: none;
+}
+
+/* The date: a step up from the body text so it anchors each release, but well
+   short of a full heading. */
+.release-item > summary {
+	padding: 0.4rem 0.85rem 0.15rem;
+	font-size: var(--sl-text-base);
+}
+
+/* One size throughout. The wrapper carries Starlight's heading size, so it has
+   to be reset alongside the heading itself. */
+.release-item :is(.sl-heading-wrapper, h2, h3, h4) {
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--sl-color-white);
+}
+
+/* Tighten the gaps between a release, its subheadings and its bullets.
+   Starlight puts 1.5em above any heading that follows other content, and
+   --sl-content-gap-y between every pair of siblings; both are overridden here
+   because .release-item rules are unlayered and Starlight's are in
+   @layer starlight.content. */
+.release-item {
+	margin-block: 0.25rem;
+}
+
+.release-item :is(.sl-heading-wrapper, h2, h3, h4) {
+	margin-top: 0.75rem;
+	margin-bottom: 0.15rem;
+}
+
+.release-item > summary .sl-heading-wrapper {
+	margin: 0;
+}
+
+/* Pull the first block under the date right up against it. */
+.release-item > summary + * {
+	margin-top: 0.1rem;
+}
+
+.release-item > summary + * :is(.sl-heading-wrapper, h2, h3, h4):first-child {
+	margin-top: 0;
+}
+
+.release-item :is(p, li) {
+	font-size: var(--sl-text-sm);
+	font-weight: 400;
+	line-height: 1.45;
+}
+
+.release-item :is(p, ul, ol) {
+	margin-top: 0.15rem;
+	margin-bottom: 0.15rem;
+}
+
+.release-item li + li {
+	margin-top: 0.1rem;
+}
+
+.release-item > *:last-child {
+	padding-bottom: 0.5rem;
+}
+
 :is(.faq-item, .release-item) > summary::before {
 	content: '';
 	width: 0.5rem;
