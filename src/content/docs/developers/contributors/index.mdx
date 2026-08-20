@@ -1,11 +1,13 @@
 ---
 title: Contributors
 description: This section acknowledges the contributions made to the Neurodesk project.
-# Contributor names are level 2 headings and their institutions level 3.
-# Limit the table of contents to level 2 so it lists people, not institutions.
+# Core team / Other contributors are level 2, contributor names level 3 and
+# their institutions level 4. Cap the table of contents at level 3 so it lists
+# people grouped under those two headings, without the institutions.
 tableOfContents:
-  maxHeadingLevel: 2
+  maxHeadingLevel: 3
 ---
+
 
 import { Aside } from '@astrojs/starlight/components';
 
@@ -25,11 +27,25 @@ We try to update this page based on the git commit history:
 - [Neurodesk Website Contributors](https://github.com/neurodesk/neurodesk.github.io/graphs/contributors)
 - [Transparent Singularity Contributors](https://github.com/neurodesk/transparent-singularity/graphs/contributors)
 
-**Core team**: [Steffen](#steffen-bollmann--stebo85), [Aswin](#aswin-narayanan--aswinnarayanan), [Ashley](#ashley-stewart--astewartau), [Josh](#joshua-scarsbrook--vbitz), [Xincheng](#xincheng-ye--yexincheng), [Thuy](#thuy-dao--iishiishii), [Moni](#monika-doerig--monidoerig), [Michèle](#michèle-masson-trottier--micmas), [Marshall](#marshall-xu--kmarshallx)
+Select a name to see that person's contributions.
 
-## Steffen Bollmann ([stebo85](https://github.com/stebo85))
+<div class="collapse-toolbar not-content">
+  <button type="button" class="collapse-toolbar__btn" data-expand="all" data-target=".contributor-item">Expand all</button>
+  <button type="button" class="collapse-toolbar__btn" data-expand="none" data-target=".contributor-item">Collapse all</button>
+</div>
 
-### University of Queensland, Australia
+<script src="/js/collapse-toolbar.js" defer></script>
+
+## Core team
+
+<details class="contributor-item">
+<summary>
+
+### Steffen Bollmann ([stebo85](https://github.com/stebo85))
+
+</summary>
+
+#### University of Queensland, Australia
 
 - Funding: Oracle Cloud (114k AUD), ECR Knowledge Exchange & Translation Fund (42k AUD), ARDC (CI for $566k AUD)
 - System architecture
@@ -42,10 +58,16 @@ We try to update this page based on the git commit history:
 - Tutorials (QSM, SWI, Unwrapping, lcmodel, freesurfer)
 - Google Colab support
 - Outreach (e.g. Mastodon, talks at conferences, YouTube videos)
+</details>
 
-## Aswin Narayanan ([aswinnarayanan](https://github.com/aswinnarayanan))
+<details class="contributor-item">
+<summary>
 
-### National Imaging Facility, Australia
+### Aswin Narayanan ([aswinnarayanan](https://github.com/aswinnarayanan))
+
+</summary>
+
+#### National Imaging Facility, Australia
 
 - Funding: ARDC (CI for $566k AUD)
 - Neurocontainer devops
@@ -54,10 +76,16 @@ We try to update this page based on the git commit history:
 - Neurodesk Play and Kubernetes implementation
 - Jupyter notebook support
 - Hugo website build and documentation
+</details>
 
-## Thuy Dao ([iishiishii](https://github.com/iishiishii))
+<details class="contributor-item">
+<summary>
 
-### University of Queensland, Australia
+### Thuy Dao ([iishiishii](https://github.com/iishiishii))
+
+</summary>
+
+#### University of Queensland, Australia
 
 - Application search tool with lunr
 - Platform-independent GUI application (Neurodeskapp)
@@ -65,17 +93,348 @@ We try to update this page based on the git commit history:
 - Documentation (GitHub workflow)
 - Automated building and testing of example documentation from Jupyter notebooks
 - Development of interactive container building tool
+</details>
 
-## Joshua Scarsbrook ([Vbitz](https://github.com/Vbitz))
+<details class="contributor-item">
+<summary>
 
-### University of Queensland, Australia
+### Joshua Scarsbrook ([Vbitz](https://github.com/Vbitz))
+
+</summary>
+
+#### University of Queensland, Australia
 
 - `build.sh` to `build.yaml`
 - Neurocontainers
+</details>
 
-## Oren Civier ([civier](https://github.com/civier))
+<details class="contributor-item">
+<summary>
 
-### Swinburne University of Technology, Australia
+### Michèle Masson-Trottier ([micmas](https://github.com/micmas))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Redesigning the Neurodesk logo
+- Redesigning neurodesk.github.io
+- User documentation
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Akshit Beniwal ([akshitbeniwal](https://github.com/akshitbeniwal))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Cloud infrastructure and testing
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Monika Doerig ([MoniDoerig](https://github.com/MoniDoerig))
+
+</summary>
+
+#### University of Queensland, Australia
+
+- Interactive notebook examples (workflows: MRIQC, pyBIDS, Nipype on Neurodesk, RISE Slideshow of a Jupyter Notebook; structural imaging: brain extraction with different software packages; diffusion imaging: MRtrix; functional imaging: AFNI, FSL, FSL's fMRI Data Analysis via Nipype)
+- Co-organisation of the Neurodesk Workshop in Zurich, Switzerland (2024), and presentation of "Nipype on Neurodesk"
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Kyle Mapue ([kylemaps](https://github.com/kylemaps))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Cloud infrastructure
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Ashley Stewart ([astewartau](https://github.com/astewartau))
+
+</summary>
+
+#### University of Queensland, Australia
+
+- Application container development (qsmxt)
+- Presentation of Neurodesk at OHBM Brainhack 2022 and OHBM educational course 2022
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Marshall Xu ([KMarshallX](https://github.com/KMarshallX))
+
+</summary>
+
+#### University of Queensland, Australia
+
+- Application container development (VesselBoost)
+</details>
+
+## Other contributors
+
+<details class="contributor-item">
+<summary>
+
+### Akshaiy Narayanan ([Akshaiy91](https://github.com/Akshaiy91))
+
+</summary>
+
+#### The University of Auckland, New Zealand
+
+- Bugfixes in neurodesktop, added tool for diskusage, checking of new version script
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Alan Hockings ([ahockings](https://github.com/ahockings))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Application container development (mricron)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Angela Renton ([air2310](https://github.com/air2310))
+
+</summary>
+
+#### University of Queensland, Australia / École Polytechnique Fédérale de Lausanne, Switzerland / Université de Genève, Switzerland
+
+- Tutorials (MNE-Python, tutorial template)
+- Graphics for website (layer diagram)
+- Documentation
+- User testing
+- [Neurodesk paper](https://doi.org/10.1038/s41592-023-02145-x) lead author
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Arjen Lentz ([arjenlentz](https://github.com/arjenlentz))
+
+</summary>
+
+#### Software freelancer
+
+- Discussion on software licensing
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### David White ([DavidjWhite33](https://github.com/DavidjWhite33))
+
+</summary>
+
+#### Swinburne University of Technology, Australia
+
+- Application container development (Brainstorm, eeglab, fieldtrip)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Edan Hamilton ([Edan-Hamilton](https://github.com/Edan-Hamilton))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Cloud infrastructure
+- Cyber security
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Farwa Abbas ([Farwa-Abbas](https://github.com/Farwa-Abbas))
+
+</summary>
+
+#### Adelaide University, Australia
+
+- Initial container setup for nftsim
+- Testing and validation for nftsim
+- [Institutional profile](https://researchers.adelaide.edu.au/profile/farwa.abbas)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Fernanda Ribeiro ([felenitaribeiro](https://github.com/felenitaribeiro))
+
+</summary>
+
+#### Justus-Liebig University Giessen, Germany; University of Queensland, Australia
+
+- Application container development (deepretinotopy)
+- Documentation
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Jakub Kaczmarzyk ([kaczmarj](https://github.com/kaczmarj))
+
+</summary>
+
+#### Stony Brook University, USA
+
+- Proof of concept contributions
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Jeryn Chang ([Cadaei-Yuvxvs](https://github.com/Cadaei-Yuvxvs))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Application container development (oshyx)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Judy D Zhu ([JD-Zhu](https://github.com/JD-Zhu))
+
+</summary>
+
+#### Macquarie University, Australia
+
+- Application containers (fieldtrip)
+- Tutorials (fieldtrip)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Kelly Garner ([garner-code](https://github.com/garner-code))
+
+</summary>
+
+#### University of New South Wales, Australia; The University of Queensland, Australia
+
+- Tutorials (fmriprep, mriqc, physio batch)
+- User testing on macOS
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Kexin Lou ([Kaxnn](https://github.com/Kaxnn))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Application container development (mne/torch, esilpd)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Korbinian Eckstein ([korbinian90](https://github.com/korbinian90))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Documentation
+- Application container development (qsmxt, mrsi)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Lars Kasper ([mrikasper](https://github.com/mrikasper))
+
+</summary>
+
+#### University of Toronto, Canada; University of Zurich and ETH Zurich, Zurich, Switzerland
+
+- Tutorials (physio)
+- Application container (physio)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Laurentius (Renzo) Huber ([layerfMRI](https://github.com/layerfMRI))
+
+</summary>
+
+#### National Institutes of Health, USA
+
+- Application container development (laynii)
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Marcel Zwiers ([marcelzwiers](https://github.com/marcelzwiers))
+
+</summary>
+
+#### Radboud University, Netherlands
+
+- bidscoin
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Martin Grignard ([MartinGrignard](https://github.com/MartinGrignard))
+
+</summary>
+
+#### University of Liège, Belgium
+
+- Initial neurocommand prototype and menu system builder, including `apps.json` idea
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Nikhil Kumar Jangamreddy ([jnikhilreddy](https://github.com/jnikhilreddy))
+
+</summary>
+
+#### The University of Queensland, Australia
+
+- Language models
+- Container building
+</details>
+
+<details class="contributor-item">
+<summary>
+
+### Oren Civier ([civier](https://github.com/civier))
+
+</summary>
+
+#### Swinburne University of Technology, Australia
 
 - Funding: ARDC Australian Electrophysiology Data Analytics PlaTform (AEDAPT) (CI for $566k AUD), contributing to initial conceptualisation, EOI writeup, scope of project, proposal writeup, teaming up with the Australian Imaging Service (AIS), recruiting collaborators, assisting collaborators with case studies
 - Design: leading the Virtual Neuro Machine (VNM) hackathon project in the 2020 OHBM BrainHack, where the first version of Neurodesktop was developed
@@ -91,221 +450,97 @@ We try to update this page based on the git commit history:
 - Outreach: providing assistance to nodes of the Australian National Imaging Facility with installing/using Neurodesk
 - Administration: one of Neurodesk/AEDAPT representatives in ARCOS, AIS and NECTAR Interactive Analytics committees and working groups
 - Papers: co-author Neurodesk manuscript (in preparation; contribution to initial outline, input on first draft), co-author proceedings of the OHBM Brainhack 2021 (to be published in Aperture)
+</details>
 
-## Tom Johnstone ([TomEmotion](https://github.com/TomEmotion))
+<details class="contributor-item">
+<summary>
 
-### Swinburne University of Technology, Australia
+### Paris Lyons
 
-- Funding: ARDC (PI for $566k AUD)
-- Application container (sigviewer)
+</summary>
 
-## Monika Doerig ([MoniDoerig](https://github.com/MoniDoerig))
+#### Swinburne University of Technology, Australia
 
-### University of Queensland, Australia
+- Design of the first Neurodesk logo
+- Project management of AEDAPT project
+</details>
 
-- Interactive notebook examples (workflows: MRIQC, pyBIDS, Nipype on Neurodesk, RISE Slideshow of a Jupyter Notebook; structural imaging: brain extraction with different software packages; diffusion imaging: MRtrix; functional imaging: AFNI, FSL, FSL's fMRI Data Analysis via Nipype)
-- Co-organisation of the Neurodesk Workshop in Zurich, Switzerland (2024), and presentation of "Nipype on Neurodesk"
+<details class="contributor-item">
+<summary>
 
-## Michèle Masson-Trottier ([micmas](https://github.com/micmas))
+### Sin Kim ([kimsin98](https://github.com/kimsin98))
 
-### The University of Queensland, Australia
+</summary>
 
-- Redesigning the Neurodesk logo
-- Redesigning neurodesk.github.io
-- User documentation
+#### Korea Advanced Institute of Science & Technology, South Korea
 
-## Nikhil Kumar Jangamreddy ([jnikhilreddy](https://github.com/jnikhilreddy))
+- Tutorial (DataLad)
+</details>
 
-### The University of Queensland, Australia
+<details class="contributor-item">
+<summary>
 
-- Language models
-- Container building
+### Stefanie Evas ([neuro-sevas](https://github.com/neuro-sevas))
 
-## Akshit Beniwal ([akshitbeniwal](https://github.com/akshitbeniwal))
+</summary>
 
-### The University of Queensland, Australia
+#### University of Adelaide, Australia; CSIRO, Australia
 
-- Cloud infrastructure and testing
-
-## Kyle Mapue ([kylemaps](https://github.com/kylemaps))
-
-### The University of Queensland, Australia
-
-- Cloud infrastructure
-
-## Edan Hamilton ([Edan-Hamilton](https://github.com/Edan-Hamilton))
-
-### The University of Queensland, Australia
-
-- Cloud infrastructure
-- Cyber security
-
-## Angela Renton ([air2310](https://github.com/air2310))
-
-### University of Queensland, Australia / École Polytechnique Fédérale de Lausanne, Switzerland / Université de Genève, Switzerland
-
-- Tutorials (MNE-Python, tutorial template)
-- Graphics for website (layer diagram)
 - Documentation
-- User testing
-- [Neurodesk paper](https://doi.org/10.1038/s41592-023-02145-x) lead author
+- Application containers
+</details>
 
-## Thomas Shaw ([thomshaw92](https://github.com/thomshaw92))
+<details class="contributor-item">
+<summary>
 
-### University of Queensland, Australia
+### Thomas Shaw ([thomshaw92](https://github.com/thomshaw92))
+
+</summary>
+
+#### University of Queensland, Australia
 
 - Windows, Mac, Linux startup scripts
 - Initial transparent singularity prototype
 - Application container development (LASHiS, ASHS)
 - User testing
+</details>
 
-## Fernanda Ribeiro ([felenitaribeiro](https://github.com/felenitaribeiro))
+<details class="contributor-item">
+<summary>
 
-### Justus-Liebig University Giessen, Germany; University of Queensland, Australia
+### Tom Johnstone ([TomEmotion](https://github.com/TomEmotion))
 
-- Application container development (deepretinotopy)
-- Documentation
+</summary>
 
-## Ashley Stewart ([astewartau](https://github.com/astewartau))
+#### Swinburne University of Technology, Australia
 
-### University of Queensland, Australia
+- Funding: ARDC (PI for $566k AUD)
+- Application container (sigviewer)
+</details>
 
-- Application container development (qsmxt)
-- Presentation of Neurodesk at OHBM Brainhack 2022 and OHBM educational course 2022
+<details class="contributor-item">
+<summary>
 
-## Xincheng Ye ([yexincheng](https://github.com/yexincheng))
+### Xincheng Ye ([yexincheng](https://github.com/yexincheng))
 
-### University of Queensland, Australia
+</summary>
+
+#### University of Queensland, Australia
 
 - Application container development (delphi, slicer, deepretinotopy)
+</details>
 
-## Marshall Xu ([KMarshallX](https://github.com/KMarshallX))
+<details class="contributor-item">
+<summary>
 
-### University of Queensland, Australia
+### Yaroslav Halchenko ([yarikoptic](https://github.com/yarikoptic))
 
-- Application container development (VesselBoost)
+</summary>
 
-## David White ([DavidjWhite33](https://github.com/DavidjWhite33))
-
-### Swinburne University of Technology, Australia
-
-- Application container development (Brainstorm, eeglab, fieldtrip)
-
-## Yaroslav Halchenko ([yarikoptic](https://github.com/yarikoptic))
-
-### Dartmouth College, USA
+#### Dartmouth College, USA
 
 - DataLad neurocontainers
-
-## Martin Grignard ([MartinGrignard](https://github.com/MartinGrignard))
-
-### University of Liège, Belgium
-
-- Initial neurocommand prototype and menu system builder, including `apps.json` idea
-
-## Akshaiy Narayanan ([Akshaiy91](https://github.com/Akshaiy91))
-
-### The University of Auckland, New Zealand
-
-- Bugfixes in neurodesktop, added tool for diskusage, checking of new version script
-
-## Kelly Garner ([garner-code](https://github.com/garner-code))
-
-### University of New South Wales, Australia; The University of Queensland, Australia
-
-- Tutorials (fmriprep, mriqc, physio batch)
-- User testing on macOS
-
-## Paris Lyons
-
-### Swinburne University of Technology, Australia
-
-- Design of the first Neurodesk logo
-- Project management of AEDAPT project
-
-## Lars Kasper ([mrikasper](https://github.com/mrikasper))
-
-### University of Toronto, Canada; University of Zurich and ETH Zurich, Zurich, Switzerland
-
-- Tutorials (physio)
-- Application container (physio)
-
-## Judy D Zhu ([JD-Zhu](https://github.com/JD-Zhu))
-
-### Macquarie University, Australia
-
-- Application containers (fieldtrip)
-- Tutorials (fieldtrip)
-
-## Korbinian Eckstein ([korbinian90](https://github.com/korbinian90))
-
-### The University of Queensland, Australia
-
-- Documentation
-- Application container development (qsmxt, mrsi)
-
-## Stefanie Evas ([neuro-sevas](https://github.com/neuro-sevas))
-
-### University of Adelaide, Australia; CSIRO, Australia
-
-- Documentation
-- Application containers
-
-## Jeryn Chang ([Cadaei-Yuvxvs](https://github.com/Cadaei-Yuvxvs))
-
-### The University of Queensland, Australia
-
-- Application container development (oshyx)
-
-## Sin Kim ([kimsin98](https://github.com/kimsin98))
-
-### Korea Advanced Institute of Science & Technology, South Korea
-
-- Tutorial (DataLad)
-
-## Jakub Kaczmarzyk ([kaczmarj](https://github.com/kaczmarj))
-
-### Stony Brook University, USA
-
-- Proof of concept contributions
-
-## Alan Hockings ([ahockings](https://github.com/ahockings))
-
-### The University of Queensland, Australia
-
-- Application container development (mricron)
-
-## Arjen Lentz ([arjenlentz](https://github.com/arjenlentz))
-
-### Software freelancer
-
-- Discussion on software licensing
-
-## Kexin Lou ([Kaxnn](https://github.com/Kaxnn))
-
-### The University of Queensland, Australia
-
-- Application container development (mne/torch, esilpd)
-
-## Laurentius (Renzo) Huber ([layerfMRI](https://github.com/layerfMRI))
-
-### National Institutes of Health, USA
-
-- Application container development (laynii)
-
-## Marcel Zwiers ([marcelzwiers](https://github.com/marcelzwiers))
-
-### Radboud University, Netherlands
-
-- bidscoin
-
-## Farwa Abbas ([Farwa-Abbas](https://github.com/Farwa-Abbas))
-
-### Adelaide University, Australia
-
-- Initial container setup for nftsim
-- Testing and validation for nftsim
-- [Institutional profile](https://researchers.adelaide.edu.au/profile/farwa.abbas)
+</details>
 
 ## Steering Committee members without code contributions
 
