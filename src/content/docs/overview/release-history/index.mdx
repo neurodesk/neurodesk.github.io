@@ -3,12 +3,12 @@ title: Release History
 description: Previous releases of Neurodesktop.
 sidebar:
   order: 7
-# Release dates are level 2 headings; the New Features / Improvements / Bug
-# Fixes headings inside each release are level 3. Cap the table of contents at
-# level 2 so it lists release dates instead of repeating the same three
-# subheadings once per release.
+# Years are level 2, release dates level 3, and the New Features / Improvements
+# / Bug Fixes headings inside each release level 4. Cap the table of contents at
+# level 3 so it nests release dates under their year without repeating the same
+# three subheadings once per release.
 tableOfContents:
-  maxHeadingLevel: 2
+  maxHeadingLevel: 3
 # Nothing above the first release is worth linking to, so drop the "Overview"
 # entry as well and leave the dates on their own.
 tocOverview: false
@@ -28,25 +28,28 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 
 <script src="/js/collapse-toolbar.js" defer></script>
 
+
+## 2026
+
 <details class="release-item" open>
 <summary>
 
-## 2026-07-11 <Badge text="Latest" variant="success" />
+### 2026-07-11 <Badge text="Latest" variant="success" />
 
 </summary>
 
-### New Features
+#### New Features
 
 - n/a
 
-### Improvements
+#### Improvements
 
 - Improved cvmfs setup
 - improved clipboard support
 - improved libreoffice integration
 - improved startup time
 
-### Bug Fixes
+#### Bug Fixes
 
 - libreoffice
 </details>
@@ -54,20 +57,20 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item" open>
 <summary>
 
-## 2026-06-04
+### 2026-06-04
 
 </summary>
 
-### New Features
+#### New Features
 
 - new webapps design
 
-### Improvements
+#### Improvements
 
 - Update to latest dependency versions
 - Improved Desktop performance
 
-### Bug Fixes
+#### Bug Fixes
 
 - fixed webapps
 - fixed RDP and VNC desktop startup issues
@@ -76,11 +79,11 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item" open>
 <summary>
 
-## 2026-04-28
+### 2026-04-28
 
 </summary>
 
-### New Features
+#### New Features
 
 - added slurm
 - added opencode, codex, claude agent apps
@@ -88,38 +91,41 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 - added webapps
 - added donation banner
 
-### Improvements
+#### Improvements
 
 - VNC and RDP desktops are now secured by random passwords
 - added pytest testing under /opt/tests
 - startup time optimisation
 - size optimisation
 
-### Bug Fixes
+#### Bug Fixes
 
 - fixed NBI default model and instructions for notebooks
 </details>
 
+
+## 2025
+
 <details class="release-item" open>
 <summary>
 
-## 2025-12-20
+### 2025-12-20
 
 </summary>
 
-### New Features
+#### New Features
 
 - added pydra
 - add jupyter-sshd-proxy to allow ssh and vscode connections
 - add nbdev
 - add nipoppy
 
-### Improvements
+#### Improvements
 
 - update examples
 - update ipyniivue
 
-### Bug Fixes
+#### Bug Fixes
 
 - pin ipywidgets version to 7.8.5 in Dockerfile to get niivue to work in rise slideshow
 </details>
@@ -127,18 +133,18 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-06-10
+### 2025-06-10
 
 </summary>
 
-### New Features
+#### New Features
 
 - upgrade to jupyterhub 5.3.0
 - added nbgitpuller, tcsh
 - added neurodesk copilot: [/developers/neurodesk-copilot/](/developers/neurodesk-copilot/)
 - added qsirecon
 
-### Improvements
+#### Improvements
 
 - updated niivue (with breaking interface change)
 - updated jupyter-lmod (with breaking interface change)
@@ -146,7 +152,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 - updated background to new Neurodesk logo
 - updated ants to 2.6.0
 
-### Bug Fixes
+#### Bug Fixes
 
 - split cvmfs in 3 different regions
 </details>
@@ -154,21 +160,21 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-04-08
+### 2025-04-08
 
 </summary>
 
-### New Features
+#### New Features
 
 - Added [dcm2bids](https://github.com/UNFmontreal/Dcm2Bids) support
 - Integrated [QSMxT](https://qsmxt.github.io/QSMxT/) v8.0.2
 
-### Improvements
+#### Improvements
 
 - Replaced [BIDScoin](https://bidscoin.readthedocs.io/en/latest/) 4.6.0 with 4.6.1 to fix GUI bug
 - Updated [qsiprep](https://qsiprep.readthedocs.io/) to 1.0.1
 
-### Bug Fixes
+#### Bug Fixes
 
 - Improved internet test by using DNS lookup instead of ping
 </details>
@@ -176,11 +182,11 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-03-14
+### 2025-03-14
 
 </summary>
 
-### Bug Fixes
+#### Bug Fixes
 
 - Startup process was setting variables in different places
 </details>
@@ -188,15 +194,15 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-03-12
+### 2025-03-12
 
 </summary>
 
-### New Features
+#### New Features
 
 - Added neurodesk copilot dependencies
 
-### Bug Fixes
+#### Bug Fixes
 
 - Apptainer didn't mount binfmt, which was resulting in simg files not working in offline mode on apple silicon
 </details>
@@ -204,11 +210,11 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-03-07
+### 2025-03-07
 
 </summary>
 
-### Bug Fixes
+#### Bug Fixes
 
 - CVMFS_DISABLED=false also disabled it.
 </details>
@@ -216,15 +222,15 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-03-06
+### 2025-03-06
 
 </summary>
 
-### Improvements
+#### Improvements
 
 - Add overlay directory on startup
 
-### Bug Fixes
+#### Bug Fixes
 
 - Only link from cvmfs if cvmfs is not disabled
 </details>
@@ -232,18 +238,18 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-03-05
+### 2025-03-05
 
 </summary>
 
-### New Features
+#### New Features
 
 - Added support for downloading containers offline, can be activated by setting CVMFS_DISABLE=true
 - Add [synthstrip](https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/) 7.4.1
 - Add [pydeface](https://pypi.org/project/pydeface/) 2.0.2
 - Add [fmriprep](https://fmriprep.org/en/stable/) 24.1.1 20250214
 
-### Improvements
+#### Improvements
 
 - update [BIDScoin](https://bidscoin.readthedocs.io/en/latest/) to 4.5.0
 - update [aslprep](https://aslprep.readthedocs.io/en/latest/) to 0.7.5
@@ -258,17 +264,17 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-02-04
+### 2025-02-04
 
 </summary>
 
-### New Features
+#### New Features
 
 - Add latency check for cvmfs direct vs CDN
 - Add [fsl](https://fsl.fmrib.ox.ac.uk/fsl/docs/) 6.0.7.16
 - Add [dicomtools](https://wfwiggins.github.io/dicomtools/) container
 
-### Improvements
+#### Improvements
 
 - update [freesurfer](https://surfer.nmr.mgh.harvard.edu/) 8.0.0 and nighres
 </details>
@@ -276,15 +282,15 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-01-29
+### 2025-01-29
 
 </summary>
 
-### New Features
+#### New Features
 
 - Add [freesurfer](https://surfer.nmr.mgh.harvard.edu/) 8.0.0
 
-### Bug Fixes
+#### Bug Fixes
 
 - In JVM, parameters only worked for arm64, not x86
 </details>
@@ -292,33 +298,36 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2025-01-24
+### 2025-01-24
 
 </summary>
 
-### New Features
+#### New Features
 
 - add [Matlab](https://www.mathworks.com/products/matlab.html) 2023b
 - add [Matlab](https://www.mathworks.com/products/matlab.html) 2022b
 - new Quay.io jupyter baseimage
 
-### Improvements
+#### Improvements
 
 - update version in neurodesk.yml
 - Change TinyRange share path to /data instead of /share
 - updated [deepRetinotopy](https://github.com/Puckett-Lab/deepRetinotopy) version
 - update [Matlab](https://www.mathworks.com/products/matlab.html) 2024b
 
-### Bug Fixes
+#### Bug Fixes
 
 - Added workaround for JVM bug on Apple M4
 - added docker fix for macOS to desktop
 </details>
 
+
+## 2024
+
 <details class="release-item">
 <summary>
 
-## 2024-12-06
+### 2024-12-06
 
 </summary>
 
@@ -338,7 +347,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2024-10-22
+### 2024-10-22
 
 </summary>
 
@@ -352,7 +361,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2024-10-16
+### 2024-10-16
 
 </summary>
 
@@ -390,7 +399,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2024-05-25
+### 2024-05-25
 
 </summary>
 
@@ -416,7 +425,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2024-03-27
+### 2024-03-27
 
 </summary>
 
@@ -427,7 +436,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2024-01-12
+### 2024-01-12
 
 </summary>
 
@@ -435,10 +444,13 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 - removed c.ServerApp.root_dir setting because it was causing an error when clicking on the Home button. Now it's not possible to navigate outside of the home directory anymore in the side panel.
 </details>
 
+
+## 2023
+
 <details class="release-item">
 <summary>
 
-## 2023-11-28
+### 2023-11-28
 
 </summary>
 
@@ -449,7 +461,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2023-10-29
+### 2023-10-29
 
 </summary>
 
@@ -459,7 +471,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2023-09-20
+### 2023-09-20
 
 </summary>
 
@@ -474,7 +486,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2023-06-28
+### 2023-06-28
 
 </summary>
 
@@ -488,7 +500,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2023-05-31
+### 2023-05-31
 
 </summary>
 
@@ -500,7 +512,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2023-05-25
+### 2023-05-25
 
 </summary>
 
@@ -510,10 +522,13 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 - added symlink on home if /data is mounted
 </details>
 
+
+## 2022
+
 <details class="release-item">
 <summary>
 
-## 2022-12-16
+### 2022-12-16
 
 </summary>
 
@@ -525,7 +540,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-11-29
+### 2022-11-29
 
 </summary>
 
@@ -542,7 +557,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-08-13
+### 2022-08-13
 
 </summary>
 
@@ -559,7 +574,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-07-01
+### 2022-07-01
 
 </summary>
 
@@ -570,7 +585,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-03-29
+### 2022-03-29
 
 </summary>
 
@@ -583,7 +598,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-03-02
+### 2022-03-02
 
 </summary>
 
@@ -595,7 +610,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-02-22
+### 2022-02-22
 
 </summary>
 
@@ -609,7 +624,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-01-28
+### 2022-01-28
 
 </summary>
 
@@ -620,7 +635,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-01-21
+### 2022-01-21
 
 </summary>
 
@@ -633,7 +648,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2022-01-11
+### 2022-01-11
 
 </summary>
 
@@ -645,10 +660,13 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 - oshyx was updated to 0.3
 </details>
 
+
+## 2021
+
 <details class="release-item">
 <summary>
 
-## 2021-12-20
+### 2021-12-20
 
 </summary>
 
@@ -663,7 +681,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-12-07
+### 2021-12-07
 
 </summary>
 
@@ -679,7 +697,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-10-28
+### 2021-10-28
 
 </summary>
 
@@ -689,7 +707,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-10-18
+### 2021-10-18
 
 </summary>
 
@@ -703,7 +721,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-09-29
+### 2021-09-29
 
 </summary>
 
@@ -717,7 +735,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-09-23
+### 2021-09-23
 
 </summary>
 
@@ -728,7 +746,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-09-18
+### 2021-09-18
 
 </summary>
 
@@ -738,7 +756,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-09-17
+### 2021-09-17
 
 </summary>
 
@@ -750,7 +768,7 @@ Please consult [this page](https://github.com/neurodesk/neurodesk.github.io/blob
 <details class="release-item">
 <summary>
 
-## 2021-09-16
+### 2021-09-16
 
 </summary>
 
