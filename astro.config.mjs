@@ -9,6 +9,13 @@ export default defineConfig({
 	compressHTML: false,
 	redirects: {
 		'/applications': '/overview/applications/',
+		// Pages that moved so the content tree mirrors the sidebar. /support/faq
+		// previously redirected the other way; the FAQ now lives at that URL, which
+		// is where the Hugo site had it.
+		'/overview/donate': '/donate/',
+		'/overview/faq': '/support/faq/',
+		'/overview/contribute': '/support/contribute/',
+		'/contact': '/support/contact/',
 		'/developers/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/manual_build': '/developers/new-tools/',
@@ -36,7 +43,7 @@ export default defineConfig({
 		'/how-to-cite-us': '/overview/how-to-cite-us/',
 		'/neurocommand': '/getting-started/neurocommand/',
 		'/neurocontainers': '/getting-started/neurocontainers/',
-		'/neurocontainers/contribute': '/overview/contribute/',
+		'/neurocontainers/contribute': '/support/contribute/',
 		'/neurodesktop': '/getting-started/neurodesktop/',
 		'/neurodesktop/getting-started/cloud': '/getting-started/neurodesktop/cloud/',
 		'/neurodesktop/getting-started/linux': '/getting-started/neurodesktop/linux/',
@@ -52,7 +59,6 @@ export default defineConfig({
 		'/static/learning-resources/tutorials/functional_imaging/connectomeworkbench': '/redirects/tutorials-to-neurodeskedu/',
 		'/support/discussion-forum': 'https://github.com/orgs/neurodesk/discussions',
 		'/overview/discussion-forum': 'https://github.com/orgs/neurodesk/discussions',
-		'/support/faq': '/overview/faq/',
 		'/support/release-history': '/overview/release-history/',
 		'/tutorials': '/redirects/tutorials-to-neurodeskedu/',
 		'/tutorials-electrophysiology/eeg_mne-python': '/redirects/tutorials-to-neurodeskedu/',
@@ -273,14 +279,14 @@ export default defineConfig({
 					label: 'Support',
 					collapsed: true,
 					items: [
-						{ label: 'FAQ', link: '/overview/faq/' },
-						{ label: 'How to contribute', link: '/overview/contribute/' },
-						{ label: 'Contact', link: '/contact/' },
+						{ label: 'FAQ', link: '/support/faq/' },
+						{ label: 'How to contribute', link: '/support/contribute/' },
+						{ label: 'Contact', link: '/support/contact/' },
 					],
 				},
 				{
 					label: 'Donate',
-					link: '/overview/donate/',
+					link: '/donate/',
 				},
 			],
 			customCss: ['./src/styles/custom.css'],
