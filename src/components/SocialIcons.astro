@@ -3,10 +3,10 @@
 import Default from '@astrojs/starlight/components/SocialIcons.astro';
 
 const links = [
-	{ label: 'Getting started', href: '/getting-started/', priority: 'low' },
-	{ label: 'Learning resources', href: 'https://neurodesk.org/edu/', priority: 'mid', external: true },
-	{ label: 'For developers', href: '/developers/', priority: 'high' },
-	{ label: 'Get in touch', href: '/support/contact/', priority: 'lowest' },
+	{ label: 'Getting started', href: '/getting-started/' },
+	{ label: 'Learning resources', href: 'https://neurodesk.org/edu/', external: true },
+	{ label: 'For developers', href: '/developers/' },
+	{ label: 'Get in touch', href: '/support/contact/' },
 ];
 
 const current = Astro.url.pathname;
@@ -14,10 +14,9 @@ const current = Astro.url.pathname;
 
 <nav class="nav-links" aria-label="Sections">
 	{
-		links.map(({ label, href, priority, external }) => (
+		links.map(({ label, href, external }) => (
 			<a
 				href={href}
-				class={`p-${priority}`}
 				aria-current={!external && current.startsWith(href) ? 'page' : undefined}
 				{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
 			>
@@ -49,25 +48,17 @@ const current = Astro.url.pathname;
 		color: var(--sl-color-white);
 	}
 
-	/* In the mobile menu footer the links stay visible and wrap. */
+	/* The mobile menu footer has room to wrap, so it always shows the full list. */
 	:global(.mobile-preferences) .nav-links {
 		flex-wrap: wrap;
 		gap: 0.5rem 1rem;
 	}
 
-	/* In the header, shed entries as room runs out, least useful first. */
-	@media (max-width: 95rem) {
-		:global(.header) .nav-links a.p-lowest {
-			display: none;
-		}
-	}
-	@media (max-width: 85rem) {
-		:global(.header) .nav-links a.p-low {
-			display: none;
-		}
-	}
-	@media (max-width: 75rem) {
-		:global(.header) .nav-links a.p-mid {
+	/* Below ~55rem the row runs out of room, even with search collapsed to its
+	   icon. The sidebar is on screen from 50rem and the hamburger takes over
+	   below that, so nothing is lost by hiding these. */
+	@media (max-width: 55rem) {
+		:global(.header) .nav-links {
 			display: none;
 		}
 	}
