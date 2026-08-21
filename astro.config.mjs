@@ -150,6 +150,7 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/NeuroDesk' },
 				{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/neurodesk-org/' },
 			],
+			routeMiddleware: './src/starlightRouteData.ts',
 			components: {
 				PageSidebar: './src/components/PageSidebar.astro',
 				SocialIcons: './src/components/SocialIcons.astro',
