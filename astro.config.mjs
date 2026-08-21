@@ -224,11 +224,6 @@ export default defineConfig({
 					link: '/overview/applications/',
 				},
 				{
-					label: 'NeurodeskEDU',
-					link: 'https://neurodesk.org/edu/',
-					attrs: { target: '_blank', rel: 'noopener noreferrer' },
-				},
-				{
 					label: 'Webapps',
 					link: 'https://webapps.neurodesk.org/',
 					attrs: { target: '_blank', rel: 'noopener noreferrer' },
