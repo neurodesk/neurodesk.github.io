@@ -1,0 +1,118 @@
+name: PR Preview Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests google-auth matplotlib
+
+      - name: Test user metrics generator
+        run: python -m unittest tests/test_write_user_metrics.py
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Write applist.json
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+        run: |
+          if [ -n "$ZENODO_TOKEN" ]; then
+            python .github/workflows/write-app-json.py --zenodo_token "$ZENODO_TOKEN"
+          else
+            echo "ZENODO_TOKEN not set, skipping applist generation"
+          fi
+
+      - name: Write user metrics
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -n "$GA4_SERVICE_ACCOUNT_KEY" ]; then
+            python .github/workflows/write-user-metrics.py
+          else
+            echo "GA4_SERVICE_ACCOUNT_KEY not set — writing unavailable placeholder for PR preview"
+            python .github/workflows/write-user-metrics.py --allow-missing-token
+          fi
+
+      - name: Write Neurodesk App download metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/workflows/write-neurodeskapp-metrics.py
+
+      - name: Build preview
+        run: |
+          PREVIEW_PATH="pr-${{ github.event.pull_request.number }}"
+
+          # Use the target repo's Pages domain for previews (staging or fork)
+          if [[ "${{ github.event.pull_request.base.repo.full_name }}" == "neurodesk/neurodesk.github.io" ]]; then
+            SITE_URL="https://neurodesk.github.io"
+            echo "Building PR preview for staging: ${SITE_URL}/${PREVIEW_PATH}/"
+          else
+            # For PRs to forks (rare case)
+            SITE_URL="https://${{ github.event.pull_request.base.repo.owner.login }}.github.io"
+            echo "Building PR preview for fork: ${SITE_URL}/${PREVIEW_PATH}/"
+          fi
+
+          npx astro build --site "${SITE_URL}" --base "/${PREVIEW_PATH}"
+
+          mkdir -p preview-deploy/${PREVIEW_PATH}
+          cp -r dist/* preview-deploy/${PREVIEW_PATH}/
+
+      - name: Save PR metadata
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+          BASE_OWNER: ${{ github.event.pull_request.base.repo.owner.login }}
+          BASE_NAME: ${{ github.event.pull_request.base.repo.name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p pr-metadata
+          printf '%s\n' "$PR_NUMBER" > pr-metadata/pr-number.txt
+          printf '%s\n' "$BASE_REPO" > pr-metadata/base-repo.txt
+          printf '%s\n' "$BASE_OWNER" > pr-metadata/base-owner.txt
+          printf '%s\n' "$BASE_NAME" > pr-metadata/base-name.txt
+          printf '%s\n' "$HEAD_SHA" > pr-metadata/head-sha.txt
+          printf '%s\n' "$HEAD_REF" > pr-metadata/head-ref.txt
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-preview-${{ github.event.pull_request.number }}
+          path: |
+            preview-deploy/
+            pr-metadata/
+          retention-days: 7
+          if-no-files-found: error

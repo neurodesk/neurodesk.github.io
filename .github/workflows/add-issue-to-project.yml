@@ -1,0 +1,17 @@
+name: add-issue-to-project
+
+on:
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+
+jobs:
+  assign-issue-to-project:
+    runs-on: ubuntu-latest
+    name: Assign to Project
+    steps:
+      - uses: actions/add-to-project@v2.0.0
+        with:
+          project-url: https://github.com/orgs/neurodesk/projects/9
+          github-token: ${{ secrets.PAT }}

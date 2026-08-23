@@ -1,0 +1,100 @@
+name: PR Preview Cleanup
+
+on:
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+# Best-effort: share the build's concurrency group (set in pr-build.yml) so
+# closing a PR cancels any in-flight preview build. This is timing-dependent
+# — cleanup must reach the concurrency-evaluation stage before the build
+# finishes uploading its artifact. The actual safety net is the
+# "Check PR state" step in pr-deploy.yml, which skips deploy steps when the
+# PR has already closed.
+concurrency:
+  group: preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Remove preview directory
+        run: |
+          PREVIEW_PATH="pr-${{ github.event.pull_request.number }}"
+
+          # Check whether gh-pages exists on the remote; if not, nothing to do
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo "No gh-pages branch found on remote; skipping cleanup"
+            exit 0
+          fi
+
+          # Ensure we have latest gh-pages to avoid push conflicts
+          git fetch origin gh-pages
+          # Create or reset a local gh-pages branch to match remote
+          git checkout -B gh-pages origin/gh-pages
+          git pull --rebase origin gh-pages || true
+
+          if [ -d "$PREVIEW_PATH" ]; then
+            echo "Removing preview directory: $PREVIEW_PATH"
+            git rm -rf "$PREVIEW_PATH" || true
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            if git diff --staged --quiet; then
+              echo "Nothing to commit after removal (nothing staged)"
+            else
+              git commit -m "cleanup: remove preview for PR #${{ github.event.pull_request.number }}" || true
+              git push origin gh-pages || true
+              echo "Preview cleaned up successfully"
+            fi
+          else
+            echo "Preview directory not found, may have been already cleaned up"
+          fi
+
+      - name: Trigger Pages deploy to drop preview from live site
+        if: ${{ github.event.pull_request.merged != true }}
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.request('POST /repos/{owner}/{repo}/dispatches', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'pr-preview-removed',
+              client_payload: { pr: context.payload.pull_request.number }
+            });
+            core.info('Triggered repository_dispatch: pr-preview-removed')
+
+      - name: Comment cleanup
+        uses: actions/github-script@v9
+        continue-on-error: true
+        with:
+          script: |
+            try {
+              const prNumber = context.payload.pull_request?.number || context.issue.number;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: 'Preview cleaned up after PR closure.'
+              });
+              core.info(`Commented on PR #${prNumber}: cleanup notice posted`);
+            } catch (error) {
+              core.info(`Skipping cleanup comment (likely permissions on forked PRs): ${error.message}`);
+            }
+
+      # Note: artifacts are NOT deleted here. They expire automatically via
+      # `retention-days: 7` set in pr-build.yml. Synchronous deletion on PR
+      # close raced with in-flight builds (see run 26075660775): cleanup could
+      # delete an artifact one second after the build uploaded it but before
+      # pr-deploy.yml could read it. Letting retention handle expiration
+      # removes the race entirely. Concurrency-group cancellation (above)
+      # prevents the build from finishing in the common case anyway.
