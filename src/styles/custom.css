@@ -1917,22 +1917,73 @@ a.add-tool-button:hover {
 	--sl-content-inline-start: 0rem;
 }
 
-@media (min-width: 50rem) {
+/* Above the mobile band below, hero pages drop the sidebar column entirely. */
+@media (min-width: 55rem) {
 	:root[data-has-hero] .sidebar-pane {
 		--sl-sidebar-visibility: hidden;
-	}
-	:root[data-has-hero][data-mobile-menu-expanded] .sidebar-pane {
-		--sl-sidebar-visibility: visible;
 	}
 	:root[data-has-hero] .main-frame {
 		padding-inline-start: 0;
 	}
 }
 
-/* With no sidebar column, the hamburger is the only nav once the header links go. */
+/* -------------------------------------------------------------------------
+   Move the desktop/mobile switch to 55rem.
+
+   Starlight flips to its desktop layout at 50rem, but this header carries four
+   section links on top of the title, search, socials and theme toggle, and that
+   row does not fit until about 55rem. That left a 5rem band rendering half of
+   each layout: header socials AND a hamburger, opening a docked-looking pane
+   whose footer, which is where the section links live, is hidden from 50rem up.
+   So the band offered no route to the sections at all.
+
+   Rather than patch that hybrid, treat the whole band as mobile. Everything
+   here restates what Starlight already does below 50rem.
+   ------------------------------------------------------------------------- */
 @media (min-width: 50rem) and (max-width: 55rem) {
-	:root[data-has-hero] starlight-menu-button button {
+	/* The right-hand cluster moves into the drawer, as it does on mobile. */
+	.header .right-group {
+		display: none;
+	}
+
+	/* Starlight hides the toggle from 50rem up; this band still needs it. */
+	starlight-menu-button button {
 		display: flex;
+	}
+
+	/* Reserve the gutter the toggle sits in. */
+	[data-has-sidebar] .header {
+		padding-inline-end: calc(
+			var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
+		);
+	}
+
+	/* Back to a full-width overlay drawer rather than a docked column. */
+	.sidebar-pane {
+		--sl-sidebar-visibility: hidden;
+		width: 100%;
+		background-color: var(--sl-color-black);
+		border-inline-end: 0;
+	}
+
+	/* custom.css is unlayered, so the rule above outranks Starlight's own
+	   visibility rule in starlight.core and it has to be restated here. This is
+	   what actually makes the hamburger open anything in this band. */
+	[aria-expanded='true'] ~ .sidebar-pane {
+		--sl-sidebar-visibility: visible;
+	}
+
+	/* No docked column, so no reserved content gutter. */
+	.main-frame {
+		padding-inline-start: 0;
+	}
+
+	/* The mobile menu footer holds the section links and socials, and Starlight
+	   hides it with a utility class from 50rem up. Re-showing it is the one
+	   Starlight-owned class we touch here; there is no other hook for it. If a
+	   release ever renames it the drawer loses its footer rather than breaking. */
+	.sidebar-content .md\:sl-hidden {
+		display: block;
 	}
 }
 
@@ -1957,8 +2008,10 @@ a.add-tool-button:hover {
 	margin-inline-start: -0.375rem;
 }
 
-/* Mid widths: search collapses to its icon, buying room for the section links. */
-@media (min-width: 50rem) and (max-width: 66rem) {
+/* Mid widths: search collapses to its icon, buying room for the section links.
+   Starts at 55rem because that is where the section links appear; below it the
+   header is the mobile one and there is nothing to buy room for. */
+@media (min-width: 55rem) and (max-width: 66rem) {
 	site-search button[data-open-modal] > span,
 	site-search button[data-open-modal] kbd {
 		display: none !important;
