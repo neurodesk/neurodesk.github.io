@@ -1910,14 +1910,14 @@ a.add-tool-button:hover {
 .sidebar-content ul:has(> li > details) > li > a[aria-current='page'] {
 	color: var(--sl-color-text-invert);
 }
-/* The landing page opts back into Starlight's sidebar (see
-   src/starlightRouteData.ts) purely so the mobile hamburger renders — without
-   it a splash page has no navigation on small screens. Above the mobile
-   breakpoint the sidebar column is suppressed so the splash layout is
-   unchanged. */
+/* Splash pages opt into hasSidebar so the mobile hamburger renders; these put
+   back the measurements and layout that [data-has-sidebar] would override. */
+:root[data-has-hero] {
+	--sl-content-width: 67.5rem;
+	--sl-content-inline-start: 0rem;
+}
+
 @media (min-width: 50rem) {
-	/* Use Starlight's own visibility variable rather than display:none, so the
-	   pane still opens when the hamburger is used. */
 	:root[data-has-hero] .sidebar-pane {
 		--sl-sidebar-visibility: hidden;
 	}
@@ -1929,19 +1929,14 @@ a.add-tool-button:hover {
 	}
 }
 
-/* Splash pages have no sidebar column, so once the header links go the
-   hamburger is the only navigation. Keep it available in that band. */
+/* With no sidebar column, the hamburger is the only nav once the header links go. */
 @media (min-width: 50rem) and (max-width: 55rem) {
 	:root[data-has-hero] starlight-menu-button button {
 		display: flex;
 	}
 }
 
-/* Social icons and the theme toggle read as one utility cluster rather than two.
-   Starlight separates them with a divider after .social-icons in the header, and
-   pushes them to opposite ends of the mobile menu footer with margin-inline-end:
-   auto. Both are dropped so the group stays together, leaving the single divider
-   before .right-group as the only separator. */
+/* Social icons and the theme toggle as one cluster, not two. */
 .header .social-icons::after {
 	display: none;
 }
@@ -1956,17 +1951,13 @@ a.add-tool-button:hover {
 	gap: 1rem;
 }
 
-/* The theme toggle is a 2rem button around a 1.25rem icon, so it carries
-   0.375rem of internal padding that the bare social icons do not. Pull it back
-   by that amount so the optical gap matches the spacing between the icons. */
+/* Offset the toggle button's 0.375rem internal padding so gaps look even. */
 .header theme-toggle,
 .mobile-preferences theme-toggle {
 	margin-inline-start: -0.375rem;
 }
 
-/* Mid widths: drop the search label and shortcut chip so the trigger is just
-   the magnifier. That frees roughly 80px, which keeps the section links in the
-   header down to ~55rem instead of ~60rem. */
+/* Mid widths: search collapses to its icon, buying room for the section links. */
 @media (min-width: 50rem) and (max-width: 66rem) {
 	site-search button[data-open-modal] > span,
 	site-search button[data-open-modal] kbd {

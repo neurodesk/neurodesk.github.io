@@ -54,9 +54,7 @@ const current = Astro.url.pathname;
 		gap: 0.5rem 1rem;
 	}
 
-	/* Below ~55rem the row runs out of room, even with search collapsed to its
-	   icon. The sidebar is on screen from 50rem and the hamburger takes over
-	   below that, so nothing is lost by hiding these. */
+	/* Below ~55rem the row runs out of room; the sidebar covers navigation. */
 	@media (max-width: 55rem) {
 		:global(.header) .nav-links {
 			display: none;
