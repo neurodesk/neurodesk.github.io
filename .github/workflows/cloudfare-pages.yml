@@ -1,0 +1,234 @@
+name: Cloudflare Pages
+
+on:
+  push:
+    branches: ["main"]
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # --- Python data generation (must run BEFORE Astro build) ---
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests google-auth matplotlib
+
+      - name: Test user metrics generator
+        run: python -m unittest tests/test_write_user_metrics.py
+
+      - name: Write applist.json
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          FAIL_ON_APPLIST_ERROR: ${{ vars.FAIL_ON_APPLIST_ERROR }}
+        run: |
+          if [ -n "$ZENODO_TOKEN" ]; then
+            EXTRA_ARGS=()
+            case "${FAIL_ON_APPLIST_ERROR,,}" in
+              true|1|yes)
+                echo "FAIL_ON_APPLIST_ERROR is enabled; running in strict mode."
+                EXTRA_ARGS+=(--fail-on-error)
+                ;;
+              *)
+                echo "FAIL_ON_APPLIST_ERROR is not enabled; running in best-effort mode."
+                ;;
+            esac
+            python .github/workflows/write-app-json.py --zenodo_token "$ZENODO_TOKEN" "${EXTRA_ARGS[@]}"
+          else
+            echo "ZENODO_TOKEN not set — skipping write-app-json.py"
+          fi
+
+      - name: Write user metrics
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -n "$GA4_SERVICE_ACCOUNT_KEY" ]; then
+            python .github/workflows/write-user-metrics.py
+          else
+            echo "GA4_SERVICE_ACCOUNT_KEY not set — writing unavailable placeholder"
+            python .github/workflows/write-user-metrics.py --allow-missing-token
+          fi
+
+      - name: Write Neurodesk App download metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/workflows/write-neurodeskapp-metrics.py
+
+      # --- Astro build (now has all generated data in public/) ---
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install, build, and upload your site
+        uses: withastro/action@v6
+
+      - name: Verify assets in public
+        run: |
+          set -e
+          MISSING=0
+
+          # Determine if we're on a fork (paths will be patched)
+          if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io" ]]; then
+            REPO_PATH="${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+            echo "Fork detected: will strip /${REPO_PATH}/ prefix when checking files"
+          fi
+
+          # Find referenced /static/ paths in generated HTML/CSS/JS and ensure files exist
+          # Use while-read loop to handle filenames with spaces properly
+          while IFS= read -r p; do
+            # For forks, strip the repo path prefix to get the actual file location
+            if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io" ]]; then
+              # Transform /<owner>.github.io/<repo>/static/... → /static/...
+              FILE_PATH="${p#/"${REPO_PATH}"}"
+              echo "DEBUG: Checking $p → ${FILE_PATH}"
+            else
+              FILE_PATH="${p}"
+            fi
+
+            FILE="public${FILE_PATH}"
+            if [ ! -f "$FILE" ]; then
+              echo "Missing asset: $p -> expected $FILE"
+              MISSING=1
+            fi
+          done < <(grep -Rho 'src="\/[^"]*static\/[^"]*"' public/ | sed -E 's/.*src="(\/[^"]*)".*/\1/' | sort -u)
+
+          if [ "$MISSING" -eq 1 ]; then
+            echo "One or more assets missing from public/ — failing the job"
+            exit 1
+          fi
+
+
+      # Note: Do NOT copy the production CNAME during staging deploys.
+
+      - name: Merge PR previews into artifact (preserve pr-* directories)
+        run: |
+          set -e
+          # Check if gh-pages branch exists
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo "Found gh-pages branch, merging preview directories..."
+
+            # Fetch gh-pages branch
+            git fetch origin gh-pages:refs/remotes/origin/gh-pages
+
+            # Create temporary worktree for gh-pages
+            mkdir -p /tmp/gh-pages-checkout
+            git worktree add /tmp/gh-pages-checkout origin/gh-pages
+
+            # Copy any pr-* directories into public/ (preserving previews)
+            if ls /tmp/gh-pages-checkout/pr-* 1> /dev/null 2>&1; then
+              echo "Copying preview directories to public/..."
+              cp -r /tmp/gh-pages-checkout/pr-* public/ || true
+              echo "Previews merged successfully"
+            else
+              echo "No preview directories found (no active PRs)"
+            fi
+
+            # Clean up worktree
+            git worktree remove /tmp/gh-pages-checkout
+          else
+            echo "No gh-pages branch exists yet, skipping preview merge"
+          fi
+
+  check-links:
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js for Linkspector
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Set up reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: v0.21.0
+
+      - name: Run Linkspector with reviewdog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: |
+          set -euo pipefail
+
+          echo '::group::Installing linkspector'
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium-browser || command -v chromium || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "No system Chrome or Chromium executable found" >&2
+            exit 1
+          fi
+          export PUPPETEER_EXECUTABLE_PATH="$CHROME_BIN"
+          echo "Using Chrome at $PUPPETEER_EXECUTABLE_PATH"
+          npm install -g @umbrelladocs/linkspector@0.5.2
+          linkspector --version
+          echo '::endgroup::'
+
+          echo '::group::Setting up Chrome Linux sandbox'
+          if [ "$(lsb_release -rs)" = "24.04" ]; then
+            echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          fi
+          echo '::endgroup::'
+
+          echo '::group::Running linkspector with reviewdog'
+          set +e
+          linkspector check -c .linkspector.yml -j |
+            reviewdog -f=rdjson \
+              -name="Linkspector" \
+              -reporter="github-pr-check" \
+              -filter-mode="nofilter" \
+              -fail-level="any" \
+              -level="error"
+          linkspector_status=$?
+          set -e
+          echo '::endgroup::'
+
+          echo '::group::Running linkspector stats'
+          linkspector check -c .linkspector.yml -s || true
+          echo '::endgroup::'
+
+          exit "$linkspector_status"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Build & Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -220,7 +220,7 @@ export default function ApplicationsBrowser() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("/data/applist.json")
+    fetch(`${import.meta.env.BASE_URL}data/applist.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
