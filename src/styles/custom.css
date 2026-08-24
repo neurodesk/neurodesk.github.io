@@ -18,35 +18,36 @@
    text input that suggests typing, but it actually opens a modal. Restyle
    as a compact button — magnifier + "Search" + ⌘K hint — so the affordance
    matches the behaviour. */
+/* Ungated so the trigger looks the same at every width. Starlight only restyles
+   it from 50rem up, which left true mobile with the wide fake input. */
 site-search button[data-open-modal] {
 	gap: 0.375rem;
 	font-size: var(--sl-text-xs);
+	width: auto;
+	max-width: none;
+	padding-inline: 0.5rem;
+	background-color: transparent;
+	border-color: transparent;
+	border-radius: 0.375rem;
 }
-@media (min-width: 50rem) {
-	site-search button[data-open-modal] {
-		width: auto;
-		max-width: none;
-		padding-inline: 0.5rem;
-		background-color: transparent;
-		border-color: transparent;
-		border-radius: 0.375rem;
-	}
-	site-search button[data-open-modal]:hover {
-		background-color: var(--sl-color-gray-6);
-		border-color: transparent;
-		color: var(--sl-color-white);
-	}
-	/* Pull the ⌘K chip in next to the label instead of pushing it to the far edge. */
-	site-search button[data-open-modal] > :last-child {
-		margin-inline-start: 0;
-	}
-	site-search button[data-open-modal] kbd {
-		padding: 0 0.25rem;
-		font-size: var(--sl-text-xs);
-		background-color: var(--sl-color-gray-5);
-	}
+site-search button[data-open-modal]:hover {
+	background-color: var(--sl-color-gray-6);
+	border-color: transparent;
+	color: var(--sl-color-white);
+}
+/* Pull the ⌘K chip in next to the label instead of pushing it to the far edge. */
+site-search button[data-open-modal] > :last-child {
+	margin-inline-start: 0;
+}
+site-search button[data-open-modal] kbd {
+	padding: 0 0.25rem;
+	font-size: var(--sl-text-xs);
+	background-color: var(--sl-color-gray-5);
+}
 
-	/* Right-align search beside the social icons, with a divider between. */
+/* Desktop header only: search right-aligned beside the socials, divider between.
+   Starts at 55rem, where the section links appear and the toggle goes away. */
+@media (min-width: 55rem) {
 	.header {
 		grid-template-columns: auto 1fr auto auto !important;
 	}
@@ -1941,6 +1942,26 @@ a.add-tool-button:hover {
    here restates what Starlight already does below 50rem.
    ------------------------------------------------------------------------- */
 @media (min-width: 50rem) and (max-width: 55rem) {
+	/* Back to the mobile flex header. Starlight switches .header to a grid at
+	   50rem and the block near the top of this file widens that to four columns
+	   so the section links get their own track. Hiding .right-group empties the
+	   last column but leaves its --sl-nav-gap behind, which shows up as a gap
+	   between the search button and the toggle. Flex has no empty track. */
+	/* Two elements carry the class "header": the fixed bar (<header>) and the row
+	   inside it (<div>, from Starlight's Header component). Scope by tag so each
+	   rule lands on the one it means. */
+	div.header {
+		display: flex;
+	}
+
+	/* Push the search wrapper to the right edge, beside the toggle. The child
+	   combinator in :has(> site-search) is what keeps this off div.header
+	   itself, which also contains the search, only deeper. Without it the whole
+	   row gets the auto margin and the logo travels right with it. */
+	div.header > div:has(> site-search) {
+		margin-inline-start: auto;
+	}
+
 	/* The right-hand cluster moves into the drawer, as it does on mobile. */
 	.header .right-group {
 		display: none;
@@ -1951,8 +1972,9 @@ a.add-tool-button:hover {
 		display: flex;
 	}
 
-	/* Reserve the gutter the toggle sits in. */
-	[data-has-sidebar] .header {
+	/* Reserve the gutter the toggle sits in. Belongs to the outer bar, which is
+	   where Starlight puts its own copy of this rule. */
+	[data-has-sidebar] header.header {
 		padding-inline-end: calc(
 			var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
 		);
@@ -2008,10 +2030,10 @@ a.add-tool-button:hover {
 	margin-inline-start: -0.375rem;
 }
 
-/* Mid widths: search collapses to its icon, buying room for the section links.
-   Starts at 55rem because that is where the section links appear; below it the
-   header is the mobile one and there is nothing to buy room for. */
-@media (min-width: 55rem) and (max-width: 66rem) {
+/* Anything under 66rem shows the search trigger as a bare icon: above 55rem that
+   buys room for the section links, below it for the menu toggle. No lower bound,
+   so mobile gets the same icon rather than Starlight's full-width trigger. */
+@media (max-width: 66rem) {
 	site-search button[data-open-modal] > span,
 	site-search button[data-open-modal] kbd {
 		display: none !important;
