@@ -6,62 +6,13 @@ sidebar:
   order: 0
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import YouTube from '../../../components/YouTube.astro';
+import SetupChooser from '../../../components/SetupChooser.astro';
 import { jupyterNeurodeskVersion } from '../../../config/neurodesktop';
 
-Choose how you want to run Neurodesk. Each option below links to setup instructions for that platform.
+Pick your setup and the matching instructions appear below.
 
-## Run in the cloud
-
-No installation. Sign in and start working in your browser.
-
-<CardGrid>
-	<LinkCard
-		title="Neurodesk Play"
-		description="Free hosted Neurodesk for evaluation and lightweight workloads."
-		href="/getting-started/hosted/play/"
-	/>
-	<LinkCard
-		title="Other hosting options"
-		description="GitHub Codespaces, Google Cloud Run, and managed web apps."
-		href="/getting-started/hosted/"
-	/>
-</CardGrid>
-
-## Install locally
-
-Run Neurodesktop on your own machine. Best for serious workloads.
-
-<CardGrid>
-	<LinkCard
-		title="Neurodesk App"
-		description="Cross-platform desktop installer. Recommended starting point."
-		href="/getting-started/app/neurodeskapp/"
-	/>
-	<LinkCard
-		title="Run on HPC"
-		description="Pre-built instructions for shared computing clusters."
-		href="/getting-started/installations/"
-	/>
-</CardGrid>
-
-## Use individual tools
-
-Skip the full desktop and use just the containers you need.
-
-<CardGrid>
-	<LinkCard
-		title="Neurocontainers"
-		description="Run tools individually with Docker or Singularity."
-		href="/getting-started/neurocontainers/"
-	/>
-	<LinkCard
-		title="Neurocommand"
-		description="Command-line tool manager for HPC and Linux workflows."
-		href="/getting-started/neurocommand/"
-	/>
-</CardGrid>
+<SetupChooser />
 
 ## Installation examples
 
