@@ -10,9 +10,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-  pull-requests: write
 
 concurrency:
   group: "pages"
@@ -84,14 +81,18 @@ jobs:
 
       # --- Astro build (now has all generated data in public/) ---
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v6
+      - name: Install Node dependencies
+        run: pnpm ci || pnpm install
 
-      - name: Verify assets in public
+      - name: Build with Astro
+        run: npx astro build
+
+      - name: Verify assets in dist
         run: |
           set -e
           MISSING=0
@@ -114,15 +115,15 @@ jobs:
               FILE_PATH="${p}"
             fi
 
-            FILE="public${FILE_PATH}"
+            FILE="dist${FILE_PATH}"
             if [ ! -f "$FILE" ]; then
               echo "Missing asset: $p -> expected $FILE"
               MISSING=1
             fi
-          done < <(grep -Rho 'src="\/[^"]*static\/[^"]*"' public/ | sed -E 's/.*src="(\/[^"]*)".*/\1/' | sort -u)
+          done < <(grep -Rho 'src="\/[^"]*static\/[^"]*"' dist/ | sed -E 's/.*src="(\/[^"]*)".*/\1/' | sort -u)
 
           if [ "$MISSING" -eq 1 ]; then
-            echo "One or more assets missing from public/ — failing the job"
+            echo "One or more assets missing from dist/ — failing the job"
             exit 1
           fi
 
@@ -143,10 +144,10 @@ jobs:
             mkdir -p /tmp/gh-pages-checkout
             git worktree add /tmp/gh-pages-checkout origin/gh-pages
 
-            # Copy any pr-* directories into public/ (preserving previews)
+            # Copy any pr-* directories into dist/ (preserving previews)
             if ls /tmp/gh-pages-checkout/pr-* 1> /dev/null 2>&1; then
-              echo "Copying preview directories to public/..."
-              cp -r /tmp/gh-pages-checkout/pr-* public/ || true
+              echo "Copying preview directories to dist/..."
+              cp -r /tmp/gh-pages-checkout/pr-* dist/ || true
               echo "Previews merged successfully"
             else
               echo "No preview directories found (no active PRs)"
@@ -157,6 +158,13 @@ jobs:
           else
             echo "No gh-pages branch exists yet, skipping preview merge"
           fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist/
+          retention-days: 1
 
   check-links:
     runs-on: ubuntu-24.04
@@ -223,12 +231,16 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Build & Deploy Worker
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=neurodesk-github-io-astro
