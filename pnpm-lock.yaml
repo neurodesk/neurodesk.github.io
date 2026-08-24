@@ -37,7 +37,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       sharp:
         specifier: ^0.35.3
-        version: 0.35.3(@types/node@24.12.4)
+        version: 0.35.3(@types/node@24.13.3)
 
 packages:
 
@@ -4944,7 +4944,7 @@ snapshots:
       '@img/sharp-win32-x64': 0.34.5
     optional: true
 
-  sharp@0.35.3(@types/node@24.12.4):
+  sharp@0.35.3(@types/node@24.13.3):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -4975,7 +4975,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.3
       '@img/sharp-win32-ia32': 0.35.3
       '@img/sharp-win32-x64': 0.35.3
-      '@types/node': 24.12.4
+      '@types/node': 24.13.3
 
   shiki@4.4.3:
     dependencies:
