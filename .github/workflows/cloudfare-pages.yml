@@ -80,14 +80,14 @@ jobs:
         run: python .github/workflows/write-neurodeskapp-metrics.py
 
       # --- Astro build (now has all generated data in public/) ---
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
         with:
-          node-version: "24"
+          version: 11
+          cache: true
 
-      - name: Install Node dependencies
-        run: pnpm ci || pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Build with Astro
         run: npx astro build
