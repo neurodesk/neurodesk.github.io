@@ -206,7 +206,7 @@ jobs:
             }
 
       - name: Remove legacy CNAME on gh-pages (target branch)
-        if: ${{ steps.pr-meta.outputs.base-repo == 'neurodesk/neurodesk.github.io' && steps.check-pr-state.outputs.skip != 'true' }}
+        if: ${{ steps.pr-meta.outputs.base-repo == 'neurodesk/neurodesk.github.io-astro' && steps.check-pr-state.outputs.skip != 'true' }}
         env:
           PR_NUMBER: ${{ steps.pr-meta.outputs.pr-number }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -214,7 +214,7 @@ jobs:
           set -e
           echo "Cleaning legacy CNAME from gh-pages for pr-${PR_NUMBER}"
           # Clone gh-pages with token auth
-          git clone --depth=1 --single-branch --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/neurodesk/neurodesk.github.io.git" gh-pages-work
+          git clone --depth=1 --single-branch --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/neurodesk/neurodesk.github.io-astro.git" gh-pages-work
           cd gh-pages-work
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -244,7 +244,7 @@ jobs:
           keep_files: true
 
       - name: Trigger Pages deploy to include previews
-        if: ${{ steps.pr-meta.outputs.base-repo == 'neurodesk/neurodesk.github.io' && steps.check-pr-state.outputs.skip != 'true' }}
+        if: ${{ steps.pr-meta.outputs.base-repo == 'neurodesk/neurodesk.github.io-astro' && steps.check-pr-state.outputs.skip != 'true' }}
         uses: actions/github-script@v9
         env:
           PR_NUMBER: ${{ steps.pr-meta.outputs.pr-number }}
@@ -321,8 +321,10 @@ jobs:
             }
 
             let previewUrl;
-            if (baseRepo === 'neurodesk/neurodesk.github.io') {
-              previewUrl = `https://neurodesk.github.io/pr-${prNumber}/`;
+            // For <user>.github.io repos, Pages serves at the root
+            // For project repos, Pages serves at /<repo-name>/
+            if (baseName === `${baseOwner}.github.io`) {
+              previewUrl = `https://${baseOwner}.github.io/pr-${prNumber}/`;
             } else {
               previewUrl = `https://${baseOwner}.github.io/${baseName}/pr-${prNumber}/`;
             }

@@ -74,18 +74,20 @@ jobs:
       - name: Build preview
         run: |
           PREVIEW_PATH="pr-${{ github.event.pull_request.number }}"
+          BASE_OWNER="${{ github.event.pull_request.base.repo.owner.login }}"
+          BASE_NAME="${{ github.event.pull_request.base.repo.name }}"
+          SITE_URL="https://${BASE_OWNER}.github.io"
 
-          # Use the target repo's Pages domain for previews (staging or fork)
-          if [[ "${{ github.event.pull_request.base.repo.full_name }}" == "neurodesk/neurodesk.github.io" ]]; then
-            SITE_URL="https://neurodesk.github.io"
-            echo "Building PR preview for staging: ${SITE_URL}/${PREVIEW_PATH}/"
+          # For <user>.github.io repos, Pages serves at the root
+          # For project repos (e.g. neurodesk.github.io-astro), Pages serves at /<repo-name>/
+          if [[ "${BASE_NAME}" == "${BASE_OWNER}.github.io" ]]; then
+            BASE_PATH="/${PREVIEW_PATH}"
           else
-            # For PRs to forks (rare case)
-            SITE_URL="https://${{ github.event.pull_request.base.repo.owner.login }}.github.io"
-            echo "Building PR preview for fork: ${SITE_URL}/${PREVIEW_PATH}/"
+            BASE_PATH="/${BASE_NAME}/${PREVIEW_PATH}"
           fi
 
-          npx astro build --site "${SITE_URL}" --base "/${PREVIEW_PATH}"
+          echo "Building PR preview: ${SITE_URL}${BASE_PATH}/"
+          npx astro build --site "${SITE_URL}" --base "${BASE_PATH}"
 
           mkdir -p preview-deploy/${PREVIEW_PATH}
           cp -r dist/* preview-deploy/${PREVIEW_PATH}/
