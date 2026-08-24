@@ -63,7 +63,7 @@ jobs:
             echo "ZENODO_TOKEN not set — falling back to staging index.json"
             # Best-effort fallback so prod still has application data
             mkdir -p public/data
-            if curl -fsSL https://neurodesk.github.io/data/applist.json -o /tmp/applist.json; then
+            if curl -fsSL https://neurodesk.github.io-astro/data/applist.json -o /tmp/applist.json; then
               cp /tmp/applist.json public/data/applist.json
               echo "Fetched staging applist.json and wrote to public/data/applist.json"
             else

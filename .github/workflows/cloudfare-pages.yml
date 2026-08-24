@@ -80,14 +80,14 @@ jobs:
         run: python .github/workflows/write-neurodeskapp-metrics.py
 
       # --- Astro build (now has all generated data in public/) ---
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
         with:
-          node-version: "24"
+          version: 11
+          cache: true
 
-      - name: Install Node dependencies
-        run: pnpm ci || pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Build with Astro
         run: npx astro build
@@ -98,7 +98,7 @@ jobs:
           MISSING=0
 
           # Determine if we're on a fork (paths will be patched)
-          if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io" ]]; then
+          if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io-astro" ]]; then
             REPO_PATH="${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
             echo "Fork detected: will strip /${REPO_PATH}/ prefix when checking files"
           fi
@@ -107,7 +107,7 @@ jobs:
           # Use while-read loop to handle filenames with spaces properly
           while IFS= read -r p; do
             # For forks, strip the repo path prefix to get the actual file location
-            if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io" ]]; then
+            if [[ "${{ github.repository }}" != "neurodesk/neurodesk.github.io-astro" ]]; then
               # Transform /<owner>.github.io/<repo>/static/... → /static/...
               FILE_PATH="${p#/"${REPO_PATH}"}"
               echo "DEBUG: Checking $p → ${FILE_PATH}"
