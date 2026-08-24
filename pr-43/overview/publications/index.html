@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll">
+	<head>
+		<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Neurodesk Publications | Neurodesk</title><link rel="canonical" href="https://neurodesk.github.io/neurodesk.github.io-astro/pr-43/overview/publications/"/><link rel="sitemap" href="/neurodesk.github.io-astro/pr-43/sitemap-index.xml"/><link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png"/><link rel="manifest" href="/favicons/site.webmanifest"/><link rel="shortcut icon" href="/neurodesk.github.io-astro/pr-43/favicons/favicon.ico" type="image/x-icon"/><meta name="generator" content="Astro v6.4.8"/><meta name="generator" content="Starlight v0.39.3"/><meta property="og:title" content="Neurodesk Publications"/><meta property="og:type" content="article"/><meta property="og:url" content="https://neurodesk.github.io/neurodesk.github.io-astro/pr-43/overview/publications/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Scientific publications, technical reports, and research outputs related to Neurodesk's development and usage."/><meta property="og:site_name" content="Neurodesk"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Scientific publications, technical reports, and research outputs related to Neurodesk's development and usage."/>
+		
+		
+<script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script>
+
+<template id="theme-icons">
+	
+	<svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg>
+
+	
+	<svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg>
+
+	
+	<svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>
+
+</template>
+		<link rel="stylesheet" href="/neurodesk.github.io-astro/pr-43/_astro/print.DNXP8c50.css" media="print">
+	<link rel="stylesheet" href="/neurodesk.github.io-astro/pr-43/_astro/common.PF8xN_Vi.css">
+<link rel="stylesheet" href="/neurodesk.github.io-astro/pr-43/_astro/Code.RTR2u1Ku.css"><script type="module" src="/neurodesk.github.io-astro/pr-43/_astro/page.B_tncCx8.js"></script></head>
+	<body class="astro-bguv2lll">
+		<a href="#_top" class="astro-7q3lir66">Skip to content</a>
+		<div class="page sl-flex astro-vrdttmbt">
+	<header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf">
+	<div class="title-wrapper sl-flex astro-kmkmnagf">
+		<a href="/neurodesk.github.io-astro/pr-43/" class="site-title sl-flex astro-m46x6ez3">
+	
+				<img class="light:sl-hidden print:hidden astro-m46x6ez3" alt src="/neurodesk.github.io-astro/pr-43/_astro/neurodesk-wordmark-dark.Dgzlscn2.svg" width="560" height="83">
+				<img class="dark:sl-hidden print:block astro-m46x6ez3" alt src="/neurodesk.github.io-astro/pr-43/_astro/neurodesk-wordmark-light.Cr4uUYIW.svg" width="560" height="83">
+	<span class="sr-only astro-m46x6ez3" translate="no">
+		Neurodesk
+	</span>
+</a>
+	</div>
+	<div class="sl-flex print:hidden astro-kmkmnagf">
+		<site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}">
+	<button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz">
+		
+	<svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg>
+
+		<span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span>
+		<kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;">
+			<kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd>
+		</kbd>
+	</button>
+
+	<dialog style="padding:0" aria-label="Search" class="astro-v37mnknz">
+		<div class="dialog-frame sl-flex astro-v37mnknz">
+			
+			<button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz">
+				Cancel
+			</button>
+			<div class="search-container astro-v37mnknz">
+						<div id="starlight__search" class="astro-v37mnknz"></div>
+					</div>
+		</div>
+	</dialog>
+</site-search>
+
+
+<script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script>
+
+<script type="module" src="/neurodesk.github.io-astro/pr-43/_astro/Search.astro_astro_type_script_index_0_lang.CSHmR-7A.js"></script>
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf">
+		<div class="sl-flex social-icons astro-kmkmnagf">
+			<nav class="nav-links astro-dv46nlzh" aria-label="Sections">
+	<a href="/getting-started/" class="astro-dv46nlzh">
+				For users
+			</a><a href="https://neurodesk.org/edu/" target="_blank" rel="noopener noreferrer" class="astro-dv46nlzh">
+				Learning resources
+			</a><a href="/developers/" class="astro-dv46nlzh">
+				For developers
+			</a><a href="/support/contact/" class="astro-dv46nlzh">
+				Get in touch
+			</a>
+</nav>
+
+<a href="https://github.com/NeuroDesk" rel="me" class="sl-flex astro-wy4te6ga">
+					<span class="sr-only astro-wy4te6ga">GitHub</span>
+					
+	<svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg>
+
+				</a><a href="https://www.linkedin.com/company/neurodesk-org/" rel="me" class="sl-flex astro-wy4te6ga">
+					<span class="sr-only astro-wy4te6ga">LinkedIn</span>
+					
+	<svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M20.47 2H3.53a1.45 1.45 0 0 0-1.47 1.43v17.14A1.45 1.45 0 0 0 3.53 22h16.94a1.45 1.45 0 0 0 1.47-1.43V3.43A1.45 1.45 0 0 0 20.47 2ZM8.09 18.74h-3v-9h3v9ZM6.59 8.48a1.56 1.56 0 0 1 0-3.12 1.57 1.57 0 1 1 0 3.12Zm12.32 10.26h-3v-4.83c0-1.21-.43-2-1.52-2A1.65 1.65 0 0 0 12.85 13a2 2 0 0 0-.1.73v5h-3v-9h3V11a3 3 0 0 1 2.71-1.5c2 0 3.45 1.29 3.45 4.06v5.18Z"/></svg>
+
+				</a>
+		</div>
+		<theme-toggle class="astro-e3sgix4a">
+  <button type="button" aria-label="Toggle colour theme" class="astro-e3sgix4a">
+    
+	<svg aria-hidden="true" class="auto astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>
+
+    
+	<svg aria-hidden="true" class="light astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg>
+
+    
+	<svg aria-hidden="true" class="dark astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg>
+
+  </button>
+</theme-toggle>
+
+<script type="module">const n="starlight-theme",a=["auto","light","dark"],c={auto:"Auto",light:"Light",dark:"Dark"},i=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",r=()=>i(typeof localStorage<"u"&&localStorage.getItem(n));function s(e){typeof localStorage<"u"&&localStorage.setItem(n,e==="light"||e==="dark"?e:"")}const d=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function l(e){document.documentElement.dataset.theme=e==="auto"?d():e,s(e),document.querySelectorAll("theme-toggle").forEach(t=>{t.dataset.themePref=e;const o=t.querySelector("button");o&&(o.title=`Theme: ${c[e]}`,o.setAttribute("aria-label",`Theme: ${c[e]}. Click to change.`))}),window.StarlightThemeProvider&&window.StarlightThemeProvider.updatePickers(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{r()==="auto"&&l("auto")});class h extends HTMLElement{constructor(){super(),l(r()),this.querySelector("button")?.addEventListener("click",()=>{const t=a[(a.indexOf(r())+1)%a.length];l(t)})}}customElements.define("theme-toggle",h);</script>
+		
+
+<script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script>
+	</div>
+</div></header>
+	<nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main">
+				<starlight-menu-button class="print:hidden astro-jif73yzw">
+	<button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw">
+		
+	<svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg>
+
+		
+	<svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg>
+
+	</button>
+</starlight-menu-button>
+
+<script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>
+				<div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt">
+					<div class="sidebar-content sl-flex astro-vrdttmbt">
+						<sl-sidebar-state-persist data-hash="1y75rj9" class="astro-kku4brbg">
+	<script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>
+
+	
+	<ul class="top-level astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<details open class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Overview</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="0"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">What is Neurodesk?</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/acknowledgement/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Acknowledgement</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/awards/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Awards</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/code-of-conduct/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Code of conduct</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/how-to-cite-us/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">How to cite us</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/metrics/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Metrics</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/publications/" aria-current="page" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Publications</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/release-history/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Release history</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Getting started</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="1"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Choose your setup</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">App</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="2"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/app/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">About the App</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/app/neurodeskapp/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Neurodesk App</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/app/troubleshooting/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Troubleshooting</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/app/uninstall/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Uninstalling</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Hosted</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="3"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Compare hosted options</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/play/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Play</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/google/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Google</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/github/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">GitHub</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/webapps/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Webapps</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/hosted/xnat/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">XNAT</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Neurodesktop</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="4"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">About Neurodesktop</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/linux/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Linux</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/mac/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">macOS</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/windows/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Windows</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/cloud/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Cloud</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurodesktop/storage/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Data Storage</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/app/neurodeskapp/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Neurodesk App</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Neurocommand</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="5"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocommand/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">About Neurocommand</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocommand/linux-and-hpc/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Linux and HPC</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocommand/windows/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Windows</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocommand/pyneurodesk/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">PyNeurodesk</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocommand/visual-studio-code/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Visual Studio Code</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Neurocontainers</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="6"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">About Neurocontainers</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/docker/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Docker</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/singularity/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Singularity / Apptainer</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/cvmfs/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">CVMFS</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/datalad/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">DataLad</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/openrecon/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">OpenRecon</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/neurocontainers/windows11-wsl/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Windows 11 &amp; WSL</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Installations</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="7"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">All installation examples</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/ubuntu2404/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Ubuntu 24.04</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/bunya/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Bunya</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/greatlakes/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Great Lakes</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/sherlock/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Sherlock</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/installations/nectar/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Nectar Desktops</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Agents</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="8"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/agents/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">About scientific agents</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/agents/opencode/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">OpenCode</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/agents/codex/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Codex</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/agents/claude/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Claude</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/getting-started/agents/notebook-intelligence/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Notebook Intelligence</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/overview/applications/" class="large astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Applications</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="https://webapps.neurodesk.org/" class="large astro-3ii7xxms" target="_blank" rel="noopener noreferrer">
+						<span class="astro-3ii7xxms">Webapps</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<details class="astro-3ii7xxms">
+						<summary class="astro-3ii7xxms">
+							<span class="group-label astro-3ii7xxms">
+								<span class="large astro-3ii7xxms">Support</span>
+								
+							</span>
+							
+	<svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</summary>
+						<sl-sidebar-restore data-index="9"></sl-sidebar-restore>
+						<ul class="astro-3ii7xxms">
+	<li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/support/faq/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">FAQ</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/support/contribute/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">How to contribute</span>
+						
+					</a>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/support/contact/" class="astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Contact</span>
+						
+					</a>
+			</li>
+</ul>
+					</details>
+			</li><li class="astro-3ii7xxms">
+				<a href="/neurodesk.github.io-astro/pr-43/donate/" class="large astro-3ii7xxms">
+						<span class="astro-3ii7xxms">Donate</span>
+						
+					</a>
+			</li>
+</ul>
+
+
+	<script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script>
+</sl-sidebar-state-persist>
+
+<div class="md:sl-hidden">
+	<div class="mobile-preferences sl-flex astro-wu23bvmt">
+	<div class="social-icons astro-wu23bvmt">
+		<nav class="nav-links astro-dv46nlzh" aria-label="Sections">
+	<a href="/getting-started/" class="astro-dv46nlzh">
+				For users
+			</a><a href="https://neurodesk.org/edu/" target="_blank" rel="noopener noreferrer" class="astro-dv46nlzh">
+				Learning resources
+			</a><a href="/developers/" class="astro-dv46nlzh">
+				For developers
+			</a><a href="/support/contact/" class="astro-dv46nlzh">
+				Get in touch
+			</a>
+</nav>
+
+<a href="https://github.com/NeuroDesk" rel="me" class="sl-flex astro-wy4te6ga">
+					<span class="sr-only astro-wy4te6ga">GitHub</span>
+					
+	<svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg>
+
+				</a><a href="https://www.linkedin.com/company/neurodesk-org/" rel="me" class="sl-flex astro-wy4te6ga">
+					<span class="sr-only astro-wy4te6ga">LinkedIn</span>
+					
+	<svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M20.47 2H3.53a1.45 1.45 0 0 0-1.47 1.43v17.14A1.45 1.45 0 0 0 3.53 22h16.94a1.45 1.45 0 0 0 1.47-1.43V3.43A1.45 1.45 0 0 0 20.47 2ZM8.09 18.74h-3v-9h3v9ZM6.59 8.48a1.56 1.56 0 0 1 0-3.12 1.57 1.57 0 1 1 0 3.12Zm12.32 10.26h-3v-4.83c0-1.21-.43-2-1.52-2A1.65 1.65 0 0 0 12.85 13a2 2 0 0 0-.1.73v5h-3v-9h3V11a3 3 0 0 1 2.71-1.5c2 0 3.45 1.29 3.45 4.06v5.18Z"/></svg>
+
+				</a>
+	</div>
+	<theme-toggle class="astro-e3sgix4a">
+  <button type="button" aria-label="Toggle colour theme" class="astro-e3sgix4a">
+    
+	<svg aria-hidden="true" class="auto astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>
+
+    
+	<svg aria-hidden="true" class="light astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg>
+
+    
+	<svg aria-hidden="true" class="dark astro-e3sgix4a astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg>
+
+  </button>
+</theme-toggle>
+
+
+	
+
+
+</div>
+</div>
+					</div>
+				</div>
+			</nav>
+	<div class="main-frame astro-vrdttmbt">
+			
+			<script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script>
+			<div class="lg:sl-flex astro-67yu43on">
+	<aside class="right-sidebar-container print:hidden astro-67yu43on">
+				<div class="right-sidebar astro-67yu43on">
+					
+			<div class="lg:sl-hidden astro-pb3aqygn">
+				<mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl">
+			<nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl">
+				<details id="starlight__mobile-toc" class="astro-doynk5tl">
+					<summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl">
+						<span class="toggle sl-flex astro-doynk5tl">
+							On this page
+							
+	<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>
+
+						</span>
+						<span class="display-current astro-doynk5tl"></span>
+					</summary>
+					<div class="dropdown astro-doynk5tl">
+						<ul class="isMobile astro-gnoq344e" style="--depth: 0;">
+	<li class="astro-gnoq344e" style="--depth: 0;">
+				<a href="#_top" class="astro-gnoq344e" style="--depth: 0;">
+					<span class="astro-gnoq344e" style="--depth: 0;">Overview</span>
+				</a>
+				
+			</li><li class="astro-gnoq344e" style="--depth: 0;">
+				<a href="#submit-your-publication" class="astro-gnoq344e" style="--depth: 0;">
+					<span class="astro-gnoq344e" style="--depth: 0;">Submit your publication</span>
+				</a>
+				
+			</li>
+</ul>
+					</div>
+				</details>
+			</nav>
+		</mobile-starlight-toc>
+
+
+
+<script type="module" src="/neurodesk.github.io-astro/pr-43/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.hwBsy0Mo.js"></script>
+			</div>
+			<div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn">
+				<div class="sl-container astro-pb3aqygn">
+					<starlight-toc data-min-h="2" data-max-h="3">
+			<nav aria-labelledby="starlight__on-this-page">
+				<h2 id="starlight__on-this-page">On this page</h2>
+				<ul class="astro-gnoq344e" style="--depth: 0;">
+	<li class="astro-gnoq344e" style="--depth: 0;">
+				<a href="#_top" class="astro-gnoq344e" style="--depth: 0;">
+					<span class="astro-gnoq344e" style="--depth: 0;">Overview</span>
+				</a>
+				
+			</li><li class="astro-gnoq344e" style="--depth: 0;">
+				<a href="#submit-your-publication" class="astro-gnoq344e" style="--depth: 0;">
+					<span class="astro-gnoq344e" style="--depth: 0;">Submit your publication</span>
+				</a>
+				
+			</li>
+</ul>
+			</nav>
+		</starlight-toc>
+
+<script type="module" src="/neurodesk.github.io-astro/pr-43/_astro/TableOfContents.astro_astro_type_script_index_0_lang.FuRcXuRY.js"></script>
+				</div>
+			</div>
+		
+				</div>
+			</aside>
+	<div class="main-pane astro-67yu43on">
+				
+				<main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">
+					
+					
+					
+								<div class="content-panel astro-7nkwcw3z">
+	<div class="sl-container astro-7nkwcw3z">
+									<h1 id="_top" class="astro-j6tvhyss">Neurodesk Publications</h1>
+									</div>
+</div>
+								<div class="content-panel astro-7nkwcw3z">
+	<div class="sl-container astro-7nkwcw3z">
+									<div class="sl-markdown-content">
+										<p>This page highlights peer-reviewed papers, preprints, and other research outputs that have used or cited Neurodesk in their methods, workflows, or infrastructure.</p>
+<p>For instructions on how to cite Neurodesk and specific tools, visit our <a href="/overview/how-to-cite-us/">Citation Guide</a>.</p>
+<div class="cite"><p><a href="https://doi.org/10.52294/001c.160858"><strong>Developing an Interactive Neuroimaging Education Resource with Neurodesk</strong></a></p><span class="cite__meta">Dörig, M., Masson-Trottier, M., Dao, T. T., Mapue, K., Jahn, A., Ribeiro, F. L., Stewart, A., Shaw, T., Toth, M., Pinkert, M., Taylor, P., Renton, A., Handwerker, D. A., Baracchini, G., Rorden, C., Narayanan, A., &amp; Bollmann, S. Aperture Neuro, 2026.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.52294/001c.143700"><strong>Toward the Future of Scientific Publishing through Reproducible Research Artefacts Enabled by Neurodesk</strong></a></p><span class="cite__meta">Masson-Trottier, M., Dao, T. T., Narayanan, A., &amp; Bollmann, S. Aperture Neuro, 12, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.52294/001c.144107"><strong>Democratizing open neuroimaging: Neurodesk’s approach to open data accessibility and utilization</strong></a></p><span class="cite__meta">Dao, T. T., Masson-Trottier, M., Ribeiro, F. L., Scarsbrook, J., Stewart, A., Ye, X., Hamilton, E., Bollmann, S., &amp; Narayanan, A. Aperture Neuro, 5(SI 2), 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1038/s41592-023-02145-x"><strong>Neurodesk: an accessible, flexible and portable data analysis environment for reproducible neuroimaging</strong></a></p><span class="cite__meta">Renton, A. I., Dao, T. T., Johnstone, T., Civier, O., Sullivan, R. P., White, D. J., … Narayanan, A., &amp; Bollmann, S. Nature Methods, 2024.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1038/s41551-026-01664-0"><strong>A geometry aware framework enhances noninvasive mapping of whole human brain dynamics</strong></a></p><span class="cite__meta">Wang, S., Lou, K., Wei, C., Sheng, Z., Tang, J., Peng, K., Shen, X., Mei, S., Chen, L., Gu, D., &amp; Liu, Q. Nature Biomedical Engineering, 2026.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1093/ageing/afag086"><strong>Effects of a 24-week resistance exercise program on Alzheimer’s disease brain signatures in cognitively unimpaired older adults: a secondary analysis of the AGUEDA randomized controlled trial</strong></a></p><span class="cite__meta">Sanchez-Martinez, J., Solis-Urra, P., Fernandez-Gamez, B., Fernandez-Ortega, J., Sanchez-Aranda, L., Erickson, K. I., Ortega, F. B., &amp; Esteban-Cornejo, I. Age and Ageing, 55(4), 2026.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1186/s12916-026-04763-6"><strong>White matter changes in reward circuits of amyotrophic lateral sclerosis: a fixel-based study of appetite loss</strong></a></p><span class="cite__meta">Chang, J., Lipscombe, H., Lv, J., McCombe, P. A., Henderson, R. D., Ngo, S. T., Steyn, F. J., &amp; Shaw, T. B. BMC Medicine, 24(1), 2026.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1093/brain/awaf344"><strong>Surgical white matter disruption leads to downstream atrophy in the non-resected human brain</strong></a></p><span class="cite__meta">Pruckner, P., Mito, R., Vaughan, D. N., Jackson, G., Fischmeister, F., Nenning, K.-H., Berger, M., Pataraia, E., Baumgartner, C., Dorfer, C., Rossler, K., Czech, T., Kasprian, G., Bonelli, S., &amp; Smith, R. Brain, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1101/2025.10.30.685686"><strong>Paediatric MRI: High-Resolution in vivo 3T Methods</strong></a></p><span class="cite__meta">Wright, B. R., Schira, M. M., Paxinos, G., &amp; Kassem, M. S. bioRxiv, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1101/2025.11.05.686896"><strong>Stable Somatotopy in Chronic Low Back Pain: Is Cortical Map Reorganization a Myth?</strong></a></p><span class="cite__meta">Dörig, M., Cole, D. M., Guekos, A., Stämpfli, P., Schuetz, P., Schibli, L., Schweinhardt, P., &amp; Meier, M. L. bioRxiv, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1017/S0007114525000406"><strong>Assessing the association between the Mediterranean, Dietary Approaches to Stop Hypertension and Mediterranean-DASH Intervention for Neurodegenerative Delay dietary patterns, structural connectivity and cognitive function</strong></a></p><span class="cite__meta">Arnoldy, L., Gauci, S., Young, L. M., Macpherson, H., Civier, O., Scholey, A., Pipingas, A., &amp; White, D. J. British Journal of Nutrition, 133(7), 1–17, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1016/j.bpsc.2025.09.003"><strong>Magnetic Resonance Imaging-Derived Markers of Acute and Chronic Inflammatory Processes in the Ventral Tegmental Area Associated With Depression</strong></a></p><span class="cite__meta">Khalife, S., Bollmann, S., Zalesky, A., &amp; Oestreich, L. K. L. Biological Psychiatry: Cognitive Neuroscience and Neuroimaging, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1101/2025.11.27.690210"><strong>Predicting functional topography of the human visual cortex from cortical anatomy at scale</strong></a></p><span class="cite__meta">Ribeiro, F. L., Satzger, R., Hoffstaedter, F., Bürger, C., Herholz, P., Linhardt, D., Benson, N. C., Schwarzkopf, D. S., Puckett, A. M., Bollmann, S., &amp; Hebart, M. N. bioRxiv, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1002/hbm.70168"><strong>Effects of Aging, Estimated Fitness, and Cerebrovascular Status on White Matter Microstructural Health</strong></a></p><span class="cite__meta">Clements, G. M., Camacho, P., Bowie, D. C., Low, K. A., Sutton, B. P., Gratton, G., &amp; Fabiani, M. Human Brain Mapping, 46(5), e70168, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1093/cercor/bhaf059"><strong>Characterizing positive and negative quantitative susceptibility values in the cortex following mild traumatic brain injury: a depth- and curvature-based study</strong></a></p><span class="cite__meta">Essex, C. A., Merenstein, J. L., Overson, D. K., Truong, T. K., Madden, D. J., Bedggood, M. J., Murray, H., Holdsworth, S. J., Stewart, A. W., Morgan, C., Faull, R. L. M., Hume, P., Theadom, A., &amp; Pedersen, M. Cerebral Cortex, 35(3), 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1093/cercor/bhaf216"><strong>Iron deposition and functional connectivity alterations in the right substantia nigra of adult males with autism</strong></a></p><span class="cite__meta">Itahashi, T., Tanji, K., Shikauchi, Y., Naoe, T., Okimura, T., Nakamura, M., Ohta, H., &amp; Hashimoto, R. I. Cerebral Cortex, 35(8), 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1016/j.nicl.2024.103724"><strong>Grey matter volume differences across Parkinson’s disease motor subtypes in the supplementary motor cortex</strong></a></p><span class="cite__meta">Martin, A., Nassif, J., Chaluvadi, L., Schammel, C., Newman-Norlund, R., Bollmann, S., &amp; Absher, J. NeuroImage: Clinical, 45, 103724, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1007/s10334-025-01298-4"><strong>BOLD fMRI at 9.4T with 3D stack-of-spirals readouts</strong></a></p><span class="cite__meta">Monreal-Madrigal, A., Kurban, D., Tse, D. H. Y., Ivanov, D., Boulant, N., &amp; Poser, B. A. MAGMA, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1016/j.compbiomed.2025.110824"><strong>Segmentation of the human tongue musculature using MRI: Field guide and validation in motor neuron disease</strong></a></p><span class="cite__meta">Shaw, T. B., Ribeiro, F. L., Zhu, X., Aiken, P., Bollmann, S., Chang, J., Chidley, K., Dempsey-Jones, H., Eftekhari, Z., Gillespie, J., Henderson, R. D., Kiernan, M. C., Ktena, I., McCombe, P. A., Ngo, S. T., Taubert, S. T., Whelan, B. M., Ye, X., … Barth, M. Computers in Biology and Medicine, 196(Pt B), 110824, 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.3390/brainsci15080796"><strong>Wired Differently? Brain Temporal Complexity and Intelligence in Autism Spectrum Disorder</strong></a></p><span class="cite__meta">Sokunbi, M. O., Soula, O., Ochieng, B., &amp; Staff, R. T. Brain Sciences, 15(8), 2025.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1111/psyp.14571"><strong>Assessing the influence of dopamine and mindfulness on the formation of routines in visual search</strong></a></p><span class="cite__meta">Garner, K. G., Leow, L. A., Uchida, A., Nolan, C., Jensen, O., Garrido, M. I., &amp; Dux, P. E. Psychophysiology, 61(7), e14571, 2024.</span></div>
+<div class="cite"><p><a href="https://doi.org/10.1162/imag_a_00308"><strong>Combining the benefits of 3D acquisitions and spiral readouts for VASO fMRI at UHF</strong></a></p><span class="cite__meta">Monreal-Madrigal, A., Kurban, D., Huber, L., Ivanov, D., Boulant, N., &amp; Poser, B. A. Imaging Neuroscience, 2, 2024.</span></div>
+<hr/>
+<div class="sl-heading-wrapper level-h2"><h2 id="submit-your-publication">Submit your publication</h2><a class="sl-anchor-link" href="#submit-your-publication"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Submit your publication”</span></a></div>
+<p>Have you used Neurodesk in your research or teaching? We welcome community contributions to this list.</p>
+<ul>
+<li><a href="https://github.com/neurodesk/neurodesk.github.io/issues/new?template=publication.md">Submit a publication</a> via GitHub issue</li>
+</ul>
+<p>Alternatively, email the core team or tag us on social media.</p>
+<script src="/js/copy-citation.js" defer></script>
+									</div>
+									<footer class="sl-flex astro-3yyafb3n">
+	<div class="meta sl-flex astro-3yyafb3n">
+		<a href="https://github.com/NeuroDesk/neurodesk.github.io/edit/main/src/content/docs/overview/publications.mdx" class="sl-flex print:hidden astro-eez2twj6">
+			
+	<svg aria-hidden="true" class="astro-eez2twj6 astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.2em;"><path d="M22 7.24a1 1 0 0 0-.29-.71l-4.24-4.24a1 1 0 0 0-1.1-.22 1 1 0 0 0-.32.22l-2.83 2.83L2.29 16.05a1 1 0 0 0-.29.71V21a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .76-.29l10.87-10.93L21.71 8c.1-.1.17-.2.22-.33a1 1 0 0 0 0-.24v-.14l.07-.05ZM6.83 20H4v-2.83l9.93-9.93 2.83 2.83L6.83 20ZM18.17 8.66l-2.83-2.83 1.42-1.41 2.82 2.82-1.41 1.42Z"/></svg>
+
+			Edit page
+		</a>
+		
+	</div>
+	<div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr">
+	<a href="/neurodesk.github.io-astro/pr-43/overview/metrics/" rel="prev" class="astro-u2l5gyhi">
+				
+	<svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg>
+
+				<span class="astro-u2l5gyhi">
+					Previous
+					<br class="astro-u2l5gyhi">
+					<span class="link-title astro-u2l5gyhi">Metrics</span>
+				</span>
+			</a>
+	<a href="/neurodesk.github.io-astro/pr-43/overview/release-history/" rel="next" class="astro-u2l5gyhi">
+				
+	<svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg>
+
+				<span class="astro-u2l5gyhi">
+					Next
+					<br class="astro-u2l5gyhi">
+					<span class="link-title astro-u2l5gyhi">Release history</span>
+				</span>
+			</a>
+</div>
+
+	
+</footer>
+								</div>
+</div>
+							
+				</main>
+			</div>
+</div>
+		</div>
+</div>
+	</body></html>
