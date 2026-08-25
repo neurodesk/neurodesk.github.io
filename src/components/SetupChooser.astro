@@ -1,0 +1,238 @@
+---
+/**
+ * Getting Started setup chooser. Radio groups plus generated `:has()` rules, so
+ * it works without JavaScript. One instance per page: ids are not namespaced.
+ */
+import { LinkCard } from '@astrojs/starlight/components';
+import { axes, constraints, defaults, outcomes, syncedTabs } from '../config/setup-chooser';
+
+/** Synced tabs are keyed by label text, so fail the build if one is renamed. */
+const mdx = import.meta.glob('../content/docs/**/*.mdx', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+}) as Record<string, string>;
+
+for (const [axis, { syncKey, labels }] of Object.entries(syncedTabs)) {
+	for (const label of Object.values(labels)) {
+		const found = Object.values(mdx).some((source) =>
+			[...source.matchAll(/<Tabs\s+syncKey="([^"]+)"\s*>([\s\S]*?)<\/Tabs>/g)].some(
+				([, key, body]) => key === syncKey && body.includes(`<TabItem label="${label}"`)
+			)
+		);
+		if (!found) {
+			throw new Error(
+				`SetupChooser: no <TabItem label="${label}"> inside a <Tabs syncKey="${syncKey}"> ` +
+					`anywhere in src/content/docs. The ${axis} axis maps to that label, so either ` +
+					`restore it or update syncedTabs in src/config/setup-chooser.ts.`
+			);
+		}
+	}
+}
+
+const id = (axis: string, value: string) => `sc-${axis}-${value}`;
+
+/** `:checked` must be repeated per selector in the list, not appended once. */
+const hasChecked = (axis: string, values: string[]) =>
+	`:has(${values.map((v) => `#${id(axis, v)}:checked`).join(', ')})`;
+
+const outcomeRules = outcomes
+	.map((outcome) => {
+		const guards = Object.entries(outcome.when)
+			.map(([axis, values]) => hasChecked(axis, values as string[]))
+			.join('');
+		return `.chooser${guards} [data-outcome="${outcome.id}"]{display:grid}`;
+	})
+	.join('\n');
+
+/** Strike through an option whose constraints the rest of the selection breaks. */
+const conflictRules = Object.entries(constraints)
+	.flatMap(([value, constraint]) =>
+		Object.entries(constraint).map(([axis, allowed]) => {
+			const axisDef = axes.find((a) => a.id === axis)!;
+			const disallowed = axisDef.options
+				.filter((o) => !(allowed as string[]).includes(o.id))
+				.map((o) => o.id);
+			if (disallowed.length === 0) return '';
+			const owner = axes.find((a) => a.options.some((o) => o.id === value))!;
+			return `.chooser${hasChecked(axis, disallowed)} label[for="${id(owner.id, value)}"]{opacity:.45;text-decoration:line-through}`;
+		})
+	)
+	.filter(Boolean)
+	.join('\n');
+---
+
+<div class="chooser" data-setup-chooser>
+	<style is:inline set:html={`${outcomeRules}\n${conflictRules}`} />
+
+	<div class="chooser__controls not-content">
+		{
+			axes.map((axis) => (
+				<div class="chooser__axis" role="group" aria-labelledby={`sc-label-${axis.id}`}>
+					{/* Not <fieldset>/<legend>: a rendered legend is lifted out of flow. */}
+					<span class="chooser__legend" id={`sc-label-${axis.id}`}>{axis.label}</span>
+					<div class="chooser__options">
+						{axis.options.map((option) => (
+							<>
+								<input
+									class="chooser__input"
+									type="radio"
+									name={axis.id}
+									id={id(axis.id, option.id)}
+									value={option.id}
+									checked={defaults[axis.id] === option.id}
+								/>
+								<label class="chooser__option" for={id(axis.id, option.id)}>
+									{option.label}
+								</label>
+							</>
+						))}
+					</div>
+				</div>
+			))
+		}
+	</div>
+
+	<div class="chooser__results">
+		{
+			outcomes.map((outcome) => (
+				<div class="chooser__outcome" data-outcome={outcome.id}>
+					{outcome.cards.map((card) => (
+						<LinkCard title={card.title} description={card.description} href={card.href} />
+					))}
+				</div>
+			))
+		}
+	</div>
+</div>
+
+<script>
+	import {
+		axes,
+		constraints,
+		syncedTabs,
+		TAB_STORE_PREFIX,
+		type AxisId,
+	} from '../config/setup-chooser';
+
+	// localStorage throws outright in some privacy modes.
+	const readTab = (key: string) => {
+		try {
+			return localStorage.getItem(TAB_STORE_PREFIX + key);
+		} catch {
+			return null;
+		}
+	};
+	const writeTab = (key: string, value: string) => {
+		try {
+			localStorage.setItem(TAB_STORE_PREFIX + key, value);
+		} catch {
+			/* nothing to do; the tabs just keep their defaults */
+		}
+	};
+
+	const root = document.querySelector<HTMLElement>('[data-setup-chooser]');
+	if (root) {
+		const inputs = [...root.querySelectorAll<HTMLInputElement>('.chooser__input')];
+		const inputFor = (axis: string, value: string) =>
+			inputs.find((i) => i.name === axis && i.value === value);
+
+		const selection = () =>
+			Object.fromEntries(
+				axes.map((a) => [a.id, inputs.find((i) => i.name === a.id && i.checked)?.value ?? ''])
+			) as Record<AxisId, string>;
+
+		const select = (axis: AxisId, value: string) => {
+			const input = inputFor(axis, value);
+			if (input && !input.checked) input.checked = true;
+		};
+
+		const detectOs = () => {
+			const platform = (
+				(navigator as any).userAgentData?.platform ?? navigator.userAgent
+			).toLowerCase();
+			if (platform.includes('mac')) return 'macos';
+			if (platform.includes('win')) return 'windows';
+			if (platform.includes('linux') || platform.includes('android')) return 'linux';
+			return null;
+		};
+
+		/** An option is available when its constraints allow every other axis's current value. */
+		const isAvailable = (value: string, current: Record<AxisId, string>) => {
+			const constraint = constraints[value];
+			if (!constraint) return true;
+			return Object.entries(constraint).every(
+				([axis, allowed]) =>
+					current[axis as AxisId] === value || allowed.includes(current[axis as AxisId])
+			);
+		};
+
+		const sync = () => {
+			let current = selection();
+
+			// Repair a combination the constraints rule out, e.g. Colab has no desktop.
+			for (const axis of axes) {
+				if (isAvailable(current[axis.id], current)) continue;
+				const fallback = axis.options.find((o) => o.id !== current[axis.id] && isAvailable(o.id, current));
+				if (fallback) {
+					select(axis.id, fallback.id);
+					current = selection();
+				}
+			}
+
+			for (const axis of axes) {
+				for (const option of axis.options) {
+					const input = inputFor(axis.id, option.id);
+					if (input) input.disabled = !isAvailable(option.id, current) && !input.checked;
+				}
+			}
+
+			const params = new URLSearchParams(current);
+			history.replaceState(null, '', `${location.pathname}?${params}${location.hash}`);
+		};
+
+		// Seed per axis, most explicit first: URL, then synced tabs, then platform.
+
+		const seeded = new Set<AxisId>();
+
+		const params = new URLSearchParams(location.search);
+		for (const axis of axes) {
+			const value = params.get(axis.id);
+			if (value && axis.options.some((o) => o.id === value)) {
+				select(axis.id, value);
+				seeded.add(axis.id);
+			}
+		}
+
+		for (const [axis, { syncKey, labels }] of Object.entries(syncedTabs)) {
+			if (seeded.has(axis as AxisId)) continue;
+			const label = readTab(syncKey);
+			if (!label) continue;
+			const value = Object.entries(labels).find(([, l]) => l === label)?.[0];
+			if (value) {
+				select(axis as AxisId, value);
+				seeded.add(axis as AxisId);
+			}
+		}
+
+		if (!seeded.has('os')) {
+			const os = detectOs();
+			if (os) select('os', os);
+		}
+
+		/** Publish to Starlight's synced tabs. Interaction only, never on load. */
+		const publish = () => {
+			const current = selection();
+			for (const [axis, { syncKey, labels }] of Object.entries(syncedTabs)) {
+				const label = labels[current[axis as AxisId]];
+				if (label) writeTab(syncKey, label);
+			}
+		};
+
+		root.addEventListener('change', () => {
+			sync();
+			publish();
+		});
+		sync();
+	}
+</script>
