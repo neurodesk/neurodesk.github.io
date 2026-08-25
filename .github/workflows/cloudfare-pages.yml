@@ -20,13 +20,19 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  generate-applist:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      # --- Python data generation (must run BEFORE Astro build) ---
+      - name: Restore cached applist.json
+        uses: actions/cache/restore@v4
+        id: cache-applist
+        with:
+          path: public/data/applist.json
+          key: applist-json-${{ github.run_id }}
+          restore-keys: applist-json-
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v7
@@ -34,12 +40,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests google-auth matplotlib
-
-      - name: Test user metrics generator
-        run: python -m unittest tests/test_write_user_metrics.py
+        run: pip install requests
 
       - name: Write applist.json
         env:
@@ -61,6 +62,42 @@ jobs:
           else
             echo "ZENODO_TOKEN not set — skipping write-app-json.py"
           fi
+
+      - name: Save applist.json to cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: public/data/applist.json
+          key: applist-json-${{ github.run_id }}
+
+      - name: Upload applist artifact
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: applist-json
+          path: public/data/applist.json
+          retention-days: 7
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # --- Python data generation (must run BEFORE Astro build) ---
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests google-auth matplotlib
+
+      - name: Test user metrics generator
+        run: python -m unittest tests/test_write_user_metrics.py
 
       - name: Write user metrics
         env:
@@ -229,7 +266,7 @@ jobs:
           exit "$linkspector_status"
 
   deploy:
-    needs: build
+    needs: [build, generate-applist]
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
@@ -237,6 +274,12 @@ jobs:
         with:
           name: site-dist
           path: dist
+
+      - name: Download applist artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: applist-json
+          path: dist/data
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
