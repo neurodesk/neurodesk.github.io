@@ -3,10 +3,14 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
+import remarkGfm from 'remark-gfm';
 
 export default defineConfig({
 	site: 'https://neurodesk.org',
 	compressHTML: false,
+	markdown: {
+		remarkPlugins: [remarkGfm],
+	},
 	redirects: {
 		'/applications': '/overview/applications/',
 		// Pages that moved so the content tree mirrors the sidebar. /support/faq
