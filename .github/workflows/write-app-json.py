@@ -11,7 +11,7 @@ from urllib3.util.retry import Retry
 
 
 APPS_JSON_URL = (
-    "https://raw.githubusercontent.com/neurodesk/neurocommand/refs/heads/main/neurodesk/apps.json"
+    "https://raw.githubusercontent.com/neurodesk/neurocommand/refs/heads/main/cvmfs/applist.json"
 )
 ZENODO_DEPOSITIONS_URL = "https://zenodo.org/api/deposit/depositions"
 README_BASE_URL = (
@@ -41,9 +41,10 @@ def build_session() -> requests.Session:
     return session
 
 
-def fetch_apps_menu_entries(session: requests.Session) -> Dict:
+def fetch_applist(session: requests.Session) -> List[Dict]:
     """
-    Fetch neurocommand/apps.json once and reuse it.
+    Fetch the canonical app list from APPS_JSON_URL.
+    Returns the list of app entries (each with 'application' and 'categories').
     """
     try:
         response = session.get(
@@ -52,12 +53,14 @@ def fetch_apps_menu_entries(session: requests.Session) -> Dict:
         )
         response.raise_for_status()
     except requests.RequestException as exc:
-        raise Exception(f"Failed to fetch apps: {exc}") from exc
+        raise Exception(f"Failed to fetch app list: {exc}") from exc
 
     try:
-        return response.json()
+        data = response.json()
     except ValueError as exc:
-        raise Exception("Failed to decode apps.json response as JSON.") from exc
+        raise Exception("Failed to decode applist.json response as JSON.") from exc
+
+    return data.get("list", [])
 
 
 def fetch_app_descriptions(session: requests.Session, app_names: List[str]) -> Dict[str, str]:
@@ -221,47 +224,6 @@ def get_deposition_license(deposition: Dict) -> str:
     return ""
 
 
-def get_app_categories(menu_entries: Dict, app: str) -> List[str]:
-    """
-    Get the categories of the app
-    Args:
-        menu_entries (dict): App menu entries loaded from apps.json
-        app (str): Application name
-    Returns:
-        list: List of categories
-    """
-    for key, value in menu_entries.items():
-        if app in key:
-            return menu_entries[key].get("categories", [])
-        for sub_key in value.get("apps", {}).keys():
-            if app in sub_key:
-                return menu_entries[key].get("categories", [])
-    print(f"Categories not found for {app}", flush=True)
-    return []
-
-
-def get_apps(menu_entries: Dict) -> List[str]:
-    """
-    Get all app image-version identifiers from apps.json
-    Args:
-        menu_entries (dict): App menu entries loaded from apps.json
-    Returns:
-        list: List of app identifiers
-    """
-    app_list = []
-    for menu_data in menu_entries.values():
-        for app_name, app_data in menu_data.get("apps", {}).items():
-            if app_data.get("exec") == "":
-                image_name_version = (
-                    app_name.split(" ")[0]
-                    + "_"
-                    + app_name.split(" ")[-1]
-                    + "_"
-                    + app_data.get("version")
-                )
-                app_list.append(image_name_version)
-    return app_list
-
 
 def fetch_depositions(zenodo_token: str, session: requests.Session) -> List[Dict]:
     """
@@ -314,57 +276,67 @@ def fetch_depositions(zenodo_token: str, session: requests.Session) -> List[Dict
 
 def write_to_file(zenodo_token, filename):
     """
-    Write the list of DOIs from Zenodo to applist.json
-    Args:
-        zenodo_token (str): Zenodo token
-        filename (str): Filename to write to
+    Write applist.json based on APPS_JSON_URL as the source of truth.
+
+    The upstream applist.json provides the canonical set of apps (with
+    application name and categories). This script enriches each entry
+    with description, doi, doi_url, and license — no new entries are added.
     """
     session = build_session()
-    all_depositions = fetch_depositions(zenodo_token, session)
-    menu_entries = fetch_apps_menu_entries(session)
-    app_list = get_apps(menu_entries)
-    print(f"Found {len(app_list)} apps in neurocommand/apps.json", flush=True)
+    app_entries = fetch_applist(session)
+    print(f"Found {len(app_entries)} apps in upstream applist.json", flush=True)
 
     # Collect unique app names and fetch their README descriptions
-    unique_app_names = sorted(set(app.rsplit("_", 2)[0] for app in app_list))
+    unique_app_names = sorted(set(
+        entry["application"].rsplit("_", 2)[0] for entry in app_entries
+    ))
     descriptions = fetch_app_descriptions(session, unique_app_names)
 
-    # Write application, categories, doi, doi_url, and description to applist.json
-    val = []
-    for app in app_list:
-        app_name = app.rsplit("_", 2)[0]
-        categories = get_app_categories(menu_entries, app_name)
+    # Fetch Zenodo depositions (non-fatal: enrich with DOI if available)
+    all_depositions: List[Dict] = []
+    try:
+        all_depositions = fetch_depositions(zenodo_token, session)
+    except Exception as exc:
+        print(
+            f"Warning: could not fetch Zenodo depositions ({exc}). "
+            "Entries will be written without DOI data.",
+            flush=True,
+        )
 
-        found_doi = False
+    # Enrich each entry with description and DOI
+    val = []
+    for entry in app_entries:
+        app = entry["application"]
+        app_name = app.rsplit("_", 2)[0]
+
+        enriched: Dict = {
+            "application": app,
+            "categories": entry.get("categories", []),
+        }
+
+        # Enrich with description
+        if app_name in descriptions:
+            enriched["description"] = descriptions[app_name]
+
+        # Enrich with DOI from Zenodo
         for deposition in all_depositions:
             if (
                 "title" not in deposition
                 or "doi" not in deposition
                 or "doi_url" not in deposition
             ):
-                print(
-                    f"Skipping deposition missing DOI fields: {deposition.get('title', '<unknown>')}",
-                    flush=True,
-                )
                 continue
             if app in deposition["title"]:
                 print(f"Processing DOI: {deposition['title']}", flush=True)
-                doi = deposition["doi"]
-                doi_url = deposition["doi_url"]
+                enriched["doi"] = deposition["doi"]
+                enriched["doi_url"] = deposition["doi_url"]
                 license_id = get_deposition_license(deposition)
-                entry = {"application": app, "categories": categories, "doi": doi, "doi_url": doi_url}
                 if license_id:
-                    entry["license"] = license_id
-                if app_name in descriptions:
-                    entry["description"] = descriptions[app_name]
-                val.append(entry)
-                found_doi = True
+                    enriched["license"] = license_id
                 break
-        if not found_doi:
-            entry = {"application": app, "categories": categories}
-            if app_name in descriptions:
-                entry["description"] = descriptions[app_name]
-            val.append(entry)
+
+        val.append(enriched)
+
     print(f"Writing {len(val)} entries to {filename}", flush=True)
     my_dict = {"list": val}
     with open(filename, "w") as fp:
@@ -393,8 +365,8 @@ if __name__ == "__main__":
         if args.fail_on_error:
             raise
         print(
-            "Warning: failed to refresh applist from Zenodo. "
-            "Keeping existing applist.json and continuing.",
+            "Warning: failed to generate applist.json. "
+            "Keeping existing file and continuing.",
             flush=True,
         )
         print(f"Details: {exc}", flush=True)
