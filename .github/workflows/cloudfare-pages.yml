@@ -266,7 +266,7 @@ jobs:
           exit "$linkspector_status"
 
   deploy:
-    needs: [build, generate-applist]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
@@ -276,10 +276,20 @@ jobs:
           path: dist
 
       - name: Download applist artifact
+        id: download-applist
+        continue-on-error: true
         uses: actions/download-artifact@v8
         with:
           name: applist-json
           path: dist/data
+
+      - name: Restore cached applist.json (fallback)
+        if: steps.download-applist.outcome == 'failure'
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/data/applist.json
+          key: applist-json-${{ github.run_id }}
+          restore-keys: applist-json-
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
