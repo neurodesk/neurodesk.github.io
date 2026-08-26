@@ -643,7 +643,7 @@
             "license": "lgpl-3.0"
         },
         {
-            "application": "brainles-aurora_0.2.7_20260822",
+            "application": "brainles-aurora_0.2.7_20260825",
             "categories": [
                 "image segmentation",
                 "machine learning",
@@ -652,7 +652,7 @@
             "description": "AURORA segments brain metastases from multi-modal MR images using pretrained deep learning models. Part of the BrainLesion Suite (BLS): https://github.com/BrainLesion ### Example"
         },
         {
-            "application": "brainles-preprocessing_0.6.10_20260820",
+            "application": "brainles-preprocessing_0.6.10_20260825",
             "categories": [
                 "image registration",
                 "structural imaging"
@@ -660,7 +660,7 @@
             "description": "brainles-preprocessing provides a preprocessing pipeline for brain MRI: co-registration, atlas alignment, skull-stripping, defacing and intensity normalization. Part of the BrainLesion Suite (BLS): https://github.com/BrainLesion ### Commands"
         },
         {
-            "application": "brainlesion_1.0.0_20260820",
+            "application": "brainlesion_1.0.0_20260825",
             "categories": [
                 "data organisation",
                 "image segmentation",
@@ -1826,7 +1826,7 @@
             "license": "other-open"
         },
         {
-            "application": "gliomoda_0.0.4_20260819",
+            "application": "gliomoda_0.0.4_20260824",
             "categories": [
                 "image segmentation",
                 "machine learning",
