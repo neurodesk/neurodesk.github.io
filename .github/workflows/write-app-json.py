@@ -91,6 +91,32 @@ def fetch_app_descriptions(session: requests.Session, app_names: List[str]) -> D
     return descriptions
 
 
+def fetch_openrecon_apps(session: requests.Session, app_names: List[str]) -> set:
+    """
+    Check which apps have an OpenReconLabel.json file in their recipe directory.
+    These apps can be run on MRI scanners via the OpenRecon standard.
+
+    Returns a set of app names that have OpenReconLabel.json.
+    """
+    openrecon_apps: set = set()
+    for name in app_names:
+        url = f"{README_BASE_URL}/{name}/OpenReconLabel.json"
+        try:
+            resp = session.get(
+                url, timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS)
+            )
+            if resp.status_code == 200:
+                openrecon_apps.add(name)
+        except requests.RequestException:
+            continue
+
+    print(
+        f"Found {len(openrecon_apps)}/{len(app_names)} OpenRecon apps",
+        flush=True,
+    )
+    return openrecon_apps
+
+
 def _fetch_readme_md(session: requests.Session, name: str) -> Optional[str]:
     """Return the raw README.md text, or None on 404 / error."""
     url = f"{README_BASE_URL}/{name}/README.md"
@@ -291,6 +317,7 @@ def write_to_file(zenodo_token, filename):
         entry["application"].rsplit("_", 2)[0] for entry in app_entries
     ))
     descriptions = fetch_app_descriptions(session, unique_app_names)
+    openrecon_apps = fetch_openrecon_apps(session, unique_app_names)
 
     # Fetch Zenodo depositions (non-fatal: enrich with DOI if available)
     all_depositions: List[Dict] = []
@@ -317,6 +344,10 @@ def write_to_file(zenodo_token, filename):
         # Enrich with description
         if app_name in descriptions:
             enriched["description"] = descriptions[app_name]
+
+        # Mark as OpenRecon-compatible
+        if app_name in openrecon_apps:
+            enriched["openrecon"] = True
 
         # Enrich with DOI from Zenodo
         for deposition in all_depositions:
