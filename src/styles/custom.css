@@ -1791,6 +1791,55 @@ site-search button[data-open-modal] kbd {
 	white-space: nowrap;
 }
 
+.ab-openrecon-badge {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.ab-badge--openrecon {
+	background-color: var(--sl-color-accent);
+	color: var(--sl-color-accent-low);
+	font-weight: 600;
+}
+
+.ab-card-title-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.ab-filter-section {
+	margin-bottom: 0.75rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+	visibility: hidden;
+	background-color: var(--sl-color-gray-3);
+	color: var(--sl-color-black);
+	font-size: 0.6rem;
+	text-align: left;
+	padding: 5px 10px 5px 5px;
+	border-radius: 6px;
+	/* Position the tooltip text - see examples below! */
+	position: absolute;
+	z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
 .ab-muted {
 	color: var(--sl-color-gray-3);
 	font-size: 0.8rem;

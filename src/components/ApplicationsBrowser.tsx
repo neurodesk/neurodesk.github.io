@@ -7,6 +7,7 @@ interface AppListEntry {
   doi_url?: string;
   license?: string;
   description?: string;
+  openrecon?: boolean;
 }
 
 interface AppVersion {
@@ -22,6 +23,7 @@ interface GroupedApp {
   description?: string;
   categories: string[];
   versions: AppVersion[];
+  openrecon: boolean;
 }
 
 function parseApplication(entry: AppListEntry): {
@@ -66,6 +68,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
 
     if (existing) {
       existing.versions.push(versionEntry);
+      if (entry.openrecon) existing.openrecon = true;
       // Merge categories
       for (const cat of entry.categories) {
         if (!existing.categories.includes(cat)) {
@@ -78,6 +81,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
         description: entry.description,
         categories: [...entry.categories],
         versions: [versionEntry],
+        openrecon: !!entry.openrecon,
       });
     }
   }
@@ -119,7 +123,12 @@ function AppCard({ app }: { app: GroupedApp }) {
   return (
     <div className="ab-card">
       <div className="ab-card-header">
-        <h3 className="ab-card-title">{app.name}</h3>
+        <div className="ab-card-title-row">
+          <h3 className="ab-card-title">{app.name}</h3>
+          {app.openrecon && (
+            <span className="ab-badge ab-badge--openrecon">OpenRecon</span>
+          )}
+        </div>
         <span className="ab-version-count">
           {app.versions.length} version{app.versions.length !== 1 ? "s" : ""}
         </span>
@@ -218,6 +227,7 @@ export default function ApplicationsBrowser() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [openreconOnly, setOpenreconOnly] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/applist.json`)
@@ -268,9 +278,11 @@ export default function ApplicationsBrowser() {
         }
       }
 
+      if (openreconOnly && !app.openrecon) return false;
+
       return true;
     });
-  }, [grouped, searchQuery, selectedCategories]);
+  }, [grouped, searchQuery, selectedCategories, openreconOnly]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -326,6 +338,27 @@ export default function ApplicationsBrowser() {
         <>
           <aside className="ab-sidebar">
             <div className="ab-filter-header">
+              <strong>Container type</strong>
+            </div>
+            <div className="ab-filter-section">
+              <label className="ab-filter-item">
+                <input
+                  type="checkbox"
+                  checked={openreconOnly}
+                  onChange={() => setOpenreconOnly((v) => !v)}
+                />
+                <div className="ab-openrecon-badge">
+                  <span className="ab-badge ab-badge--openrecon">
+                    OpenRecon
+                  </span>
+                  <div className="tooltip">
+                    &#9432;
+                    <span className="tooltiptext">Runs on MRI scanners</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+            <div className="ab-filter-header">
               <strong>Categories</strong>
               {selectedCategories.length > 0 && (
                 <button
@@ -351,16 +384,14 @@ export default function ApplicationsBrowser() {
           </aside>
           <div className="ab-grid">
             <div className="ab-grid-toolbar">
-              <h3 className="ab-grid-toolbar-count">
-                {filtered.length} Tools
-              </h3>
+              <h3 className="ab-grid-toolbar-count">{filtered.length} Tools</h3>
               <a
                 href="/developers/new-tools/"
                 className="add-tool-button"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Suggest new tool
+                Build new tool
               </a>
             </div>
             {filtered.map((app) => (
@@ -374,6 +405,7 @@ export default function ApplicationsBrowser() {
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedCategories([]);
+                    setOpenreconOnly(false);
                   }}
                 >
                   Clear filters
