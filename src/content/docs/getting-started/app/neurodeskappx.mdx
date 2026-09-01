@@ -1,0 +1,158 @@
+---
+title: NeurodeskAppX
+description: Run Neurodesktop without admin access, Docker, or Podman.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+NeurodeskAppX runs Neurodesktop without Docker, Podman, or administrator privileges. It is a standalone application that can run from any writable folder.
+
+It uses [vmsh and TinyRange](https://github.com/tinyrange/vmsh) internally; you do not need to install or configure them separately.
+
+:::note
+If you have admin/root access and can install a container engine, use the [standard Neurodesk App](/getting-started/app/neurodeskapp/) instead.
+:::
+
+## Before you begin
+
+| Operating system | Supported hardware | Virtualisation requirement |
+|---|---|---|
+| macOS 15 or newer | Apple Silicon (M1 or newer) | Hypervisor.framework (included with macOS) |
+| Windows | x86-64 (Intel or AMD) | Windows Hypervisor Platform enabled |
+| Linux | x86-64 (Intel or AMD) | KVM with user access to `/dev/kvm` |
+
+By default, NeurodeskAppX assigns 8 GB of memory to Neurodesktop. Your computer also needs enough memory for the host operating system. NeurodeskAppX checks virtualisation support and available disk space before it downloads the desktop image.
+
+:::caution
+NeurodeskAppX does not require admin access. An administrator may still need to enable Windows Hypervisor Platform or grant your Linux account access to `/dev/kvm`.
+:::
+
+## Download NeurodeskAppX
+
+Use the links below to download the latest release for your platform.
+
+<Tabs syncKey="os">
+<TabItem label="macOS">
+
+<Steps>
+
+1. [Download NeurodeskAppX for Apple Silicon](https://github.com/tinyrange/vmsh/releases/latest/download/NeurodeskAppX_v0.8.0_darwin_arm64.zip).
+2. Double-click the ZIP file to extract `NeurodeskAppX.app`.
+3. Move the app to `~/Applications`, or leave it in another folder you can write to.
+4. Double-click `NeurodeskAppX.app` to open it.
+
+</Steps>
+
+The macOS app is signed and notarised. It requires macOS 15 or newer and does not support Intel Macs.
+
+</TabItem>
+<TabItem label="Windows">
+
+<Steps>
+
+1. [Download NeurodeskAppX for Windows](https://github.com/tinyrange/vmsh/releases/latest/download/NeurodeskAppX_v0.8.0_windows_amd64.exe).
+2. Optionally move the `.exe` to a folder in your user profile, such as `C:\Users\<username>\Applications\NeurodeskAppX`.
+3. Double-click the `.exe` to start it.
+
+</Steps>
+
+NeurodeskAppX does not currently support Windows on ARM.
+
+</TabItem>
+<TabItem label="Linux">
+
+<Steps>
+
+1. [Download NeurodeskAppX for Linux](https://github.com/tinyrange/vmsh/releases/latest/download/NeurodeskAppX_v0.8.0_linux_amd64).
+
+2. Make the downloaded file executable, then run it:
+
+   ```bash
+   chmod +x NeurodeskAppX_v0.8.0_linux_amd64
+   ./NeurodeskAppX_v0.8.0_linux_amd64
+   ```
+
+</Steps>
+
+To make the command available from your user profile instead:
+
+```bash
+mkdir -p ~/.local/bin
+mv NeurodeskAppX_v0.8.0_linux_amd64 ~/.local/bin/neurodeskappx
+chmod +x ~/.local/bin/neurodeskappx
+~/.local/bin/neurodeskappx
+```
+
+</TabItem>
+</Tabs>
+
+You can verify the download using the [latest checksums](https://github.com/tinyrange/vmsh/releases/latest/download/checksums.txt). See the [latest release page](https://github.com/tinyrange/vmsh/releases/latest) for release notes and all available downloads.
+
+## Start NeurodeskAppX
+
+When NeurodeskAppX opens, the welcome screen checks:
+
+- **Virtualisation:** Confirms that the computer can run a hardware-accelerated virtual machine. If this check fails, Windows Hypervisor Platform may be disabled, or your Linux account may not have access to `/dev/kvm`.
+- **Disk space:** Confirms that the selected data location has enough space for the compressed image, indexes, update data, and working space.
+- **Desktop image:** Checks whether the Neurodesktop image is installed and up to date. Before the first launch, this check shows the download size and estimated time.
+- **Virtual machine manager:** Checks for a newer NeurodeskAppX release. If this online check is unavailable, you can still start an installed desktop.
+
+Before starting, you can change the following options:
+
+- **SSH access:** Adds a managed SSH entry so you can run `ssh neurodesk` while NeurodeskAppX is open.
+- **System install:** Stores application data in your user cache. Leave this off to keep the data beside the application in portable mode. Neither option requires administrator access.
+- **Shared folder:** Selects the host folder available inside Neurodesktop. The default is `~/neurodesktop-storage`, which is also used by the standard Neurodesk App.
+- **Advanced:** Lets you change the memory and vCPU allocation. NeurodeskAppX remembers these settings for later launches.
+
+Once the required checks pass, select **Download & start**, **Start NeurodeskAppX**, or **Update & start**, depending on the displayed state. Select **Skip** to start without applying an available update.
+
+The first launch takes longer because NeurodeskAppX must download and prepare the desktop image. Later launches reuse the local image. Closing the NeurodeskAppX window shuts down the virtual machine.
+
+## Start JupyterLab
+
+NeurodeskAppX opens directly into the Neurodesktop graphical environment. JupyterLab does not start automatically.
+
+To use JupyterLab:
+
+<Steps>
+
+1. Double-click the **JupyterLab** icon on the desktop.
+2. Keep the progress terminal open while JupyterLab starts.
+3. When JupyterLab is ready, NeurodeskAppX opens it in your host web browser.
+
+</Steps>
+
+JupyterLab runs as a systemd service inside Neurodesktop. You can close the progress terminal after the browser opens. The service continues running until NeurodeskAppX shuts down, and clicking the icon again reopens the same session.
+
+## Downloads and image updates
+
+NeurodeskAppX is designed to make large Neurodesktop downloads and updates faster and more reliable:
+
+- The desktop image is stored compressed, reducing the disk space it uses.
+- Updates reuse unchanged data from the installed image, so large layers do not need to be downloaded again in full.
+- NeurodeskAppX can download and verify a new image in the background while you continue using the current desktop. On a later start, you can apply the verified image without waiting for it to download.
+- Multiple downloads run at the same time, with continuous progress and transfer-rate information.
+- Disk-space checks include the image, indexes, temporary update data, and required working space.
+- NeurodeskAppX selects a responsive CVMFS mirror automatically and keeps a host-side cache of up to 5 GiB, improving subsequent tool launches.
+
+These optimisations use standard OCI images and registries. See the [latest release notes](https://github.com/tinyrange/vmsh/releases/latest) for recent changes.
+
+## Data and installation modes
+
+### Shared data
+
+Inside NeurodeskAppX, the shared host folder is available at `/neurodesktop-storage` and `/home/jovyan/neurodesktop-storage`. The underlying mount is `/vmsh-neurodesktop-storage`.
+
+No extra configuration is needed to share the default folder with the standard Neurodesk App. If the standard App uses a custom storage location, select the same folder in NeurodeskAppX and make sure your account can read and write it. The standard App's optional **Additional Directory**, mounted at `/home/jovyan/data`, is separate.
+
+Save important datasets and results in the shared folder so they remain independent of the app and its downloaded desktop image. See [Data Storage](/getting-started/neurodesktop/storage/#local-storage) for more guidance.
+
+### Application data
+
+Both modes run without admin/root access:
+
+- **Portable mode (default):** On Windows and Linux, downloaded data is stored in a `NeurodeskAppX-data` folder beside the application. Move this folder with the executable if you relocate NeurodeskAppX.
+- **System install:** Downloaded data is stored in your user cache. The application itself remains a standalone file and can be placed anywhere in your user profile.
+- **macOS:** Application data is always stored in your user cache because the app bundle or its containing folder may not be writable.

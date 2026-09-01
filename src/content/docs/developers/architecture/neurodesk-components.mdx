@@ -40,19 +40,17 @@ More info: [transparent-singularity](/developers/architecture/transparent-singul
 - This repo provides a way of using our containers on HPCs for large scale processing of pipelines (including support of SLURM and other job schedulers)
 - CI: tests if exposing of binaries from container works
 
-## TinyRange integration
+## NeurodeskAppX
 
-To ensure accessibility for users without privileged system access (root/admin permissions), Neurodesk has integrated [TinyRange](https://github.com/tinyrange/tinyrange), a lightweight container runtime that operates without requiring root privileges. This integration represents a significant advancement in making neuroimaging tools accessible to all users, regardless of their system permissions.
+[NeurodeskAppX](/getting-started/app/neurodeskappx/) provides a portable Neurodesktop experience for users without privileged system access (root/admin permissions). It is powered by [vmsh and TinyRange](https://github.com/tinyrange/vmsh), which provide a lightweight virtual machine and container runtime without requiring Docker or Podman.
 
-![TinyRange Architecture](/developers/architecture/neurodesk-components/tinyrange.png)
+NeurodeskAppX provides:
 
-TinyRange provides:
-
-- Rootless container execution
-- User-space networking
-- Simplified container management
-- Seamless integration with Neurodesk's interface
-- Cross-platform compatibility
+- Installation and execution without admin/root access
+- A standalone graphical Neurodesktop application
+- User-space networking and virtual machine management
+- Portable storage or installation within the user's profile
+- Support for Apple Silicon macOS, x86-64 Windows, and x86-64 Linux
 
 This solution is particularly valuable in environments where users don't have administrative privileges, such as shared computing facilities or institutional workstations.
 
