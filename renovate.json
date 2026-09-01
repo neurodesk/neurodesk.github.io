@@ -1,6 +1,142 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ]
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommitsDisabled"
+  ],
+  "timezone": "Australia/Brisbane",
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "prConcurrentLimit": 5,
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "description": "Astro and Starlight versions are coupled; bump them as one reviewable unit.",
+      "matchPackageNames": [
+        "astro",
+        "@astrojs/**"
+      ],
+      "groupName": "astro"
+    },
+    {
+      "description": "A major Astro or Starlight bump can break custom CSS and MDX; review deliberately.",
+      "matchPackageNames": [
+        "astro",
+        "@astrojs/**"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "React runtime and its types move together.",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "groupName": "react"
+    },
+    {
+      "description": "sharp ships native binaries; a major bump can break image builds on Cloudflare.",
+      "matchPackageNames": [
+        "sharp"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Workflow actions, grouped into one review.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions"
+    },
+    {
+      "description": "Neurodesktop images are CalVer; newer is simply newer, so there is no major or minor distinction to act on. Always offer the latest as one PR.",
+      "matchDepNames": [
+        "ghcr.io/neurodesk/neurodesktop"
+      ],
+      "groupName": "neurodesktop image in docs",
+      "separateMajorMinor": false
+    },
+    {
+      "description": "NeurodeskAppX download links break as soon as a release ships, so let these through promptly.",
+      "matchDepNames": [
+        "tinyrange/vmsh"
+      ],
+      "groupName": "neurodeskappx downloads"
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Neurodesktop image tag pinned in installation instructions.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^src/content/docs/.*\\.mdx$/"
+      ],
+      "matchStrings": [
+        "VERSION=\"(?<currentValue>\\d{4}-\\d{2}-\\d{2})\""
+      ],
+      "depNameTemplate": "ghcr.io/neurodesk/neurodesktop",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$"
+    },
+    {
+      "description": "NeurodeskAppX release pinned in download URLs and filenames.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^src/content/docs/.*\\.mdx$/"
+      ],
+      "matchStrings": [
+        "NeurodeskAppX_v(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "tinyrange/vmsh",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "description": "websocat binary used in the interfacing guide.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^src/content/docs/.*\\.mdx$/"
+      ],
+      "matchStrings": [
+        "websocat/releases/download/v(?<currentValue>[0-9.]+)/"
+      ],
+      "depNameTemplate": "vi/websocat",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "description": "MATLAB VS Code extension vsix pinned in the Sherlock guide.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^src/content/docs/.*\\.mdx$/"
+      ],
+      "matchStrings": [
+        "MATLAB-extension-for-vscode/releases/download/v(?<currentValue>[0-9.]+)/"
+      ],
+      "depNameTemplate": "mathworks/MATLAB-extension-for-vscode",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": [
+      "at any time"
+    ],
+    "labels": [
+      "security"
+    ]
+  }
 }
