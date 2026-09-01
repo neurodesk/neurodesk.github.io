@@ -8,43 +8,31 @@
 
 ## Checking your preview
 
-Every push builds a preview site on **Cloudflare Pages**. There are two ways to reach it.
+Every push builds a preview site on Cloudflare Pages.
 
-### 1. The predictable branch link
+**Scroll down this page to the comment from `cloudflare-workers-and-pages`.** It has this
+icon beside it:
 
-Your preview always lives at:
+<img src="https://avatars.githubusercontent.com/in/85455?v=4" width="28" alt="Cloudflare Workers and Pages bot avatar">
 
-```
-https://<your-branch-name>.neurodesk-github-io-astro.pages.dev
-```
-
-Lowercase the branch name and replace anything that is not a letter or number with a
-hyphen. So a branch named `content-sync` is served at:
-
-```
-https://content-sync.neurodesk-github-io-astro.pages.dev
-```
-
-Long branch names are cut to 28 characters, so if that does not load, use the bot comment below.
-
-### 2. The Cloudflare bot comment
-
-Scroll down this page to a comment from **`cloudflare-workers-and-pages`**. It looks like this:
+The comment looks like this:
 
 > **Deploying neurodesk-github-io-astro with Cloudflare Pages**
 >
 > | | |
 > |---|---|
-> | **Latest commit** | `7377fc4` |
+> | **Latest commit** | the commit it built |
 > | **Status** | ✅ Deploy successful! |
-> | **Preview URL** | `https://ec56373a.neurodesk-github-io-astro.pages.dev` |
-> | **Branch Preview URL** | `https://content-sync.neurodesk-github-io-astro.pages.dev` |
+> | **Preview URL** | a link pinned to that one commit |
+> | **Branch Preview URL** | a link that follows your latest commit |
 
-- **Branch Preview URL** is the one you usually want. It follows your latest commit.
-- **Preview URL** is pinned to one specific commit, for checking a single build.
+**Open the Branch Preview URL.** That is the one you usually want, because it keeps
+working as you push more commits. Use the Preview URL only when you need to look at one
+specific build.
 
-Wait for ✅ **Deploy successful** before trusting what you see. A 404 or a stale page
-usually means the build is still running, so wait a moment and refresh.
+Wait until the status shows ✅ **Deploy successful** before trusting what you see. A 404
+or an out-of-date page usually means the build is still running, so give it a moment and
+refresh.
 
 ## When the preview looks right
 
