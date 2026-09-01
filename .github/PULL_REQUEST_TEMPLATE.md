@@ -1,15 +1,56 @@
-<!-- You may delete this guidance once you've edited the PR description. -->
+<!-- Describe your change here. You can delete the guidance below once you have. -->
 
-## Preview guidance (please read)
+## What changed
 
-It may take a few minutes after the build succeeds for the PR preview to become live. If you see a 404, wait a couple minutes and refresh.
 
-## About the bot comment
 
-- The bot comment will contain the preview URL and a short checklist you can complete (it will not modify your PR body). Please react 👍 to the bot comment when you are ready for a reviewer to look at your changes.
+---
 
-## Contact / help
+## Checking your preview
 
-If you need help or access, contact one of the code owners: @neurodesk/website-team 
+Every push builds a preview site on **Cloudflare Pages**. There are two ways to reach it.
 
-Thank you — this helps reviewers know your PR is ready and reduces churn during review.
+### 1. The predictable branch link
+
+Your preview always lives at:
+
+```
+https://<your-branch-name>.neurodesk-github-io-astro.pages.dev
+```
+
+Lowercase the branch name and replace anything that is not a letter or number with a
+hyphen. So a branch named `content-sync` is served at:
+
+```
+https://content-sync.neurodesk-github-io-astro.pages.dev
+```
+
+Long branch names are cut to 28 characters, so if that does not load, use the bot comment below.
+
+### 2. The Cloudflare bot comment
+
+Scroll down this page to a comment from **`cloudflare-workers-and-pages`**. It looks like this:
+
+> **Deploying neurodesk-github-io-astro with Cloudflare Pages**
+>
+> | | |
+> |---|---|
+> | **Latest commit** | `7377fc4` |
+> | **Status** | ✅ Deploy successful! |
+> | **Preview URL** | `https://ec56373a.neurodesk-github-io-astro.pages.dev` |
+> | **Branch Preview URL** | `https://content-sync.neurodesk-github-io-astro.pages.dev` |
+
+- **Branch Preview URL** is the one you usually want. It follows your latest commit.
+- **Preview URL** is pinned to one specific commit, for checking a single build.
+
+Wait for ✅ **Deploy successful** before trusting what you see. A 404 or a stale page
+usually means the build is still running, so wait a moment and refresh.
+
+## When the preview looks right
+
+React 👍 on the **Preview Deployment** comment. That tells reviewers your changes are
+ready to look at.
+
+## Help
+
+Need help or access? Contact a code owner: @neurodesk/website-team
