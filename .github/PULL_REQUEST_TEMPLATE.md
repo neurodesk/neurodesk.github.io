@@ -8,7 +8,7 @@
 
 ## Checking your preview
 
-Every push builds a preview site on Cloudflare Pages.
+Every push builds a preview site on Cloudflare Pages. It takes a few minutes.
 
 **Scroll down this page to the comment from `cloudflare-workers-and-pages`.** It has this
 icon beside it:
@@ -32,12 +32,18 @@ specific build.
 
 Wait until the status shows ✅ **Deploy successful** before trusting what you see. A 404
 or an out-of-date page usually means the build is still running, so give it a moment and
-refresh.
+refresh. If the comment has not appeared yet, the first build is still queued.
 
-## When the preview looks right
+## Before requesting a review
 
-React 👍 on the **Preview Deployment** comment. That tells reviewers your changes are
-ready to look at.
+Open your preview and confirm:
+
+- [ ] The visual layout looks correct
+- [ ] Links and images load as expected
+- [ ] Your recent changes actually appear on the page
+
+Tick these boxes once you have checked them. That tells reviewers the preview has been
+validated and the PR is ready to look at.
 
 ## Help
 
