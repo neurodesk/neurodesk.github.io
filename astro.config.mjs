@@ -45,7 +45,7 @@ export default defineConfig({
 		'/getting-started/neurodesktop/hpc': '/getting-started/neurocommand/linux-and-hpc/',
 		'/getting-started/neurodesktop/nectar': '/getting-started/installations/nectar/',
 		'/getting-started/neurodesktop/neurodeskapp': '/getting-started/app/neurodeskapp/',
-		'/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskapp/',
+		'/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskappx/',
 		'/getting-started/neurodesktop/play': '/getting-started/hosted/play/',
 		'/getting-started/neurodesktop/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
 		'/getting-started/pyneurodesk': '/getting-started/neurocommand/pyneurodesk/',
@@ -207,6 +207,7 @@ export default defineConfig({
 							items: [
 								{ autogenerate: { directory: 'getting-started/neurodesktop' } },
 								{ label: 'Neurodesk App', link: '/getting-started/app/neurodeskapp/' },
+								{ label: 'NeurodeskAppX', link: '/getting-started/app/neurodeskappx/' },
 							],
 						},
 						{

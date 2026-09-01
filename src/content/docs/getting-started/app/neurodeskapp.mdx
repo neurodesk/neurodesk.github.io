@@ -11,6 +11,10 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Download the Neurodesk App for your operating system, then follow the install instructions below.
 
+:::note[No admin/root access?]
+Use [NeurodeskAppX](/getting-started/app/neurodeskappx/) to run Neurodesktop without installing Docker or Podman.
+:::
+
 <Tabs syncKey="os">
 <TabItem label="macOS">
 
@@ -85,9 +89,7 @@ Search [GitHub Store](https://komistore.app/) for `Neurodesk-app` to install dir
 
 ## Step 2: Set up a container engine
 
-The Neurodesk App needs a container engine to run neuroimaging tools. Which engine you use depends on whether you have admin (root) privileges on your system.
-
-![Engine selection screen showing Docker, Podman, and TinyRange options](/docs/getting-started/neurodeskapp/engine-options.png)
+The Neurodesk App needs a container engine to run neuroimaging tools. Docker is recommended, and Podman is also supported. Both generally require admin/root access for installation.
 
 <Tabs>
 <TabItem label="Docker (recommended)">
@@ -117,26 +119,10 @@ docker run hello-world
 Podman is a drop-in replacement for Docker. Install it using your system's package manager or from [podman.io](https://podman.io/docs/installation).
 
 </TabItem>
-<TabItem label="TinyRange (no admin needed)">
-
-**Use this if you do NOT have admin/root access.**
-
-TinyRange is included with the Neurodesk App, so no separate install is needed on Windows and Linux.
-
-**macOS only:** you also need to install QEMU:
-
-```bash
-brew install qemu
-```
-
-Verify with:
-
-```bash
-qemu-system-aarch64 --version
-```
-
-</TabItem>
 </Tabs>
+
+If you cannot install a container engine, use [NeurodeskAppX](/getting-started/app/neurodeskappx/), the portable option that does not require Docker, Podman, or admin/root access.
+
 
 ## Step 3: Launch the app
 
