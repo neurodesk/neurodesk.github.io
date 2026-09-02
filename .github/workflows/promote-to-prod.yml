@@ -1,0 +1,232 @@
+name: Promote to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to promote
+        required: false
+        default: main
+      include_edu:
+        description: Include NeurodeskEDU in the assembled site
+        required: true
+        default: true
+        type: boolean
+      publish:
+        description: Publish the assembled site to neurodesk.org
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-promotion
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  promote:
+    runs-on: ubuntu-22.04
+    env:
+      PROD_OWNER: neurodesk
+      PROD_REPO: neurodesk.org
+      PROD_BRANCH: site
+    steps:
+      - name: Checkout Astro source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Record promoted revision
+        run: echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests google-auth matplotlib
+
+      - name: Test user metrics generator
+        run: python -m unittest tests/test_write_user_metrics.py
+
+      - name: Generate applications list
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          FAIL_ON_APPLIST_ERROR: ${{ vars.FAIL_ON_APPLIST_ERROR }}
+        run: |
+          if [ -z "$ZENODO_TOKEN" ]; then
+            echo "ZENODO_TOKEN is required for a production candidate" >&2
+            exit 1
+          fi
+
+          EXTRA_ARGS=()
+          case "${FAIL_ON_APPLIST_ERROR,,}" in
+            true|1|yes)
+              EXTRA_ARGS+=(--fail-on-error)
+              ;;
+          esac
+
+          python .github/workflows/write-app-json.py \
+            --zenodo_token "$ZENODO_TOKEN" \
+            "${EXTRA_ARGS[@]}"
+
+      - name: Generate user metrics
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -n "$GA4_SERVICE_ACCOUNT_KEY" ]; then
+            python .github/workflows/write-user-metrics.py
+          else
+            echo "GA4_SERVICE_ACCOUNT_KEY not set; writing unavailable placeholder"
+            python .github/workflows/write-user-metrics.py --allow-missing-token
+          fi
+
+      - name: Generate Neurodesk App download metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/workflows/write-neurodeskapp-metrics.py
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11
+          cache: true
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro production site
+        run: pnpm build
+
+      - name: Verify applications data
+        run: |
+          node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('dist/data/applist.json','utf8'));const n=Array.isArray(d.list)?d.list.length:0;console.log('Applications:',n);if(n<=1)process.exit(1)"
+
+      - name: Include example notebooks
+        run: |
+          git clone --depth=1 --branch gh-pages \
+            https://github.com/neurodesk/example-notebooks.git \
+            "${{ runner.temp }}/example-notebooks"
+          mkdir -p dist/example-notebooks
+          rsync -a --delete \
+            "${{ runner.temp }}/example-notebooks/" \
+            dist/example-notebooks/ \
+            --exclude=.git
+          test -f dist/example-notebooks/intro.html
+
+      - name: Include NeurodeskEDU
+        if: ${{ inputs.include_edu }}
+        run: |
+          git clone --depth=1 --branch gh-pages \
+            https://github.com/neurodesk/neurodeskedu.git \
+            "${{ runner.temp }}/neurodeskedu"
+          mkdir -p dist/edu
+          rsync -a --delete \
+            "${{ runner.temp }}/neurodeskedu/" \
+            dist/edu/ \
+            --exclude=.git
+          if [ ! -f dist/edu/intro.html ] && [ ! -f dist/edu/index.html ]; then
+            echo "NeurodeskEDU entry page was not found" >&2
+            exit 1
+          fi
+
+      - name: Checkout Neurocontainers UI
+        uses: actions/checkout@v7
+        with:
+          repository: neurodesk/neurocontainers-ui
+          path: .production-inputs/neurocontainers-ui
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build Neurocontainers UI
+        working-directory: .production-inputs/neurocontainers-ui
+        env:
+          PAGES_BASE_PATH: /neurocontainers-ui
+        run: |
+          bun install
+          bun run build
+
+      - name: Include Neurocontainers UI
+        run: |
+          mkdir -p dist/neurocontainers-ui
+          rsync -a --delete \
+            .production-inputs/neurocontainers-ui/out/ \
+            dist/neurocontainers-ui/
+          test -f dist/neurocontainers-ui/index.html
+
+      - name: Add production custom domain
+        run: printf '%s\n' 'neurodesk.org' > dist/CNAME
+
+      - name: Verify assembled production candidate
+        run: |
+          test -f dist/index.html
+          test -f dist/CNAME
+          test -f dist/example-notebooks/intro.html
+          test -f dist/neurocontainers-ui/index.html
+          if ${{ inputs.include_edu }}; then
+            test -d dist/edu
+          fi
+
+      - name: Upload production candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-site-candidate-${{ github.run_id }}
+          path: dist/
+          retention-days: 7
+
+      - name: Push candidate to production repository
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ secrets.PROD_REPO_TOKEN }}
+          INCLUDE_EDU: ${{ inputs.include_edu }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "PROD_REPO_TOKEN is required to publish" >&2
+            exit 1
+          fi
+
+          PROD_WORKTREE="${{ runner.temp }}/prod-site"
+          git clone --branch "${PROD_BRANCH}" --single-branch \
+            "https://x-access-token:${GH_TOKEN}@github.com/${PROD_OWNER}/${PROD_REPO}.git" \
+            "$PROD_WORKTREE"
+
+          if [ "$INCLUDE_EDU" = "true" ]; then
+            rsync -a --delete --exclude=.git dist/ "$PROD_WORKTREE/"
+          else
+            rsync -a --delete --exclude=.git --exclude=edu/ dist/ "$PROD_WORKTREE/"
+          fi
+
+          cd "$PROD_WORKTREE"
+          git config user.name "production-promotion-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No production changes to publish"
+          else
+            git commit -m "Deploy ${GITHUB_REPOSITORY}@${SOURCE_SHA}"
+            git push origin "${PROD_BRANCH}"
+          fi
+
+      - name: Trigger GitHub Pages production deployment
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ secrets.PROD_REPO_TOKEN }}
+        run: |
+          gh api \
+            --method POST \
+            "repos/${PROD_OWNER}/${PROD_REPO}/dispatches" \
+            -f event_type=publish-site
