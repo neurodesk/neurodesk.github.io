@@ -3,13 +3,16 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import remarkGfm from 'remark-gfm';
 
 export default defineConfig({
 	site: 'https://neurodesk.org',
 	compressHTML: false,
 	markdown: {
-		remarkPlugins: [remarkGfm],
+		processor: unified({
+			remarkPlugins: [remarkGfm],
+		}),
 	},
 	redirects: {
 		'/applications': '/overview/applications/',
@@ -23,8 +26,85 @@ export default defineConfig({
 		'/developers/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/add_tool': '/developers/new-tools/',
 		'/developers/new_tools/manual_build': '/developers/new-tools/',
+		'/developers/new_tools': '/developers/new-tools/',
+		'/developers/new_tools/new_tool': '/developers/new-tools/',
 		'/developers/new-tools/new-tool': '/developers/new-tools/',
+		'/developers/new_tools/update_tool': '/developers/new-tools/update-tool/',
+		'/developers/architecture/cvmfs/cvmfs_architecture': '/developers/architecture/cvmfs/cvmfs-architecture/',
+		'/developers/architecture/release_process': '/developers/architecture/release-process/',
+		'/developers/architecture/transparent_singularity': '/developers/architecture/transparent-singularity/',
+		'/getting-started/agents/notebook_intelligence': '/getting-started/agents/notebook-intelligence/',
+		'/redirects': '/redirects/tutorials-to-neurodeskedu/',
+		'/docs/getting-started/neurocontainers/openrecon': '/getting-started/neurocontainers/openrecon/',
+		'/docs//getting-started/neurodesktop/cloud': '/getting-started/neurodesktop/cloud/',
+		'/docs//getting-started/neurodesktop/linux': '/getting-started/neurodesktop/linux/',
+		'/docs//getting-started/neurodesktop/mac': '/getting-started/neurodesktop/mac/',
+		'/docs//getting-started/neurodesktop/windows': '/getting-started/neurodesktop/windows/',
+		'/docs/Getting-Started/Local/neurodeskapp': '/getting-started/app/neurodeskapp/',
+		'/docs/Neurodesktop/release-history': '/overview/release-history/',
+		'/docs/getting-started/hosted/bunya': '/getting-started/installations/bunya/',
+		'/docs/getting-started/hosted/github': '/getting-started/hosted/github/',
+		'/docs/getting-started/hosted/googlecolab': '/getting-started/hosted/google/',
+		'/docs/getting-started/hosted/nectar': '/getting-started/installations/nectar/',
+		'/docs/getting-started/hosted/play': '/getting-started/hosted/play/',
+		'/docs/getting-started/hosted/xnat': '/getting-started/hosted/xnat/',
+		'/docs/getting-started/linux-and-hpc': '/getting-started/neurocommand/linux-and-hpc/',
+		'/docs/getting-started/local/examples': '/getting-started/installations/ubuntu2404/',
+		'/docs/getting-started/neurocommand/hpc': '/getting-started/neurocommand/linux-and-hpc/',
+		'/docs/getting-started/neurocommand/linux': '/getting-started/neurocommand/linux-and-hpc/',
+		'/docs/getting-started/neurocommand/linux-and-hpc': '/getting-started/neurocommand/linux-and-hpc/',
+		'/docs/getting-started/neurocommand/pyneurodesk': '/getting-started/neurocommand/pyneurodesk/',
+		'/docs/getting-started/neurocommand/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
+		'/docs/getting-started/neurocontainers/cvmfs': '/getting-started/neurocontainers/cvmfs/',
+		'/docs/getting-started/neurocontainers/datalad': '/getting-started/neurocontainers/datalad/',
+		'/docs/getting-started/neurocontainers/docker': '/getting-started/neurocontainers/docker/',
+		'/docs/getting-started/neurocontainers/googleColab': '/getting-started/hosted/google/',
+		'/docs/getting-started/neurocontainers/googlecolab': '/getting-started/hosted/google/',
+		'/docs/getting-started/neurocontainers/singularity': '/getting-started/neurocontainers/singularity/',
+		'/docs/getting-started/neurocontainers/windows11-wsl': '/getting-started/neurocontainers/windows11-wsl/',
+		'/docs/getting-started/neurodesktop/hpc': '/getting-started/neurocommand/linux-and-hpc/',
+		'/docs/getting-started/neurodesktop/nectar': '/getting-started/installations/nectar/',
+		'/docs/getting-started/neurodesktop/neurodeskapp': '/getting-started/app/neurodeskapp/',
+		'/docs/getting-started/neurodesktop/play': '/getting-started/hosted/play/',
+		'/docs/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskappx/',
+		'/docs/getting-started/neurodesktop/storage': '/getting-started/neurodesktop/storage/',
+		'/docs/getting-started/neurodesktop/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
+		'/docs/getting-started/pyneurodesk': '/getting-started/neurocommand/pyneurodesk/',
+		'/docs/getting-started/storage': '/getting-started/neurodesktop/storage/',
+		'/docs/getting-started/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
+		'/docs/getting-started/windows': '/getting-started/neurocommand/windows/',
+		'/docs/how-to-cite-us': '/overview/how-to-cite-us/',
+		'/docs/neurocommand': '/getting-started/neurocommand/',
+		'/docs/neurocontainers/contribute': '/support/contribute/',
+		'/docs/neurodesktop': '/getting-started/neurodesktop/',
+		'/docs/neurodesktop/getting-started/cloud': '/getting-started/neurodesktop/cloud/',
+		'/docs/neurodesktop/getting-started/linux': '/getting-started/neurodesktop/linux/',
+		'/docs/neurodesktop/getting-started/mac': '/getting-started/neurodesktop/mac/',
+		'/docs/neurodesktop/getting-started/nectar': '/getting-started/installations/nectar/',
+		'/docs/neurodesktop/getting-started/play': '/getting-started/hosted/play/',
+		'/docs/neurodesktop/getting-started/windows': '/getting-started/neurodesktop/windows/',
+		'/docs/neurodesktop/storage': '/getting-started/neurodesktop/storage/',
+		'/docs/overview/acknowledgment': '/overview/acknowledgement/',
+		'/docs/overview/applications': '/overview/applications/',
+		'/docs/overview/code-of-conduct': '/overview/code-of-conduct/',
+		'/docs/overview/contribute': '/support/contribute/',
+		'/docs/overview/discussion-forum': 'https://github.com/orgs/neurodesk/discussions',
+		'/docs/overview/donate': '/donate/',
+		'/docs/overview/faq': '/support/faq/',
+		'/docs/overview/how-to-cite-us': '/overview/how-to-cite-us/',
+		'/docs/overview/metrics': '/overview/metrics/',
+		'/docs/overview/publications': '/overview/publications/',
+		'/docs/overview/release-history': '/overview/release-history/',
+		'/docs/support/discussion-forum': 'https://github.com/orgs/neurodesk/discussions',
+		'/docs/support/release-history': '/overview/release-history/',
+		'/tutorials-electrophysiology/EEG_mne-python': '/redirects/tutorials-to-neurodeskedu/',
+		'/tutorials-examples/tutorials/electrophysiology/EEG_mne-python': '/redirects/tutorials-to-neurodeskedu/',
+		'/tutorials-examples/tutorials/multimodal_imaging/MFCSC': '/redirects/tutorials-to-neurodeskedu/',
+		'/tutorials/electrophysiology/EEG_mne-python': '/redirects/tutorials-to-neurodeskedu/',
 		'/getting-started/hosted/bunya': '/getting-started/installations/bunya/',
+		'/getting-started/hosted/xnat-lucas': '/getting-started/installations/xnat-lucas/',
+		'/docs/getting-started/hosted/xnat-lucas': '/getting-started/installations/xnat-lucas/',
+		'/docs/getting-started/installations/xnat-lucas': '/getting-started/installations/xnat-lucas/',
 		'/getting-started/hosted/googlecolab': '/getting-started/hosted/google/',
 		'/getting-started/hosted/nectar': '/getting-started/installations/nectar/',
 		'/getting-started/linux-and-hpc': '/getting-started/neurocommand/linux-and-hpc/',
@@ -37,7 +117,7 @@ export default defineConfig({
 		'/getting-started/neurodesktop/hpc': '/getting-started/neurocommand/linux-and-hpc/',
 		'/getting-started/neurodesktop/nectar': '/getting-started/installations/nectar/',
 		'/getting-started/neurodesktop/neurodeskapp': '/getting-started/app/neurodeskapp/',
-		'/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskapp/',
+		'/getting-started/neurodesktop/portable': '/getting-started/app/neurodeskappx/',
 		'/getting-started/neurodesktop/play': '/getting-started/hosted/play/',
 		'/getting-started/neurodesktop/visual-studio-code': '/getting-started/neurocommand/visual-studio-code/',
 		'/getting-started/pyneurodesk': '/getting-started/neurocommand/pyneurodesk/',
@@ -145,13 +225,30 @@ export default defineConfig({
 			},
 			favicon: '/favicons/favicon.ico',
 			head: [
+				{
+					tag: 'script',
+					content: `
+						if (['neurodesk.org', 'www.neurodesk.org'].includes(window.location.hostname)) {
+							window.dataLayer = window.dataLayer || [];
+							window.gtag = function(){window.dataLayer.push(arguments);};
+
+							const googleTag = document.createElement('script');
+							googleTag.async = true;
+							googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=G-4Z9774J59Y';
+							document.head.appendChild(googleTag);
+
+							window.gtag('js', new Date());
+							window.gtag('config', 'G-4Z9774J59Y');
+						}
+					`,
+				},
 				{ tag: 'link', attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicons/apple-touch-icon.png' } },
 				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' } },
 				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' } },
 				{ tag: 'link', attrs: { rel: 'manifest', href: '/favicons/site.webmanifest' } },
 			],
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/NeuroDesk' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/neurodesk' },
 				{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/neurodesk-org/' },
 			],
 			routeMiddleware: './src/starlightRouteData.ts',
@@ -161,7 +258,7 @@ export default defineConfig({
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},
 			editLink: {
-				baseUrl: 'https://github.com/NeuroDesk/neurodesk.github.io/edit/main/',
+				baseUrl: 'https://github.com/neurodesk/neurodesk.github.io/edit/main/',
 			},
 			sidebar: [
 				{
@@ -199,6 +296,7 @@ export default defineConfig({
 							items: [
 								{ autogenerate: { directory: 'getting-started/neurodesktop' } },
 								{ label: 'Neurodesk App', link: '/getting-started/app/neurodeskapp/' },
+								{ label: 'NeurodeskAppX', link: '/getting-started/app/neurodeskappx/' },
 							],
 						},
 						{

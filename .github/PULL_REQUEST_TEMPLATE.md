@@ -1,15 +1,37 @@
-<!-- You may delete this guidance once you've edited the PR description. -->
+<!-- cloudflare-preview:start -->
+> [!NOTE]
+> **Preview deployment pending**
+>
+> This panel updates automatically when Cloudflare finishes building the preview.
+<!-- cloudflare-preview:end -->
 
-## Preview guidance (please read)
+<!-- Describe your change here. You can delete the guidance below once you have. -->
 
-It may take a few minutes after the build succeeds for the PR preview to become live. If you see a 404, wait a couple minutes and refresh.
+## What changed
 
-## About the bot comment
 
-- The bot comment will contain the preview URL and a short checklist you can complete (it will not modify your PR body). Please react 👍 to the bot comment when you are ready for a reviewer to look at your changes.
 
-## Contact / help
+---
 
-If you need help or access, contact one of the code owners: @neurodesk/website-team 
+## Checking your preview
 
-Thank you — this helps reviewers know your PR is ready and reduces churn during review.
+Every push builds a preview site on Cloudflare Pages. It takes a few minutes.
+
+The preview panel at the top of this description updates when the deployment finishes.
+Refresh the page if it still shows as queued. Open the **Branch Preview URL** for the
+latest version of the branch, or the **Preview URL** for that specific commit.
+
+## Before requesting a review
+
+Open your preview and confirm:
+
+- [ ] The visual layout looks correct
+- [ ] Links and images load as expected
+- [ ] Your recent changes actually appear on the page
+
+Tick these boxes once you have checked them. That tells reviewers the preview has been
+validated and the PR is ready to look at.
+
+## Help
+
+Need help or access? Contact a code owner: @neurodesk/website-team

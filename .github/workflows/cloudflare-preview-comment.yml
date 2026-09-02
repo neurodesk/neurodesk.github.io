@@ -1,0 +1,145 @@
+name: Cloudflare preview links
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  check_run:
+    types: [completed]
+
+permissions:
+  checks: read
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview-links:
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event.check_run.name == 'Cloudflare Pages' &&
+      github.event.check_run.app.slug == 'cloudflare-workers-and-pages')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Add preview links to PR description
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const project = 'neurodesk-github-io-astro';
+            const startMarker = '<!-- cloudflare-preview:start -->';
+            const endMarker = '<!-- cloudflare-preview:end -->';
+            const pendingBlock = [
+              startMarker,
+              '> [!NOTE]',
+              '> **Preview deployment pending**',
+              '>',
+              '> This panel updates automatically when Cloudflare finishes building the preview.',
+              endMarker,
+            ].join('\n');
+            const managedSection = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`);
+
+            function branchAlias(ref) {
+              return ref
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+                .slice(0, 28)
+                .replace(/^-+|-+$/g, '');
+            }
+
+            function cloudflareBlock(pr, check) {
+              const deploymentId = check.details_url?.match(/\/([0-9a-f-]{36})$/i)?.[1];
+              if (!deploymentId) {
+                core.setFailed(`Could not extract a Cloudflare deployment ID from ${check.details_url}`);
+                return null;
+              }
+
+              const previewUrl = `https://${deploymentId.substring(0, 8)}.${project}.pages.dev`;
+              const branchUrl = `https://${branchAlias(pr.head.ref)}.${project}.pages.dev`;
+
+              if (check.conclusion !== 'success') {
+                return [
+                  startMarker,
+                  '> [!WARNING]',
+                  '> **Preview deployment failed**',
+                  '>',
+                  `> [View deployment logs](${check.details_url})`,
+                  endMarker,
+                ].join('\n');
+              }
+
+              return [
+                startMarker,
+                '> [!IMPORTANT]',
+                '> **Preview ready**',
+                '>',
+                `> [Open latest branch preview](${branchUrl}) · [Open this commit](${previewUrl}) · [View deployment logs](${check.details_url})`,
+                '',
+                '| | |',
+                '|---|---|',
+                `| Commit | \`${check.head_sha.substring(0, 7)}\` |`,
+                '| Status | ✅ Deploy successful |',
+                endMarker,
+              ].join('\n');
+            }
+
+            function updateManagedSection(body, block) {
+              const current = body || '';
+              const replacement = block || pendingBlock;
+              if (managedSection.test(current)) {
+                return current.replace(managedSection, replacement);
+              }
+              return `${replacement}\n\n${current}`;
+            }
+
+            async function reconcile(prNumber) {
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              });
+
+              const { data } = await github.rest.checks.listForRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: pr.head.sha,
+                check_name: 'Cloudflare Pages',
+                filter: 'latest',
+                per_page: 100,
+              });
+              const check = data.check_runs.find(run =>
+                run.status === 'completed' &&
+                run.app?.slug === 'cloudflare-workers-and-pages'
+              );
+              const block = check ? cloudflareBlock(pr, check) : null;
+              if (check && !block) return;
+
+              const body = updateManagedSection(pr.body, block);
+              if (body === (pr.body || '')) {
+                core.info(`PR #${prNumber} description is already current`);
+                return;
+              }
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                body,
+              });
+              core.info(check
+                ? `Updated Cloudflare preview links on PR #${prNumber}`
+                : `Reset Cloudflare preview links on PR #${prNumber}`
+              );
+            }
+
+            if (context.eventName === 'pull_request_target') {
+              await reconcile(context.payload.pull_request.number);
+              return;
+            }
+
+            const pullRequests = context.payload.check_run.pull_requests || [];
+            if (pullRequests.length === 0) {
+              core.info('The check completed before a PR existed; the PR event will reconcile it later');
+              return;
+            }
+
+            for (const pr of pullRequests) {
+              await reconcile(pr.number);
+            }

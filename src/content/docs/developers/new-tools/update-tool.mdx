@@ -10,7 +10,7 @@ import { FileTree, Steps } from '@astrojs/starlight/components';
 
 Updating an existing container is quite easy with the new build system.
 
-Here is a step-by-step on how to proceed by modifying the `.yaml` file. It is also possible to edit the containers by using our newly released web browser UI: [https://neurodesk.org/neurocontainers-ui/](https://neurodesk.org/neurocontainers-ui/).
+Here is a step-by-step on how to proceed by modifying the `.yaml` file. It is also possible to edit the containers by using our web browser UI: [https://neurodesk.org/neurocontainers-ui/](https://neurodesk.org/neurocontainers-ui/).
 
 There's a [detailed version](#detailed-version) below including screenshots and an example.
 
@@ -20,7 +20,7 @@ There's a [detailed version](#detailed-version) below including screenshots and 
 
 1. Access the [Neurodesk Containers repository](https://github.com/neurodesk/neurocontainers).
 2. Fork the repository.
-3. Using your preferred development environment (such as VS Code locally or GitHub Codespaces), make changes to the desired container.
+3. Set up Neurocontainers in your preferred development environment, such as VS Code locally or GitHub Codespaces, then make changes to the desired container.
 
    Each tool has its own folder inside the `recipes/` directory, and inside that folder, you will find the corresponding `build.yaml` file.
 
@@ -38,10 +38,10 @@ There's a [detailed version](#detailed-version) below including screenshots and 
    Make sure your changes are valid. In the terminal, run:
 
    ```shell
-   ./builder/build.py generate <toolname>
+   builder generate <toolname> --recreate
 
-   #This second step can take some time
-   ./builder/build.py generate <toolname> --recreate --build --test
+   # This second step requires Docker and can take some time
+   builder test <toolname> --recreate --build
    ```
 
 5. Commit and push your changes.
@@ -81,9 +81,50 @@ If changes are committed to the `Neurodesk/neurocontainers` repository, you will
 
 ![Commits behind](/developers/new_tools/update_tool/neurocontainers-commits-behind.png)
 
-## 3. Create and edit a Codespace
+## 3. Set up your development environment
 
-Once this is done, you will want to start a Codespace by:
+Choose either a local setup or GitHub Codespaces. Both options install Neurocontainers so that the `builder` command is available.
+
+### Option A: set up Neurocontainers locally
+
+Install Git, Python 3.13, and Docker before continuing. Confirm that they are available:
+
+```shell
+git --version
+python3.13 --version
+docker version
+docker buildx version
+```
+
+Clone your fork, add the Neurodesk repository as the upstream remote, and create a branch for your update. Replace `YOUR_GITHUB_USERNAME` and `TOOLNAME` below:
+
+```shell
+git clone https://github.com/YOUR_GITHUB_USERNAME/neurocontainers.git
+cd neurocontainers
+git remote add upstream https://github.com/neurodesk/neurocontainers.git
+git switch -c update-TOOLNAME
+```
+
+Create an isolated Python environment and install Neurocontainers, including the `builder` command:
+
+```shell
+python3.13 -m venv .venv
+source .venv/bin/activate
+python --version # Must report Python 3.13.x
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
+
+builder --help
+docker info
+docker run --rm hello-world
+```
+
+Activate the environment with `source .venv/bin/activate` whenever you open a new terminal.
+
+### Option B: create and edit a Codespace
+
+Use Codespaces when Docker or Python is unavailable on your local computer. Make sure your fork's `main` branch is up to date, then create a Codespace by:
 
 - Clicking the **+ (Create new...)** button in the top right corner. (It's a `+` sign button.)
 - Selecting **Codespaces**, **New codespace**.
@@ -102,15 +143,18 @@ This opens an editable environment directly in your browser.
 
 ![Codespace](/developers/new_tools/update_tool/codespace.png)
 
-In the terminal, run the following lines to configure your Codespace environment.
+The repository's development-container configuration creates the `env` virtual environment and installs Neurocontainers automatically. In the terminal, activate the environment and verify the setup:
 
 ```shell
-python3 -m venv env
+git switch -c update-TOOLNAME
 source env/bin/activate
-pip install -r requirements.txt
+python --version # Must report Python 3.13.x
+builder --help
+docker info
+docker run --rm hello-world
 ```
 
-This will install a series of packages to allow you to make changes to Neurocontainers.
+If Codespaces setup fails, first make sure your fork's `main` branch is up to date. Then fully rebuild the container or create a new Codespace; restarting a failed Codespace does not apply updated development-container configuration.
 
 ### YAML extension
 
@@ -202,17 +246,19 @@ Before committing, make sure your changes are valid.
 In the terminal, run:
 
 ```shell
-./builder/build.py generate connectomeworkbench # Replace connectomeworkbench with the name of the folder you updated
+builder generate connectomeworkbench --recreate # Replace connectomeworkbench with the name of the folder you updated
 
-#This second step can take some time
-./builder/build.py generate connectomeworkbench --recreate --build --test # Replace connectomeworkbench with the name of the folder you updated
+# This second step requires Docker and can take some time
+builder test connectomeworkbench --recreate --build # Replace connectomeworkbench with the name of the folder you updated
 ```
 
-This script will:
+The first command will:
 
 - Parse your `build.yaml`
 - Check for syntax errors
-- Show the build steps without actually building the full container
+- Generate the Dockerfile without building the container
+
+The second command builds the Docker image and runs the recipe's tests. If Docker is unavailable, successful generation is still useful validation, but it does not prove that the image builds or that its tests pass.
 
 You will be able to see the progress for each of the building steps in the VS Code terminal panel at the bottom of your Codespace. The output looks something like this:
 
@@ -224,7 +270,7 @@ You will be able to see the progress for each of the building steps in the VS Co
 	</div>
 	<div class="fakeScreen fakeScreen--scroll">
 		<pre class="fake-log fake-log--cli">{`DataLayer: Build directory already exists.
-(env) @neurodesksExternalUser:/workspaces/neurocontainers (main) $ ./builder/build.py generate connectomeworkbench --recreate --build --test
+(env) @neurodesksExternalUser:/workspaces/neurocontainers (main) $ builder test connectomeworkbench --recreate --build
 
 `}<span class="fake-cli-sel">{`Building Docker 302.2s (15/26)`}</span>{`
  => [build  7/22] RUN apt-get update -qq && apt-get install -y -q --no-install-recommends ca-certificates curl gnupg2 jq        4.1s
