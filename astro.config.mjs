@@ -248,7 +248,7 @@ export default defineConfig({
 				{ tag: 'link', attrs: { rel: 'manifest', href: '/favicons/site.webmanifest' } },
 			],
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/NeuroDesk' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/neurodesk' },
 				{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/neurodesk-org/' },
 			],
 			routeMiddleware: './src/starlightRouteData.ts',
@@ -258,7 +258,7 @@ export default defineConfig({
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},
 			editLink: {
-				baseUrl: 'https://github.com/NeuroDesk/neurodesk.github.io/edit/main/',
+				baseUrl: 'https://github.com/neurodesk/neurodesk.github.io/edit/main/',
 			},
 			sidebar: [
 				{
