@@ -1,0 +1,178 @@
+name: Cloudflare preview comment
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  check_run:
+    types: [completed]
+
+permissions:
+  checks: read
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview-comment:
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event.check_run.name == 'Cloudflare Pages' &&
+      github.event.check_run.app.slug == 'cloudflare-workers-and-pages')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create or update preview comment
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const marker = '<!-- pr-preview:neurodesk -->';
+            const project = 'neurodesk-github-io-astro';
+
+            function branchAlias(ref) {
+              return ref
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+                .slice(0, 28)
+                .replace(/^-+|-+$/g, '');
+            }
+
+            function guidance(pr) {
+              const branchUrl = `https://${branchAlias(pr.head.ref)}.${project}.pages.dev/`;
+              return [
+                marker,
+                '## Preview Deployment',
+                '',
+                `### :arrow_right: [Open the preview site](${branchUrl})`,
+                '',
+                `\`${branchUrl}\``,
+                '',
+                'This branch link follows your latest commit, so it stays correct as you push more.',
+                '',
+                'The Cloudflare deployment details, including the commit-specific preview link,',
+                'will be appended to this comment when the deployment finishes.',
+                '',
+                'Quick contributor self-check (please confirm before requesting reviewers):',
+                '- [ ] Visual layout looks correct',
+                '- [ ] Links and images load as expected',
+                '- [ ] Please verify that recent changes were applied correctly',
+                '',
+                'If this looks good, please react with a thumbs-up to this comment.',
+                'This signals to maintainers that the preview has been validated and is ready for review.',
+                '',
+                '<details>',
+                '<summary>Build Details</summary>',
+                '',
+                `- Commit: ${pr.head.sha.substring(0, 7)}`,
+                `- Branch: \`${pr.head.ref}\``,
+                '- Deployed by: Cloudflare Pages',
+                '',
+                '</details>',
+              ].join('\n');
+            }
+
+            function cloudflareBlock(pr, check) {
+              const deploymentId = check.details_url?.match(/\/([0-9a-f-]{36})$/i)?.[1];
+              if (!deploymentId) {
+                core.setFailed(`Could not extract a Cloudflare deployment ID from ${check.details_url}`);
+                return null;
+              }
+
+              const previewUrl = `https://${deploymentId.substring(0, 8)}.${project}.pages.dev`;
+              const branchUrl = `https://${branchAlias(pr.head.ref)}.${project}.pages.dev`;
+              const status = check.conclusion === 'success'
+                ? '&nbsp;✅&nbsp; Deploy successful!'
+                : `&nbsp;❌&nbsp; Deploy ${check.conclusion || 'failed'}`;
+
+              return {
+                previewUrl,
+                body: [
+                  `## Deploying ${project} with &nbsp;<a href="https://pages.dev"><img alt="Cloudflare Pages" src="https://user-images.githubusercontent.com/23264/106598434-9e719e00-654f-11eb-9e59-6167043cfa01.png" width="16"></a> &nbsp;Cloudflare Pages`,
+                  '',
+                  '<table><tr><td><strong>Latest commit:</strong> </td><td>',
+                  `<code>${check.head_sha.substring(0, 7)}</code>`,
+                  '</td></tr>',
+                  `<tr><td><strong>Status:</strong></td><td>${status}</td></tr>`,
+                  '<tr><td><strong>Preview URL:</strong></td><td>',
+                  `<a href='${previewUrl}'>${previewUrl}</a>`,
+                  '</td></tr>',
+                  '<tr><td><strong>Branch Preview URL:</strong></td><td>',
+                  `<a href='${branchUrl}'>${branchUrl}</a>`,
+                  '</td></tr>',
+                  '</table>',
+                  '',
+                  `[View logs](${check.details_url})`,
+                ].join('\n'),
+              };
+            }
+
+            async function reconcile(prNumber) {
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              });
+
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                per_page: 100,
+              });
+              let comment = comments.find(({ body }) => body?.includes(marker));
+
+              if (!comment) {
+                const created = await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: prNumber,
+                  body: guidance(pr),
+                });
+                comment = created.data;
+                core.info(`Created preview guidance comment on PR #${prNumber}`);
+              }
+
+              const { data } = await github.rest.checks.listForRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: pr.head.sha,
+                check_name: 'Cloudflare Pages',
+                filter: 'latest',
+                per_page: 100,
+              });
+              const check = data.check_runs.find(run =>
+                run.status === 'completed' &&
+                run.app?.slug === 'cloudflare-workers-and-pages'
+              );
+
+              if (!check) {
+                core.info(`Cloudflare deployment for PR #${prNumber} is not complete yet`);
+                return;
+              }
+
+              const block = cloudflareBlock(pr, check);
+              if (!block || comment.body.includes(block.previewUrl)) {
+                core.info(`Cloudflare deployment is already recorded on PR #${prNumber}`);
+                return;
+              }
+
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: comment.id,
+                body: `${comment.body}\n\n---\n\n${block.body}`,
+              });
+              core.info(`Appended Cloudflare deployment to PR #${prNumber}`);
+            }
+
+            if (context.eventName === 'pull_request_target') {
+              await reconcile(context.payload.pull_request.number);
+              return;
+            }
+
+            const pullRequests = context.payload.check_run.pull_requests || [];
+            if (pullRequests.length === 0) {
+              core.info('The check completed before a PR existed; the PR event will reconcile it later');
+              return;
+            }
+
+            for (const pr of pullRequests) {
+              await reconcile(pr.number);
+            }
