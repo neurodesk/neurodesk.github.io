@@ -67,7 +67,7 @@ jobs:
 
               return [
                 startMarker,
-                '> [!TIP]',
+                '> [!IMPORTANT]',
                 '> **Preview ready**',
                 '>',
                 `> [Open latest branch preview](${branchUrl}) · [Open this commit](${previewUrl}) · [View deployment logs](${check.details_url})`,
