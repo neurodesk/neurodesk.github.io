@@ -225,6 +225,23 @@ export default defineConfig({
 			},
 			favicon: '/favicons/favicon.ico',
 			head: [
+				{
+					tag: 'script',
+					content: `
+						if (['neurodesk.org', 'www.neurodesk.org'].includes(window.location.hostname)) {
+							window.dataLayer = window.dataLayer || [];
+							window.gtag = function(){window.dataLayer.push(arguments);};
+
+							const googleTag = document.createElement('script');
+							googleTag.async = true;
+							googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=G-4Z9774J59Y';
+							document.head.appendChild(googleTag);
+
+							window.gtag('js', new Date());
+							window.gtag('config', 'G-4Z9774J59Y');
+						}
+					`,
+				},
 				{ tag: 'link', attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicons/apple-touch-icon.png' } },
 				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' } },
 				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' } },
