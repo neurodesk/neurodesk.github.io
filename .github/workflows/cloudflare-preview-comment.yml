@@ -26,9 +26,15 @@ jobs:
             const project = 'neurodesk-github-io-astro';
             const startMarker = '<!-- cloudflare-preview:start -->';
             const endMarker = '<!-- cloudflare-preview:end -->';
-            const managedSection = new RegExp(
-              `\\n\\n---\\n\\n${startMarker}[\\s\\S]*?${endMarker}`
-            );
+            const pendingBlock = [
+              startMarker,
+              '> [!NOTE]',
+              '> **Preview deployment pending**',
+              '>',
+              '> This panel updates automatically when Cloudflare finishes building the preview.',
+              endMarker,
+            ].join('\n');
+            const managedSection = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`);
 
             function branchAlias(ref) {
               return ref
@@ -47,38 +53,40 @@ jobs:
 
               const previewUrl = `https://${deploymentId.substring(0, 8)}.${project}.pages.dev`;
               const branchUrl = `https://${branchAlias(pr.head.ref)}.${project}.pages.dev`;
-              const status = check.conclusion === 'success'
-                ? '&nbsp;✅&nbsp; Deploy successful!'
-                : `&nbsp;❌&nbsp; Deploy ${check.conclusion || 'failed'}`;
+
+              if (check.conclusion !== 'success') {
+                return [
+                  startMarker,
+                  '> [!WARNING]',
+                  '> **Preview deployment failed**',
+                  '>',
+                  `> [View deployment logs](${check.details_url})`,
+                  endMarker,
+                ].join('\n');
+              }
 
               return [
                 startMarker,
-                `## Deploying ${project} with &nbsp;<a href="https://pages.dev"><img alt="Cloudflare Pages" src="https://user-images.githubusercontent.com/23264/106598434-9e719e00-654f-11eb-9e59-6167043cfa01.png" width="16"></a> &nbsp;Cloudflare Pages`,
+                '> [!TIP]',
+                '> **Preview ready**',
+                '>',
+                `> [Open latest branch preview](${branchUrl}) · [Open this commit](${previewUrl}) · [View deployment logs](${check.details_url})`,
                 '',
-                '<table><tr><td><strong>Latest commit:</strong> </td><td>',
-                `<code>${check.head_sha.substring(0, 7)}</code>`,
-                '</td></tr>',
-                `<tr><td><strong>Status:</strong></td><td>${status}</td></tr>`,
-                '<tr><td><strong>Preview URL:</strong></td><td>',
-                `<a href='${previewUrl}'>${previewUrl}</a>`,
-                '</td></tr>',
-                '<tr><td><strong>Branch Preview URL:</strong></td><td>',
-                `<a href='${branchUrl}'>${branchUrl}</a>`,
-                '</td></tr>',
-                '</table>',
-                '',
-                `[View logs](${check.details_url})`,
+                '| | |',
+                '|---|---|',
+                `| Commit | \`${check.head_sha.substring(0, 7)}\` |`,
+                '| Status | ✅ Deploy successful |',
                 endMarker,
               ].join('\n');
             }
 
             function updateManagedSection(body, block) {
               const current = body || '';
-              if (!block) return current.replace(managedSection, '');
+              const replacement = block || pendingBlock;
               if (managedSection.test(current)) {
-                return current.replace(managedSection, `\n\n---\n\n${block}`);
+                return current.replace(managedSection, replacement);
               }
-              return `${current.trimEnd()}\n\n---\n\n${block}`;
+              return `${replacement}\n\n${current}`;
             }
 
             async function reconcile(prNumber) {
@@ -117,7 +125,7 @@ jobs:
               });
               core.info(check
                 ? `Updated Cloudflare preview links on PR #${prNumber}`
-                : `Removed stale Cloudflare preview links from PR #${prNumber}`
+                : `Reset Cloudflare preview links on PR #${prNumber}`
               );
             }
 

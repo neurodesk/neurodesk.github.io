@@ -1,3 +1,10 @@
+<!-- cloudflare-preview:start -->
+> [!NOTE]
+> **Preview deployment pending**
+>
+> This panel updates automatically when Cloudflare finishes building the preview.
+<!-- cloudflare-preview:end -->
+
 <!-- Describe your change here. You can delete the guidance below once you have. -->
 
 ## What changed
@@ -10,28 +17,9 @@
 
 Every push builds a preview site on Cloudflare Pages. It takes a few minutes.
 
-When Cloudflare finishes building the site, the deployment details are added to the end
-of this pull request description so they are always easy to find.
-
-The appended details look like this:
-
-> **Deploying neurodesk-github-io-astro with Cloudflare Pages**
->
-> | | |
-> |---|---|
-> | **Latest commit** | the commit it built |
-> | **Status** | ✅ Deploy successful! |
-> | **Preview URL** | a link pinned to that one commit |
-> | **Branch Preview URL** | a link that follows your latest commit |
-
-**Open the Branch Preview URL.** That is the one you usually want, because it keeps
-working as you push more commits. Use the Preview URL only when you need to look at one
-specific build.
-
-Wait until the status shows ✅ **Deploy successful** before trusting what you see. A 404
-or an out-of-date page usually means the build is still running, so give it a moment and
-refresh. If the deployment details have not been appended yet, the build is still queued
-or running.
+The preview panel at the top of this description updates when the deployment finishes.
+Refresh the page if it still shows as queued. Open the **Branch Preview URL** for the
+latest version of the branch, or the **Preview URL** for that specific commit.
 
 ## Before requesting a review
 
