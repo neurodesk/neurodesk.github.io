@@ -10,12 +10,11 @@
 
 Every push builds a preview site on Cloudflare Pages. It takes a few minutes.
 
-**Scroll down this page to the comment from `cloudflare-workers-and-pages`.** It has this
-icon beside it:
+**Scroll down this page to the `Preview Deployment` comment from `github-actions`.** It
+appears as soon as the pull request opens. When Cloudflare finishes building the site,
+the deployment details are appended to that same comment.
 
-<img src="https://avatars.githubusercontent.com/in/85455?v=4" width="28" alt="Cloudflare Workers and Pages bot avatar">
-
-The comment looks like this:
+The appended details look like this:
 
 > **Deploying neurodesk-github-io-astro with Cloudflare Pages**
 >
@@ -32,7 +31,8 @@ specific build.
 
 Wait until the status shows ✅ **Deploy successful** before trusting what you see. A 404
 or an out-of-date page usually means the build is still running, so give it a moment and
-refresh. If the comment has not appeared yet, the first build is still queued.
+refresh. If the deployment details have not been appended yet, the build is still queued
+or running.
 
 ## Before requesting a review
 
