@@ -10,9 +10,8 @@
 
 Every push builds a preview site on Cloudflare Pages. It takes a few minutes.
 
-**Scroll down this page to the `Preview Deployment` comment from `github-actions`.** It
-appears as soon as the pull request opens. When Cloudflare finishes building the site,
-the deployment details are appended to that same comment.
+When Cloudflare finishes building the site, the deployment details are added to the end
+of this pull request description so they are always easy to find.
 
 The appended details look like this:
 
