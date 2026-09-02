@@ -266,7 +266,7 @@ jobs:
           exit "$linkspector_status"
 
   deploy:
-    needs: build
+    needs: [build, generate-applist]
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
