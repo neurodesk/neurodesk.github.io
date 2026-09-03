@@ -2379,6 +2379,13 @@
             "openrecon": true
         },
         {
+            "application": "metabody_1.0.4_20260902",
+            "categories": [
+                "functional imaging"
+            ],
+            "openrecon": true
+        },
+        {
             "application": "mfcsc_1.0_20230306",
             "categories": [
                 "diffusion imaging",
@@ -2986,7 +2993,7 @@
             "license": "other-open"
         },
         {
-            "application": "openmsk_0.1.11_20260814",
+            "application": "openmsk_0.1.11_20260902",
             "categories": [
                 "image segmentation",
                 "quantitative imaging"
@@ -3435,6 +3442,18 @@
         },
         {
             "application": "qsmxt_9.14.0_20260827",
+            "categories": [
+                "image reconstruction",
+                "phase processing",
+                "quantitative imaging",
+                "structural imaging",
+                "workflows"
+            ],
+            "description": "QSMxT is an end-to-end software toolbox for Quantitative Susceptibility Mapping (QSM). This container packages upstream QSMxT {{ context.version }}. Version 9 is a ground-up reimplementation in Rust: a single self-contained binary that reconstructs QSM from BIDS datasets, converts DICOMs to BIDS, and includes an interactive TUI. A pinned dcm2niix is bundled.",
+            "openrecon": true
+        },
+        {
+            "application": "qsmxt_9.15.0_20260902",
             "categories": [
                 "image reconstruction",
                 "phase processing",
@@ -3961,7 +3980,7 @@
             "license": "bsd-2-clause-netbsd"
         },
         {
-            "application": "synthseg_8.2.0_20260805",
+            "application": "synthseg_8.2.0_20260902",
             "categories": [
                 "image segmentation",
                 "machine learning",
