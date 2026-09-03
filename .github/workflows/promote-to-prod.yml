@@ -118,14 +118,17 @@ jobs:
         run: |
           node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('dist/data/applist.json','utf8'));const n=Array.isArray(d.list)?d.list.length:0;console.log('Applications:',n);if(n<=1)process.exit(1)"
 
-      - name: Include example notebooks
+      - name: Checkout NeurodeskEDU
         run: |
           git clone --depth=1 --branch gh-pages \
-            https://github.com/neurodesk/example-notebooks.git \
-            "${{ runner.temp }}/example-notebooks"
+            https://github.com/neurodesk/neurodeskedu.git \
+            "${{ runner.temp }}/neurodeskedu"
+
+      - name: Include legacy example notebooks path
+        run: |
           mkdir -p dist/example-notebooks
           rsync -a --delete \
-            "${{ runner.temp }}/example-notebooks/" \
+            "${{ runner.temp }}/neurodeskedu/" \
             dist/example-notebooks/ \
             --exclude=.git
           test -f dist/example-notebooks/intro.html
@@ -133,9 +136,6 @@ jobs:
       - name: Include NeurodeskEDU
         if: ${{ inputs.include_edu }}
         run: |
-          git clone --depth=1 --branch gh-pages \
-            https://github.com/neurodesk/neurodeskedu.git \
-            "${{ runner.temp }}/neurodeskedu"
           mkdir -p dist/edu
           rsync -a --delete \
             "${{ runner.temp }}/neurodeskedu/" \
