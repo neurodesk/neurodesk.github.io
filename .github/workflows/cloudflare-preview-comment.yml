@@ -3,8 +3,6 @@ name: Cloudflare preview links
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-  check_run:
-    types: [completed]
 
 permissions:
   checks: read
@@ -13,11 +11,9 @@ permissions:
 
 jobs:
   preview-links:
-    if: >-
-      github.event_name == 'pull_request_target' ||
-      (github.event.check_run.name == 'Cloudflare Pages' &&
-      github.event.check_run.app.slug == 'cloudflare-workers-and-pages')
+    name: Wait for Cloudflare preview
     runs-on: ubuntu-24.04
+    timeout-minutes: 12
     steps:
       - name: Add preview links to PR description
         uses: actions/github-script@v9
@@ -89,57 +85,75 @@ jobs:
               return `${replacement}\n\n${current}`;
             }
 
-            async function reconcile(prNumber) {
-              const { data: pr } = await github.rest.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber,
-              });
+            const normalizeNewlines = value => value.replace(/\r\n/g, '\n');
 
-              const { data } = await github.rest.checks.listForRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: pr.head.sha,
-                check_name: 'Cloudflare Pages',
-                filter: 'latest',
-                per_page: 100,
-              });
-              const check = data.check_runs.find(run =>
-                run.status === 'completed' &&
-                run.app?.slug === 'cloudflare-workers-and-pages'
-              );
-              const block = check ? cloudflareBlock(pr, check) : null;
-              if (check && !block) return;
-
+            async function updateDescription(pr, block) {
               const body = updateManagedSection(pr.body, block);
-              if (body === (pr.body || '')) {
-                core.info(`PR #${prNumber} description is already current`);
+              if (normalizeNewlines(body) === normalizeNewlines(pr.body || '')) {
+                core.info(`PR #${pr.number} description is already current`);
                 return;
               }
 
               await github.rest.pulls.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: prNumber,
+                pull_number: pr.number,
                 body,
               });
-              core.info(check
-                ? `Updated Cloudflare preview links on PR #${prNumber}`
-                : `Reset Cloudflare preview links on PR #${prNumber}`
-              );
             }
 
-            if (context.eventName === 'pull_request_target') {
-              await reconcile(context.payload.pull_request.number);
-              return;
+            async function waitForCloudflare(sha) {
+              for (let attempt = 1; attempt <= 60; attempt += 1) {
+                const { data } = await github.rest.checks.listForRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: sha,
+                  check_name: 'Cloudflare Pages',
+                  filter: 'latest',
+                  per_page: 100,
+                });
+                const check = data.check_runs.find(
+                  run => run.app?.slug === 'cloudflare-workers-and-pages'
+                );
+                if (check?.status === 'completed') return check;
+
+                core.info(`Waiting for Cloudflare Pages (${attempt}/60)`);
+                await new Promise(resolve => setTimeout(resolve, 10000));
+              }
+              return null;
             }
 
-            const pullRequests = context.payload.check_run.pull_requests || [];
-            if (pullRequests.length === 0) {
-              core.info('The check completed before a PR existed; the PR event will reconcile it later');
-              return;
+            async function reconcile(prNumber) {
+              let { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              });
+
+              await updateDescription(pr, null);
+
+              const check = await waitForCloudflare(pr.head.sha);
+              if (!check) {
+                core.setFailed(`Timed out waiting for Cloudflare Pages on ${pr.head.sha}`);
+                return;
+              }
+
+              const block = cloudflareBlock(pr, check);
+              if (!block) return;
+
+              ({ data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              }));
+              await updateDescription(pr, block);
+
+              if (check.conclusion !== 'success') {
+                core.setFailed(`Cloudflare Pages finished with ${check.conclusion}`);
+                return;
+              }
+
+              core.info(`Updated Cloudflare preview links on PR #${prNumber}`);
             }
 
-            for (const pr of pullRequests) {
-              await reconcile(pr.number);
-            }
+            await reconcile(context.payload.pull_request.number);
