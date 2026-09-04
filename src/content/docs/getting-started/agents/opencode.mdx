@@ -47,7 +47,11 @@ tail -f ~/.ollama/logs/server.log
 
 ## Use models provided through llm.neurodesk.org
 
-Create an API key at [llm.neurodesk.org](https://llm.neurodesk.org) and add it to your OpenCode config file `.config/opencode/opencode.json`:
+:::note[First-time access requires approval]
+Open [llm.neurodesk.org](https://llm.neurodesk.org) and attempt to sign in. If your account has not yet been authorized, you will automatically be shown a registration form. Submit the form; the average authorization time is 24 hours.
+:::
+
+Once approved, return to [llm.neurodesk.org](https://llm.neurodesk.org), create an API key, and add it to your OpenCode config file at `.config/opencode/opencode.json`:
 
 ```json
 {

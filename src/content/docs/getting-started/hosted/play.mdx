@@ -7,9 +7,9 @@ sidebar:
 
 import { Steps } from '@astrojs/starlight/components';
 
-Neurodesk Play provides instant access to our neuroimaging analysis environment directly through your web browser. This service allows you to:
+Neurodesk Play provides access to our neuroimaging analysis environment directly through your web browser. This service allows you to:
 
-- Start using Neurodesk immediately without any installation.
+- Start using Neurodesk without any local installation.
 - Access a wide range of pre-installed neuroimaging tools.
 - Try out the platform before setting up a local installation.
 - Collaborate with colleagues using a consistent environment.
@@ -48,6 +48,10 @@ The tool below automatically detects the fastest server for your location. Click
 </div>
 
 <script src="/js/play-latency.js" defer></script>
+
+:::note[First-time access requires approval]
+The US and Europe Play servers use your GitHub account to sign in. On your first login attempt, you will automatically be shown a registration form if your account has not yet been authorized. Submit the form; the average authorization time is 24 hours. Once approved, return and sign in with the same GitHub account.
+:::
 
 ## Usage acknowledgments
 
@@ -166,4 +170,3 @@ It is possible to connect to Play instances using SSH, including from VS Code Re
    ```
 
 </Steps>
-
