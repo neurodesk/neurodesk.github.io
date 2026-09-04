@@ -22,7 +22,7 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321). Before opening a pull request, check the build:
+Open `http://localhost:4321`. Before opening a pull request, check the build:
 
 ```bash
 pnpm build
