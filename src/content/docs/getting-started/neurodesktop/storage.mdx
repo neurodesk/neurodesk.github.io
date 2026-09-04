@@ -153,39 +153,64 @@ Rclone is a command-line tool that enables interaction with various cloud servic
 
 #### Globus
 
-We also provide the Globus client, so you can transfer large amounts of data between Globus endpoints and Neurodesktop. You can configure it by running the following commands in the Neurodesktop environment:
+We also provide the Globus client, so you can transfer large amounts of data between Globus collections and Neurodesktop.
+
+Start the setup from a terminal in Neurodesktop:
 
 ```bash
 ml globus
-# First run the setup:
 globusconnectpersonal -setup
-
-#Follow the instructions in the terminal: 
-#1) copy the URL into a browser and generate the Native App Authorization Code
-#2) then copy this code and paste it in the terminal
-#3) then name the endpoint, e.g. Neurodesktop
-
-# Then start the GUI:
-globusconnectpersonal -gui
-
-# If the connection fails, reset the permissions on the key file:
-chmod 600 /home/jovyan/.globusonline/lta/relay-anonymous-key.pem
-
-# If the connection still fails, start the client like this to get more information
-globusconnectpersonal -debug
 ```
 
-Then add the directories you want to share with Globus by opening File → Preferences:
+The terminal displays a login URL. Copy the URL, open it in a browser, and sign in to your Globus account.
 
-![Globus Connect Personal menu showing File then Preferences option](https://github.com/neurodesk/neurodesk.github.io/assets/4021595/c6c7b912-a113-43df-b6d9-233fb92c4ea0)
+Review the requested permissions, enter a label that will help you identify this authorization later, and select **Allow**:
 
-and then add the paths required and hit Save:
+![Globus consent page listing the permissions requested by Globus Connect Personal Setup](/docs/getting-started/neurodesktop/datastorage/1-globus-connecting-account.png)
 
-![Globus Connect Personal Preferences dialog with accessible directories listed and Save button](https://github.com/neurodesk/neurodesk.github.io/assets/4021595/daa8c036-4548-4da2-98f1-8ac39b7e8317)
+Globus then displays a single-use Native App Authorization Code. Copy this code; it is valid for 10 minutes:
 
-Then you can go to the [Globus file manager](https://app.globus.org/file-manager) and your Neurodesktop instance will be an endpoint for Globus. You can change the path to any location you specified in the Preferences:
+![Globus page displaying a Native App Authorization Code](/docs/getting-started/neurodesktop/datastorage/globus-authorization-code.png)
 
-![Globus file manager web interface showing the Neurodesktop endpoint and its file listing](https://github.com/neurodesk/neurodesk.github.io/assets/4021595/35dcfc7a-2975-4fcc-8c49-dbe9c43b6433)
+Return to the Neurodesktop terminal, paste the code at the `Enter the auth code` prompt, and press <kbd>Enter</kbd>. When prompted, enter a descriptive endpoint name, such as `NeurodesktopApp`:
+
+![Neurodesktop terminal prompting for the Globus authorization code and endpoint name](/docs/getting-started/neurodesktop/datastorage/2-globus-entering-information.png)
+
+After setup completes, start the Globus Connect Personal interface:
+
+```bash
+globusconnectpersonal -gui
+```
+
+Select **Connect** and wait for the Globus Online status to change to **Connected**:
+
+![Globus Connect Personal window with the Connect button highlighted](/docs/getting-started/neurodesktop/datastorage/3-globus-connect.png)
+
+To choose which Neurodesktop directories Globus can access, open **File → Preferences**:
+
+![Globus Connect Personal File menu with Preferences highlighted](/docs/getting-started/neurodesktop/datastorage/4-globus-preferences.png)
+
+Use the **+** button to add each directory, then select the **Shared** and **Write** permissions appropriate for each path. Select **Save** when the access paths are configured:
+
+![Globus Access Path Configuration window showing shared and writable directory options and the Save button](/docs/getting-started/neurodesktop/datastorage/5-globus-save-path.png)
+
+Open the [Globus file manager](https://app.globus.org/file-manager) and select the collection with the endpoint name you entered during setup. You can now browse the shared paths and transfer files between Neurodesktop and another Globus collection:
+
+![Globus file manager displaying the NeurodesktopApp collection and its shared home directory](/docs/getting-started/neurodesktop/datastorage/6-globus-file-manager.png)
+
+::::note[Troubleshooting]
+If Globus cannot connect, reset the permissions on its relay key:
+
+```bash
+chmod 600 /home/jovyan/.globusonline/lta/relay-anonymous-key.pem
+```
+
+If the problem continues, start the client in debug mode to display more information:
+
+```bash
+globusconnectpersonal -debug
+```
+::::
 
 #### Mount volume using SSHFS
 
