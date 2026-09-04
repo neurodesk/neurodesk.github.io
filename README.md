@@ -7,7 +7,7 @@ The deployed site combines:
 
 | Path | Source |
 | --- | --- |
-| [Main website](https://neurodesk.org/) | [`neurodesk/neurodesk.github.io`](https://github.com/neurodesk/neurodesk.github.io) |
+| [neurodesk.org](https://neurodesk.org/) | [`neurodesk/neurodesk.github.io`](https://github.com/neurodesk/neurodesk.github.io) |
 | [`/edu/`](https://neurodesk.org/edu/) | [`neurodesk/neurodeskedu`](https://github.com/neurodesk/neurodeskedu) |
 | [`/neurocontainers-ui/`](https://neurodesk.org/neurocontainers-ui/) | [`neurodesk/neurocontainers-ui`](https://github.com/neurodesk/neurocontainers-ui) |
 
