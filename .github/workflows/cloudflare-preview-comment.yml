@@ -112,7 +112,8 @@ jobs:
               if (check && !block) return;
 
               const body = updateManagedSection(pr.body, block);
-              if (body === (pr.body || '')) {
+              const normalizeNewlines = value => value.replace(/\r\n/g, '\n');
+              if (normalizeNewlines(body) === normalizeNewlines(pr.body || '')) {
                 core.info(`PR #${prNumber} description is already current`);
                 return;
               }
