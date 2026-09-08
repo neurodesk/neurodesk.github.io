@@ -276,6 +276,8 @@ sf-test openreconi2iexample --architecture x86_64
 
 ### Build the example OpenRecon and FIRE packages
 
+This checkout is for local package builds, which do not require a fork or a push to OpenRecon. To contribute changes directly to OpenRecon, follow [Fork OpenRecon for packaging changes](#fork-openrecon-for-packaging-changes) before cloning.
+
 From the directory containing your `neurocontainers` checkout, clone the packaging repository and create its Python 3.13 environment:
 
 ```bash
@@ -416,7 +418,9 @@ sf-test myrecon --architecture x86_64
 
 First build the Neurocontainer as described above. The local Docker image must be tagged `myrecon:<version>`, which is the tag produced by `sf-build` and `sf-login`.
 
-Clone the packaging repository next to your Neurocontainers checkout:
+If you already cloned OpenRecon in section 4, reuse that checkout and activate its `.venv` environment. Local package builds do not require a fork or a push. To contribute changes directly to OpenRecon, follow [Fork OpenRecon for packaging changes](#fork-openrecon-for-packaging-changes).
+
+Otherwise, clone the packaging repository next to your Neurocontainers checkout:
 
 ```bash
 cd ..
@@ -536,6 +540,7 @@ FIRE installation is a scanner-administration operation. Follow your site's scan
 From your Neurocontainers branch, review what will be published, then commit and push it to your fork:
 
 ```bash
+cd /PATH/TO/neurocontainers
 git status --short
 git diff --check
 git add recipes/myrecon
@@ -565,7 +570,45 @@ The current release sequence is:
 
 You therefore normally submit only the Neurocontainers pull request. Do not open a hand-written OpenRecon packaging pull request unless a maintainer asks for a packaging-only change or the automatic synchronization fails.
 
+### Fork OpenRecon for packaging changes
+
+If you need to submit changes directly to OpenRecon, first fork [`neurodesk/openrecon`](https://github.com/neurodesk/openrecon/fork) into your GitHub account. Forking Neurocontainers does not create an OpenRecon fork. Replace `YOUR_GITHUB_USERNAME` below with your GitHub username.
+
+For a new checkout, clone your fork from the directory containing your Neurocontainers checkout:
+
+```bash
+git clone https://github.com/YOUR_GITHUB_USERNAME/openrecon.git
+cd openrecon
+git remote add upstream https://github.com/neurodesk/openrecon.git
+git switch -c myrecon-packaging
+```
+
+If you already cloned `neurodesk/openrecon`, keep your existing checkout and branch. After creating your fork on GitHub, run these commands inside that checkout:
+
+```bash
+git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/openrecon.git
+git remote -v
+```
+
+The `origin` fetch and push URLs must point to your fork. Changing the remote preserves your local files and commits.
+
+Review and commit the intended source changes, then push your current branch and configure tracking:
+
+```bash
+git push --set-upstream origin HEAD
+```
+
+Open a pull request from that branch in your fork to `neurodesk/openrecon:main`. Keep generated packages and private test data out of the commit.
+
 ## 10. Troubleshooting and scanner notes
+
+### Git push fails in the OpenRecon checkout
+
+`The current branch ... has no upstream branch` means Git has no tracking branch configured. `git push --set-upstream origin HEAD` configures tracking when the push succeeds.
+
+If the push instead reports `Permission to neurodesk/openrecon.git denied` with HTTP 403, `origin` points to the Neurodesk repository and your account lacks write access. Follow [Fork OpenRecon for packaging changes](#fork-openrecon-for-packaging-changes) to create a fork and update the existing checkout's remote, then retry the push. Setting a tracking branch does not grant repository access.
+
+For a normal recipe contribution, return to your Neurocontainers checkout and follow section 9. OpenRecon package builds alone do not require a push.
 
 ### Package behaviour and metadata
 
