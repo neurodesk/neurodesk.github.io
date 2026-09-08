@@ -19,7 +19,7 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            const project = 'neurodesk-github-io-astro';
+            const project = 'neurodesk-preview';
             const startMarker = '<!-- cloudflare-preview:start -->';
             const endMarker = '<!-- cloudflare-preview:end -->';
             const pendingBlock = [
