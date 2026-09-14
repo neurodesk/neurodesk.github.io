@@ -74,6 +74,21 @@
         "tinyrange/vmsh"
       ],
       "groupName": "neurodeskappx downloads"
+    },
+    {
+      "description": "User-facing version recommendations require manual validation before merging.",
+      "matchDepNames": [
+        "neurodesk/neurodesktop",
+        "tinyrange/vmsh",
+        "mathworks/MATLAB-extension-for-vscode",
+        "vi/websocat"
+      ],
+      "addLabels": [
+        "enhancement"
+      ],
+      "prBodyNotes": [
+        "> [!WARNING]\\n> This update changes a user-facing recommendation and requires manual testing before merging."
+      ]
     }
   ],
   "customManagers": [
