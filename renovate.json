@@ -78,13 +78,13 @@
   ],
   "customManagers": [
     {
-      "description": "Stable Neurodesktop release pinned in installation instructions.",
+      "description": "Stable Neurodesktop release used across the documentation.",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^src/content/docs/.*\\.mdx$/"
+        "/^src/config/neurodesktop\\.ts$/"
       ],
       "matchStrings": [
-        "VERSION=\"(?<currentValue>\\d{4}-\\d{2}-\\d{2})\""
+        "jupyterNeurodeskVersion = '(?<currentValue>\\d{4}-\\d{2}-\\d{2})'"
       ],
       "depNameTemplate": "neurodesk/neurodesktop",
       "datasourceTemplate": "github-releases",
