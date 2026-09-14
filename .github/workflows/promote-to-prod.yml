@@ -89,18 +89,16 @@ jobs:
         env:
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+        run: python .github/workflows/write-user-metrics.py --output public/data/user-metrics.json
+
+      - name: Verify user metrics
         run: |
-          if [ -n "$GA4_SERVICE_ACCOUNT_KEY" ]; then
-            python .github/workflows/write-user-metrics.py
-          else
-            echo "GA4_SERVICE_ACCOUNT_KEY not set; writing unavailable placeholder"
-            python .github/workflows/write-user-metrics.py --allow-missing-token
-          fi
+          python -c 'import json; data = json.load(open("public/data/user-metrics.json")); assert not data.get("unavailable") and data.get("months"), "Generated user metrics are unavailable or empty"'
 
       - name: Generate Neurodesk App download metrics
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python .github/workflows/write-neurodeskapp-metrics.py
+        run: python .github/workflows/write-neurodeskapp-metrics.py --output public/docs/overview/neurodeskapp_metrics.png
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
