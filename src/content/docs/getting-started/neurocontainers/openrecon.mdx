@@ -735,6 +735,10 @@ OpenRecon will not install an update to a container with the same version.
 
 #### Cleaning up packages on the scanner (on XA60/61)
 
+:::danger[Protocols are deleted on scanner restart]
+If a protocol has OpenRecon selected in the **Inline** tab and the corresponding OpenRecon container has been deleted, the scanner deletes that protocol on restart.
+:::
+
 After installing and testing different OpenRecon containers, old containers remain in the host registry and consume space on the host C: drive.
 
 Download `wip_OpenRecon_PackageRemover_Tool.exe` from the Siemens MAGNETOM forum and follow the installation instructions.
