@@ -8,6 +8,7 @@ import datetime as dt
 import json
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,8 @@ ANALYTICS_SCOPE = "https://www.googleapis.com/auth/analytics.readonly"
 # Earliest date the GA4 Data API accepts; months without data return no rows.
 EARLIEST_START_DATE = "2015-08-14"
 DEFAULT_PERIOD_DAYS = 30
+REPORT_MAX_ATTEMPTS = 4
+RETRYABLE_REPORT_STATUSES = {429, 500, 502, 503, 504}
 
 GA4_SEGMENTS: list[dict[str, Any]] = [
     {
@@ -216,24 +219,44 @@ def run_report(
     start_date: str = EARLIEST_START_DATE,
     end_date: str = "today",
 ) -> list[dict[str, Any]]:
-    response = requests.post(
-        f"https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runReport",
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "dateRanges": [{"startDate": start_date, "endDate": end_date}],
-            "limit": 10000,
-            **body,
-        },
-        timeout=60,
-    )
-    if response.status_code != 200:
-        raise RuntimeError(
-            f"GA4 Data API returned HTTP {response.status_code}: {response.text[:500]}"
+    for attempt in range(REPORT_MAX_ATTEMPTS):
+        try:
+            response = requests.post(
+                f"https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runReport",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "dateRanges": [{"startDate": start_date, "endDate": end_date}],
+                    "limit": 10000,
+                    **body,
+                },
+                timeout=60,
+            )
+        except (requests.Timeout, requests.ConnectionError) as error:
+            if attempt == REPORT_MAX_ATTEMPTS - 1:
+                raise
+            reason = type(error).__name__
+        else:
+            if response.status_code == 200:
+                return response.json().get("rows") or []
+            if (
+                response.status_code not in RETRYABLE_REPORT_STATUSES
+                or attempt == REPORT_MAX_ATTEMPTS - 1
+            ):
+                raise RuntimeError(
+                    f"GA4 Data API returned HTTP {response.status_code}: {response.text[:500]}"
+                )
+            reason = f"HTTP {response.status_code}"
+
+        delay = 2 ** attempt
+        print(
+            f"GA4 report failed ({reason}); retrying in {delay}s "
+            f"(attempt {attempt + 2}/{REPORT_MAX_ATTEMPTS})",
+            file=sys.stderr,
         )
-    return response.json().get("rows") or []
+        time.sleep(delay)
 
 
 def string_filter(field_name: str, value: str, match_type: str = "EXACT") -> dict[str, Any]:

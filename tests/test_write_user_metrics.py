@@ -22,6 +22,66 @@ write_user_metrics = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(write_user_metrics)
 
 
+class RunReportTests(unittest.TestCase):
+    def test_retries_temporary_failures_with_exponential_backoff(self) -> None:
+        rows = [{"metricValues": [{"value": "60"}]}]
+        failures = [
+            mock.Mock(status_code=status, text="temporary error")
+            for status in (429, 500, 502, 503, 504)
+        ] + [
+            write_user_metrics.requests.Timeout("timed out"),
+            write_user_metrics.requests.ConnectionError("connection reset"),
+        ]
+        for failure in failures:
+            with (
+                self.subTest(failure=failure),
+                mock.patch.object(
+                    write_user_metrics.requests,
+                    "post",
+                    side_effect=[failure, failure, mock.Mock(
+                        status_code=200, json=lambda: {"rows": rows}
+                    )],
+                ) as post,
+                mock.patch("time.sleep") as sleep,
+            ):
+                self.assertEqual(
+                    write_user_metrics.run_report("token", "property", {}), rows
+                )
+                self.assertEqual(post.call_count, 3)
+                self.assertEqual(sleep.call_args_list, [mock.call(1), mock.call(2)])
+                self.assertTrue(all(call == post.call_args for call in post.call_args_list))
+
+    def test_stops_after_four_attempts(self) -> None:
+        for failure, error_type, message in [
+            (mock.Mock(status_code=502, text="Bad Gateway"), RuntimeError, "HTTP 502"),
+            (write_user_metrics.requests.Timeout("timed out"),
+             write_user_metrics.requests.Timeout, "timed out"),
+        ]:
+            with (
+                self.subTest(failure=failure),
+                mock.patch.object(write_user_metrics.requests, "post", side_effect=[failure] * 4) as post,
+                mock.patch("time.sleep") as sleep,
+            ):
+                with self.assertRaisesRegex(error_type, message):
+                    write_user_metrics.run_report("token", "property", {})
+                self.assertEqual(post.call_count, 4)
+                self.assertEqual(sleep.call_args_list, [mock.call(1), mock.call(2), mock.call(4)])
+
+    def test_does_not_retry_permanent_errors(self) -> None:
+        for status in (400, 401, 403, 404):
+            with (
+                self.subTest(status=status),
+                mock.patch.object(write_user_metrics.requests, "post", return_value=mock.Mock(
+                    status_code=status, text="invalid request"
+                )) as post,
+                mock.patch("time.sleep") as sleep,
+            ):
+                with self.assertRaisesRegex(RuntimeError, f"HTTP {status}"):
+                    write_user_metrics.run_report("token", "property", {})
+                post.assert_called_once()
+                sleep.assert_not_called()
+
+
 class BuildMetricsTests(unittest.TestCase):
     def test_default_output_targets_astro_public_directory(self) -> None:
         with mock.patch("sys.argv", ["write-user-metrics.py"]):
