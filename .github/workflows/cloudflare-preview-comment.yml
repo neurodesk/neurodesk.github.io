@@ -402,6 +402,10 @@ jobs:
                 ref,
               });
             } catch (error) {
-              if (error.status !== 404) throw error;
+              const alreadyAbsent = error.status === 404 || (
+                error.status === 422 &&
+                error.response?.data?.message === 'Reference does not exist'
+              );
+              if (!alreadyAbsent) throw error;
               core.info(`${ref} is already absent`);
             }
