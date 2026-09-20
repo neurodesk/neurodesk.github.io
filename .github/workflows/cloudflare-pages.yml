@@ -21,7 +21,7 @@ defaults:
 
 jobs:
   generate-applist:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -79,7 +79,7 @@ jobs:
           retention-days: 7
 
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -202,7 +202,7 @@ jobs:
           retention-days: 1
 
   check-links:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: build
     steps:
       - uses: actions/checkout@v7
