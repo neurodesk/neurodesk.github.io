@@ -14,10 +14,11 @@ import { Steps } from '@astrojs/starlight/components';
 1. Check if the last automated build ran OK: [https://github.com/neurodesk/neurodesktop/actions](https://github.com/neurodesk/neurodesktop/actions)
 2. Run this build date and test if everything is OK and no regression happened.
 3. Check what changes were made since the last release: [https://github.com/neurodesk/neurodesktop/commits/main](https://github.com/neurodesk/neurodesktop/commits/main)
-4. Summarise the main changes and copy this to the Release History: [/overview/release-history/](/overview/release-history/)
-5. Change the version of the latest desktop in [https://github.com/neurodesk/neurodesk.github.io/blob/main/data/neurodesktop.toml](https://github.com/neurodesk/neurodesk.github.io/blob/main/data/neurodesktop.toml).
-6. Commit all changes.
-7. Tweet a quick summary of the changes and announce the new version: [https://masto.ai/@Neurodesk](https://masto.ai/@Neurodesk)
+4. Create the GitHub release on [neurodesk/neurodesktop](https://github.com/neurodesk/neurodesktop/releases), tagged with the build date (for example `2026-09-23`).
+5. Summarise the main changes and add them to the [Release History](/overview/release-history/) using the [release history template](https://github.com/neurodesk/neurodesk.github.io/blob/main/.github/content-templates/release-history-template.md). Move the **Latest** badge to the new release.
+6. Change `jupyterNeurodeskVersion` in [`src/config/neurodesktop.ts`](https://github.com/neurodesk/neurodesk.github.io/blob/main/src/config/neurodesktop.ts) to the new release. Every docker command, the Getting Started page, the release history and the citation examples read the version from this constant. Renovate also opens a PR for this bump once the GitHub release is published; close it if you have already made the change together with the release notes.
+7. Commit all changes.
+8. Tweet a quick summary of the changes and announce the new version: [https://masto.ai/@Neurodesk](https://masto.ai/@Neurodesk)
 
 </Steps>
 

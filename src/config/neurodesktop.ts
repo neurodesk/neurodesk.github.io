@@ -1,5 +1,6 @@
-// Mirrors data/neurodesktop.toml in the Hugo source.
-// Update the version here when bumping Neurodesktop releases.
+// Stable Neurodesktop release used across the documentation. Pages import this
+// constant for docker commands, the release history and citation examples.
+// Renovate opens a PR to bump it when a new neurodesk/neurodesktop release ships.
 
 export const jupyterNeurodeskVersion = '2026-09-23';
 
