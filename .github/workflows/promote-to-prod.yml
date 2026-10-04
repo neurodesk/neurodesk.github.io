@@ -122,13 +122,41 @@ jobs:
             https://github.com/neurodesk/neurodeskedu.git \
             "${{ runner.temp }}/neurodeskedu"
 
-      - name: Include legacy example notebooks path
+      - name: Generate legacy example notebooks redirects
+        env:
+          NEURODESKEDU_DIR: ${{ runner.temp }}/neurodeskedu
         run: |
-          mkdir -p dist/example-notebooks
-          rsync -a --delete \
-            "${{ runner.temp }}/neurodeskedu/" \
-            dist/example-notebooks/ \
-            --exclude=.git
+          rm -rf dist/example-notebooks
+          python - <<'PY'
+          import html
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import quote
+
+          source = Path(os.environ["NEURODESKEDU_DIR"])
+          destination = Path("dist/example-notebooks")
+          for page in source.rglob("*.html"):
+              relative = page.relative_to(source)
+              if relative.parts[0] in {".git", "build", "_static"}:
+                  continue
+              path = relative.as_posix()
+              if page.name == "index.html":
+                  path = path.removesuffix("index.html")
+              target = "https://neurodesk.org/edu/" + quote(path, safe="/")
+              escaped_target = html.escape(target, quote=True)
+              redirect = destination / relative
+              redirect.parent.mkdir(parents=True, exist_ok=True)
+              redirect.write_text(
+                  '<!doctype html><html><head><meta charset="utf-8">'
+                  '<meta name="robots" content="noindex">'
+                  f'<meta http-equiv="refresh" content="0; url={escaped_target}">'
+                  f'<script>location.replace({json.dumps(target)} + location.search + location.hash);</script>'
+                  f'</head><body><a href="{escaped_target}">Continue to the page</a></body></html>\n',
+                  encoding="utf-8",
+              )
+          PY
+          test -f dist/example-notebooks/index.html
           test -f dist/example-notebooks/intro.html
 
       - name: Include NeurodeskEDU
@@ -178,6 +206,7 @@ jobs:
         run: |
           test -f dist/index.html
           test -f dist/CNAME
+          test -f dist/example-notebooks/index.html
           test -f dist/example-notebooks/intro.html
           test -f dist/neurocontainers-ui/index.html
           if ${{ inputs.include_edu }}; then
