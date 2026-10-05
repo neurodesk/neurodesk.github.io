@@ -43,9 +43,9 @@ The code expires after a few minutes. If it expires, select **Retry** to get a n
 
 **5. Wait until the panel shows Ready.**
 
-After you approve the code, Neurodesktop restarts T3 Code and checks that the connection works. If agents are still working in a chat, setup waits until they finish. The connection can take several minutes to become available.
+After you approve the code, Neurodesktop restarts T3 Code and checks that the connection works. If agents are still working in a chat, setup waits up to 30 minutes for them to finish. If they are still working after that, setup stops with an error. Finish or stop the active chats, and then select **Retry**. The connection can take several minutes to become available.
 
-The panel shows **Ready** and the name of the environment. On JupyterHub, the name is `username@hub-address`, for example `stebo85@play-america.neurodesk.org`.
+The panel shows **Ready** and the name of the environment. On JupyterHub, the name is `username@hub-address`, for example `stebo85@play-america.neurodesk.org`. For a named server, the name is `username/server-name@hub-address`.
 
 ![The Setup T3 connect panel showing that the environment is ready](/docs/agents/t3-connect-ready.png)
 
