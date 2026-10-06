@@ -1,5 +1,5 @@
 ---
-title: XNAT at the Lucas Centre Stanford
+title: XNAT at the Lucas Centre
 description: Transfer imaging data to the Lucas Centre XNAT and process it interactively with Neurodesk.
 sidebar:
   label: XNAT Lucas
@@ -8,7 +8,7 @@ sidebar:
 
 import { Steps } from '@astrojs/starlight/components';
 
-The Stanford Lucas Centre XNAT is available at [xnat-lucas.neurodesk.org](https://xnat-lucas.neurodesk.org/). This guide explains how to transfer scanner data and additional files to XNAT, then start Neurodesk for interactive processing.
+The Lucas Centre XNAT is available at [xnat-lucas.neurodesk.org](https://xnat-lucas.neurodesk.org/). This guide explains how to transfer scanner data and additional files to XNAT, then start Neurodesk for interactive processing.
 
 ## Before you transfer data
 
@@ -247,13 +247,13 @@ When you have finished, save your work and close the session. Your personal work
 
 The local server receives DICOM images through Orthanc and raw TWIX and physiological files through Samba. It retains received data locally and prepares anonymized copies for transfer through SeaweedFS to the cloud XNAT instance. Local copies follow the retention periods described above.
 
-XNAT Container Service saves processing outputs back to XNAT. Users can download data and derivatives to their computers or HPC systems such as Sherlock.
+XNAT Container Service saves processing outputs back to XNAT. For interactive analysis, users launch Neurodesk through JupyterHub with mounted XNAT project data and a personal workspace. They can upload processed files back to XNAT using **XNAT Upload**, or download data and derivatives to their computers or HPC systems such as Sherlock.
 
-[![Stanford XNAT workflow showing MRI scanners, local Orthanc and Samba ingestion, retained originals, local anonymization, SeaweedFS transfer, XNAT processing, and downloads to computers or HPC](/docs/getting-started/installations/xnat-lucas/stanford-xnat-workflow.svg)](/docs/getting-started/installations/xnat-lucas/stanford-xnat-workflow.svg)
+[![Lucas Centre XNAT workflow showing MRI scanners, local Orthanc and Samba ingestion, retained originals, local anonymization, SeaweedFS transfer, Container Service processing, interactive Neurodesk analysis, and downloads to computers or HPC](/docs/getting-started/installations/xnat-lucas/stanford-xnat-workflow.svg)](/docs/getting-started/installations/xnat-lucas/stanford-xnat-workflow.svg)
 
 Select the diagram to view it at full size.
 
-The Stanford deployment uses these repositories:
+The Lucas Centre deployment uses these repositories:
 
 - [AIS Edge, `stanford` branch](https://github.com/stebo85/ais-edge/tree/stanford): Local ingestion, staging, and SeaweedFS transfer.
-- [AIS XNAT deployment stack, `stanford` branch](https://github.com/Australian-Imaging-Service/ais-devstack/tree/stanford): Cloud XNAT deployment and Container Service processing.
+- [AIS XNAT deployment stack, `stanford` branch](https://github.com/Australian-Imaging-Service/ais-devstack/tree/stanford): Cloud XNAT deployment, Container Service processing, and interactive Neurodesk sessions through JupyterHub.
