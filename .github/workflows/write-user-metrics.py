@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -53,56 +54,52 @@ GA4_SEGMENTS: list[dict[str, Any]] = [
             "play.neurodesk.cloud.edu.au",
         ],
     },
-    {
-        "id": "webapp-calmar",
-        "name": "CALMaR",
-        "url": "https://calmar.neurodesk.org/",
-        "description": "CALMaR lesion mapping and reporting webapp.",
-        "hostNames": ["calmar.neurodesk.org"],
-    },
-    {
-        "id": "webapp-dicompare",
-        "name": "dicompare",
-        "url": "https://dicompare.neurodesk.org",
-        "description": "dicompare DICOM protocol comparison webapp.",
-        "hostNames": ["dicompare.neurodesk.org"],
-    },
-    {
-        "id": "webapp-musclemap",
-        "name": "MuscleMap",
-        "url": "https://musclemap.neurodesk.org",
-        "description": "MuscleMap muscle segmentation webapp.",
-        "hostNames": ["musclemap.neurodesk.org"],
-    },
-    {
-        "id": "webapp-qsmbly",
-        "name": "QSMbly",
-        "url": "https://qsmbly.neurodesk.org",
-        "description": "QSMbly quantitative susceptibility mapping webapp.",
-        "hostNames": ["qsmbly.neurodesk.org"],
-    },
-    {
-        "id": "webapp-seedseg",
-        "name": "SeedSeg",
-        "url": "https://seedseg.neurodesk.org/",
-        "description": "SeedSeg fiducial marker segmentation webapp.",
-        "hostNames": ["seedseg.neurodesk.org"],
-    },
-    {
-        "id": "webapp-sct",
-        "name": "Spinal Cord Toolbox",
-        "url": "https://sct.neurodesk.org",
-        "description": "Spinal Cord Toolbox segmentation webapp.",
-        "hostNames": ["sct.neurodesk.org"],
-    },
-    {
-        "id": "webapp-vesselboost",
-        "name": "VesselBoost",
-        "url": "https://vesselboost.neurodesk.org",
-        "description": "VesselBoost blood vessel segmentation webapp.",
-        "hostNames": ["vesselboost.neurodesk.org"],
-    },
 ]
+
+
+WEBAPP_CATALOG_URL = "https://webapps.neurodesk.org/analytics.json"
+WEBAPP_HOST = "webapps.neurodesk.org"
+LEGACY_WEBAPP_HOSTS = {
+    "calmar": "calmar.neurodesk.org",
+    "dicompare": "dicompare.neurodesk.org",
+    "musclemap": "musclemap.neurodesk.org",
+    "qsmbly": "qsmbly.neurodesk.org",
+    "seedseg": "seedseg.neurodesk.org",
+    "sct": "sct.neurodesk.org",
+    "vesselboost": "vesselboost.neurodesk.org",
+}
+
+
+def load_webapp_segments() -> list[dict[str, Any]]:
+    response = requests.get(WEBAPP_CATALOG_URL, timeout=60)
+    response.raise_for_status()
+    catalog = response.json()
+    apps = catalog.get("apps") if isinstance(catalog, dict) else None
+    if not isinstance(apps, list) or not apps:
+        raise ValueError("Webapp catalog must contain a nonempty apps list")
+
+    segments = []
+    paths = set()
+    for app in apps:
+        if not isinstance(app, dict):
+            raise ValueError("Webapp catalog entries must be objects")
+        path, title = app.get("path"), app.get("title")
+        if not isinstance(path, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", path):
+            raise ValueError(f"Invalid webapp path: {path!r}")
+        if not isinstance(title, str) or not title.strip():
+            raise ValueError(f"Missing webapp title for {path}")
+        if path in paths:
+            raise ValueError(f"Duplicate webapp path: {path}")
+        paths.add(path)
+        segments.append({
+            "id": f"webapp-{path}",
+            "name": title.strip(),
+            "url": f"https://{WEBAPP_HOST}/{path}/",
+            "description": f"{title.strip()} hosted Neurodesk webapp.",
+            "webappPath": f"/{path}",
+            "legacyHostName": LEGACY_WEBAPP_HOSTS.get(path),
+        })
+    return segments
 
 
 def utc_now() -> dt.datetime:
@@ -151,7 +148,7 @@ def public_segment_config(segment: dict[str, Any]) -> dict[str, Any]:
         "name": segment["name"],
         "url": segment["url"],
         "description": segment.get("description", ""),
-        "filters": filters,
+        "filters": dimension_filter_for_segment(segment) if "webappPath" in segment else filters,
     }
 
 
@@ -258,6 +255,20 @@ def grouped_filter(group_name: str, expressions: list[dict[str, Any]]) -> dict[s
 
 
 def dimension_filter_for_segment(segment: dict[str, Any]) -> dict[str, Any] | None:
+    if "webappPath" in segment:
+        path = segment["webappPath"]
+        current_host = grouped_filter("andGroup", [
+            string_filter("hostName", WEBAPP_HOST),
+            grouped_filter("orGroup", [
+                string_filter("pagePath", path),
+                string_filter("pagePath", path + "/", "BEGINS_WITH"),
+            ]),
+        ])
+        alternatives = [current_host]
+        if segment.get("legacyHostName"):
+            alternatives.append(string_filter("hostName", segment["legacyHostName"]))
+        return grouped_filter("orGroup", alternatives)
+
     expressions: list[dict[str, Any]] = []
 
     host_filters = [
@@ -492,6 +503,12 @@ def main() -> int:
         print(f"{GA4_SERVICE_ACCOUNT_KEY_ENV} is not valid JSON: {error}", file=sys.stderr)
         return 1
 
+    try:
+        segment_configs = [*GA4_SEGMENTS, *load_webapp_segments()]
+    except (requests.RequestException, ValueError) as error:
+        print(f"Could not load webapp catalog: {error}", file=sys.stderr)
+        return 1
+
     token = get_access_token(service_account_info)
     aggregate = build_metrics(token, property_id, args.period_days)
     print(
@@ -500,7 +517,7 @@ def main() -> int:
     )
 
     segments = []
-    for segment in GA4_SEGMENTS:
+    for segment in segment_configs:
         dimension_filter = dimension_filter_for_segment(segment)
         try:
             tracking_start_date = summarize_tracking_start(
