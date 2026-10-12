@@ -7,6 +7,7 @@
 const root = document.getElementById('pub-stats');
 const cards = [...document.querySelectorAll('.cite[data-methods]')];
 const untagged = [...document.querySelectorAll('.cite:not([data-methods])')];
+const teamFrame = document.querySelector('.pub-team');
 
 const PREPRINT = /\b(bioRxiv|medRxiv|arXiv|PsyArXiv|protocols\.io|Reviewed Preprint)\b/;
 
@@ -87,6 +88,7 @@ function applyFilter() {
     if (match) shown += 1;
   }
   untagged.forEach((card) => { card.hidden = Boolean(active); });
+  if (teamFrame) teamFrame.hidden = Boolean(active);
   for (const group of groups) {
     const empty = group.cards.every((card) => card.hidden);
     group.els.forEach((el) => { el.hidden = empty; });
@@ -215,6 +217,13 @@ function tile(number, caption) {
 }
 
 if (root && entries.length) {
+  const header = document.createElement('div');
+  header.className = 'pub-stats__header';
+  header.innerHTML = `
+    <p class="pub-stats__heading">Research using Neurodesk at a glance</p>
+    <p class="pub-stats__lede">Summary of the ${entries.length} publications listed under
+      <a href="#research-using-neurodesk">Research using Neurodesk</a>. The Neurodesk team's own papers are not counted.</p>`;
+
   const headline = document.createElement('div');
   headline.className = 'pub-stats__headline';
   headline.append(
@@ -227,7 +236,7 @@ if (root && entries.length) {
   grid.className = 'pub-stats__grid';
   grid.append(...panels.map(renderPanel));
 
-  root.append(headline, grid, status);
+  root.append(header, headline, grid, status);
   entries.forEach(renderTags);
   groups = headingGroups();
 }

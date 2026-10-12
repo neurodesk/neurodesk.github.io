@@ -355,6 +355,27 @@ site-search button[data-open-modal] kbd {
 	margin-top: 1.75rem;
 }
 
+.pub-stats__header {
+	margin-bottom: 0.9rem;
+}
+
+.pub-stats__heading {
+	margin: 0;
+	font-size: var(--sl-text-h4);
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+.pub-stats__lede {
+	margin: 0.2rem 0 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-2);
+}
+
+.pub-stats__lede a {
+	color: var(--sl-color-text-accent);
+}
+
 .pub-stats__headline {
 	display: grid;
 	gap: 0.75rem;
@@ -571,6 +592,45 @@ site-search button[data-open-modal] kbd {
 	font: inherit;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/* Neurodesk team papers, framed, with the main paper featured */
+.pub-team {
+	margin-top: 1.25rem;
+	padding: 0.25rem 1.5rem 1.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.75rem;
+	background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+}
+
+.pub-team > .sl-heading-wrapper {
+	margin-top: 1.25rem;
+}
+
+.cite.cite--featured {
+	margin: 1rem 0 1.25rem;
+	padding: 1rem 3rem 1rem 1.1rem;
+	border-left: 3px solid var(--sl-color-accent);
+	border-radius: 0 0.5rem 0.5rem 0;
+	background: var(--sl-color-accent-low);
+}
+
+.cite--featured > p:first-of-type strong {
+	font-size: var(--sl-text-lg);
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.cite--featured .cite__meta {
+	color: var(--sl-color-gray-2);
+}
+
+.cite__badge {
+	margin-bottom: 0.35rem;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--sl-color-text-accent);
 }
 
 /* Topic tags on each publication card */
