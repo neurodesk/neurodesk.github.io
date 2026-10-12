@@ -52,18 +52,18 @@ site-search button[data-open-modal] kbd {
 /* Desktop header only: search right-aligned beside the socials, divider between.
    Starts at 55rem, where the section links appear and the toggle goes away. */
 @media (min-width: 55rem) {
-	.header {
+	div.header {
 		grid-template-columns: auto 1fr auto auto !important;
 	}
-	.header > div:has(site-search) {
+	div.header > div:has(> site-search) {
 		grid-column: 3;
 		justify-self: end;
 	}
-	.header > .right-group {
+	div.header > .right-group {
 		grid-column: 4;
 		margin-inline-start: -0.75rem;
 	}
-	.header > .right-group::before {
+	div.header > .right-group::before {
 		content: '';
 		align-self: center;
 		height: 1.25rem;
