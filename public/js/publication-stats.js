@@ -1,4 +1,4 @@
-// Summarises the publications list by population, method and year, adds topic
+// Summarises the publications list by year, population and method, adds topic
 // tags to each card, and lets bars and tags filter the list. Everything comes
 // from the data-population and data-methods attributes on each .cite card, so
 // tagging a new entry is enough to keep the page current.
@@ -34,7 +34,6 @@ const byLabel = (a, b) => a[0].localeCompare(b[0]);
 const panels = [
   { field: 'population', title: 'Population studied', sort: byCount },
   { field: 'method', title: 'Method', sort: byCount },
-  { field: 'year', title: 'By year', sort: byLabel },
 ];
 
 // Group the cards under their h2/h3 headings so empty sections can be hidden
@@ -89,7 +88,7 @@ function applyFilter() {
     const empty = group.cards.every((card) => card.hidden);
     group.els.forEach((el) => { el.hidden = empty; });
   }
-  document.querySelectorAll('.pub-bar, .cite-tag[data-field]').forEach((el) => {
+  document.querySelectorAll('.pub-bar, .pub-year, .cite-tag[data-field]').forEach((el) => {
     const on = active && el.dataset.field === active.field && el.dataset.value === active.value;
     el.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
@@ -105,42 +104,71 @@ function applyFilter() {
   }
 }
 
+function filterButton(className, field, value, n) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = className;
+  button.dataset.field = field;
+  button.dataset.value = value;
+  button.setAttribute('aria-pressed', 'false');
+  button.setAttribute('aria-label', `${value}: ${n} publication${n === 1 ? '' : 's'}. Filter the list.`);
+  button.addEventListener('click', () => setFilter(field, value));
+  return button;
+}
+
 function renderPanel({ field, title, sort }) {
   const rows = [...tally(field)].sort(sort);
   const max = Math.max(...rows.map(([, n]) => n));
+  const covered = entries.filter((e) => e[field].length > 0).length;
 
   const panel = document.createElement('section');
   panel.className = 'pub-stats__panel';
   const heading = document.createElement('p');
   heading.className = 'pub-stats__title';
   heading.textContent = title;
-  if (field === 'population') {
-    const tagged = entries.filter((e) => e.population.length > 0).length;
-    const detail = document.createElement('span');
-    detail.className = 'pub-stats__detail';
-    detail.textContent = ` (${tagged} studies, excludes software papers)`;
-    heading.append(detail);
-  }
-  panel.append(heading);
+  const detail = document.createElement('p');
+  detail.className = 'pub-stats__detail';
+  detail.textContent = field === 'population'
+    ? `${covered} studies · excludes software papers`
+    : `${covered} publications · a paper can use several`;
+  panel.append(heading, detail);
 
   for (const [value, n] of rows) {
-    const bar = document.createElement('button');
-    bar.type = 'button';
-    bar.className = 'pub-bar';
-    bar.dataset.field = field;
-    bar.dataset.value = value;
-    bar.setAttribute('aria-pressed', 'false');
-    bar.setAttribute('aria-label', `${value}: ${n} publication${n === 1 ? '' : 's'}. Filter the list.`);
+    const bar = filterButton('pub-bar', field, value, n);
     bar.innerHTML = `
-      <span class="pub-bar__label"></span>
-      <span class="pub-bar__track"><span class="pub-bar__fill" style="width:${(n / max) * 100}%"></span></span>
-      <span class="pub-bar__count">${n}</span>`;
+      <span class="pub-bar__head"><span class="pub-bar__label"></span><span class="pub-bar__count">${n}</span></span>
+      <span class="pub-bar__track"><span class="pub-bar__fill" style="width:${(n / max) * 100}%"></span></span>`;
     bar.querySelector('.pub-bar__label').textContent = value;
-    bar.addEventListener('click', () => setFilter(field, value));
     panel.append(bar);
   }
-
   return panel;
+}
+
+// Headline tile with the publication total and a small column chart by year.
+function totalTile() {
+  const years = [...tally('year')].sort(byLabel);
+  const max = Math.max(...years.map(([, n]) => n));
+
+  const el = document.createElement('div');
+  el.className = 'pub-stats__tile pub-stats__tile--total';
+  el.innerHTML = `
+    <div class="pub-stats__figure">
+      <span class="pub-stats__number">${entries.length}</span>
+      <span class="pub-stats__caption">publications since ${years[0][0]}</span>
+    </div>
+    <div class="pub-years"></div>`;
+  const chart = el.querySelector('.pub-years');
+  for (const [year, n] of years) {
+    const col = filterButton('pub-year', 'year', year, n);
+    col.innerHTML = `
+      <span class="pub-year__slot">
+        <span class="pub-year__count">${n}</span>
+        <span class="pub-year__bar" style="--share:${n / max}"></span>
+      </span>
+      <span class="pub-year__label">${year}</span>`;
+    chart.append(col);
+  }
+  return el;
 }
 
 function renderTags(entry) {
@@ -177,24 +205,19 @@ function renderTags(entry) {
 function tile(number, caption) {
   const el = document.createElement('div');
   el.className = 'pub-stats__tile';
-  el.innerHTML = '<span class="pub-stats__number"></span><span class="pub-stats__caption"></span>';
-  el.firstElementChild.textContent = number;
-  el.lastElementChild.textContent = caption;
+  el.innerHTML = '<div class="pub-stats__figure"><span class="pub-stats__number"></span><span class="pub-stats__caption"></span></div>';
+  el.querySelector('.pub-stats__number').textContent = number;
+  el.querySelector('.pub-stats__caption').textContent = caption;
   return el;
 }
 
 if (root && entries.length) {
-  const years = tally('year');
-  const sortedYears = [...years.keys()].sort();
-  const latest = sortedYears.at(-1);
-
   const headline = document.createElement('div');
   headline.className = 'pub-stats__headline';
   headline.append(
-    tile(entries.length, `publications since ${sortedYears[0]}`),
-    tile(years.get(latest), `published in ${latest}`),
+    totalTile(),
     tile(tally('population').size, 'populations studied'),
-    tile(tally('method').size, 'methods and modalities used'),
+    tile(tally('method').size, 'methods and modalities'),
   );
 
   const grid = document.createElement('div');
