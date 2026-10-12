@@ -1539,6 +1539,12 @@ site-search button[data-open-modal] kbd {
 	--um-ink: var(--sl-color-white);
 	--um-ink-secondary: var(--sl-color-gray-2);
 	--um-landmass: var(--sl-color-gray-6);
+	/* Choropleth ramp: dim to bright on dark backgrounds. */
+	--um-map-0: #2e4320;
+	--um-map-1: #3f6424;
+	--um-map-2: #578a2a;
+	--um-map-3: #7cb33a;
+	--um-map-4: #b4e070;
 
 	display: flex;
 	flex-direction: column;
@@ -1552,6 +1558,12 @@ site-search button[data-open-modal] kbd {
 	--um-series-wash: rgba(106, 163, 41, 0.12);
 	--um-surface: #fff;
 	--um-landmass: #f0efec;
+	/* Choropleth ramp: light to dark on light backgrounds. */
+	--um-map-0: #dcecc4;
+	--um-map-1: #b2d585;
+	--um-map-2: #82b64a;
+	--um-map-3: #568a26;
+	--um-map-4: #315a16;
 }
 
 .user-metrics {
