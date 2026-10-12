@@ -351,35 +351,56 @@ site-search button[data-open-modal] kbd {
 
 /* Publications summary — headline counts and filterable bar charts */
 .pub-stats__headline {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 2rem;
-	margin: 1.5rem 0 1rem;
+	display: grid;
+	gap: 0.75rem;
+	grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+	margin: 1.75rem 0 0.75rem;
 }
 
-.pub-stats__headline > div {
+.pub-stats__tile {
 	display: flex;
-	align-items: baseline;
-	gap: 0.4rem;
+	flex-direction: column;
+	gap: 0.2rem;
+	padding: 0.85rem 1rem;
+	border-radius: 0.5rem;
+	background: var(--sl-color-accent-low);
 }
 
 .pub-stats__number {
 	font-size: var(--sl-text-3xl);
 	font-weight: 600;
-	color: var(--sl-color-white);
+	color: var(--sl-color-accent-high);
 	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
 }
 
 .pub-stats__caption {
-	font-size: var(--sl-text-sm);
-	color: var(--sl-color-gray-3);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-2);
+	line-height: 1.35;
+}
+
+.pub-stats {
+	container-type: inline-size;
 }
 
 .pub-stats__grid {
 	display: grid;
 	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+	grid-template-columns: minmax(0, 1fr);
 	align-items: start;
+}
+
+/* Two columns when there is room: population on the left, method and year
+   stacked on the right so the columns end at similar heights. */
+@container (min-width: 34rem) {
+	.pub-stats__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.pub-stats__panel:first-child {
+		grid-row: span 2;
+	}
 }
 
 .pub-stats__panel {
@@ -467,6 +488,52 @@ site-search button[data-open-modal] kbd {
 	font: inherit;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/* Topic tags on each publication card */
+.cite .cite__tags {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.3rem;
+	margin-top: 0.5rem;
+}
+
+.cite-tag {
+	padding: 0.05rem 0.55rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+	font: inherit;
+	font-size: 0.72rem;
+	line-height: 1.6;
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.cite-tag:hover,
+.cite-tag:focus-visible,
+.cite-tag[aria-pressed='true'] {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-text-accent);
+}
+
+.cite-tag--population {
+	border-color: transparent;
+	background: var(--sl-color-accent-low);
+	color: var(--sl-color-accent-high);
+}
+
+.cite-tag--preprint {
+	border-style: dashed;
+	color: var(--sl-color-gray-3);
+	cursor: default;
+}
+
+.cite-tag--preprint:hover {
+	border-color: var(--sl-color-gray-5);
+	color: var(--sl-color-gray-3);
 }
 
 /* Repository metrics grid (overview/metrics) */

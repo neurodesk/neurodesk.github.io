@@ -1,13 +1,15 @@
-// Summarises the publications list by year, population and method, and lets
-// each bar filter the list. Counts come from the data-population and
-// data-methods attributes on each .cite card, so tagging a new entry is enough
-// to keep the charts current.
+// Summarises the publications list by population, method and year, adds topic
+// tags to each card, and lets bars and tags filter the list. Everything comes
+// from the data-population and data-methods attributes on each .cite card, so
+// tagging a new entry is enough to keep the page current.
 
 const root = document.getElementById('pub-stats');
 const cards = [...document.querySelectorAll('.cite')];
 
-const yearOf = (card) =>
-  card.querySelector('.cite__meta')?.textContent.match(/(\d{4})\.\s*$/)?.[1] ?? '';
+const PREPRINT = /\b(bioRxiv|medRxiv|arXiv|PsyArXiv|protocols\.io|Reviewed Preprint)\b/;
+
+const metaOf = (card) => card.querySelector('.cite__meta')?.textContent ?? '';
+const yearOf = (card) => metaOf(card).match(/(\d{4})\.\s*$/)?.[1] ?? '';
 const split = (value) =>
   (value ?? '').split(';').map((s) => s.trim()).filter(Boolean);
 
@@ -35,10 +37,46 @@ const panels = [
   { field: 'year', title: 'By year', sort: byLabel },
 ];
 
+// Group the cards under their h2/h3 headings so empty sections can be hidden
+// while a filter is active.
+function headingGroups() {
+  const container = root.closest('.sl-markdown-content') ?? root.parentElement;
+  const groups = [];
+  let h2 = null;
+  let h3 = null;
+  for (const el of container.children) {
+    if (el.matches('.sl-heading-wrapper.level-h2')) {
+      h2 = { els: [el], cards: [] };
+      h3 = null;
+      groups.push(h2);
+    } else if (el.matches('.sl-heading-wrapper.level-h3')) {
+      h3 = { els: [el], cards: [] };
+      groups.push(h3);
+    } else if (el.classList.contains('cite')) {
+      h2?.cards.push(el);
+      h3?.cards.push(el);
+    } else if (el.tagName === 'HR') {
+      h2 = h3 = null;
+    } else if (el.tagName === 'P') {
+      const group = h3 ?? h2;
+      if (group && group.cards.length === 0) group.els.push(el);
+    }
+  }
+  return groups.filter((g) => g.cards.length > 0);
+}
+
 let active = null;
+let groups = [];
 const status = document.createElement('p');
 status.className = 'pub-stats__status';
 status.setAttribute('aria-live', 'polite');
+
+function setFilter(field, value, { scroll = false } = {}) {
+  const same = active && active.field === field && active.value === value;
+  active = same || !field ? null : { field, value };
+  applyFilter();
+  if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function applyFilter() {
   let shown = 0;
@@ -47,9 +85,13 @@ function applyFilter() {
     entry.card.hidden = !match;
     if (match) shown += 1;
   }
-  root.querySelectorAll('.pub-bar').forEach((bar) => {
-    const on = active && bar.dataset.field === active.field && bar.dataset.value === active.value;
-    bar.setAttribute('aria-pressed', on ? 'true' : 'false');
+  for (const group of groups) {
+    const empty = group.cards.every((card) => card.hidden);
+    group.els.forEach((el) => { el.hidden = empty; });
+  }
+  document.querySelectorAll('.pub-bar, .cite-tag[data-field]').forEach((el) => {
+    const on = active && el.dataset.field === active.field && el.dataset.value === active.value;
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   status.replaceChildren();
   if (active) {
@@ -58,10 +100,7 @@ function applyFilter() {
     clear.type = 'button';
     clear.className = 'pub-stats__clear';
     clear.textContent = 'Show all';
-    clear.addEventListener('click', () => {
-      active = null;
-      applyFilter();
-    });
+    clear.addEventListener('click', () => setFilter(null));
     status.append(clear);
   }
 }
@@ -90,11 +129,7 @@ function renderPanel({ field, title, sort }) {
       <span class="pub-bar__track"><span class="pub-bar__fill" style="width:${(n / max) * 100}%"></span></span>
       <span class="pub-bar__count">${n}</span>`;
     bar.querySelector('.pub-bar__label').textContent = value;
-    bar.addEventListener('click', () => {
-      const same = active && active.field === field && active.value === value;
-      active = same ? null : { field, value };
-      applyFilter();
-    });
+    bar.addEventListener('click', () => setFilter(field, value));
     panel.append(bar);
   }
 
@@ -108,20 +143,65 @@ function renderPanel({ field, title, sort }) {
   return panel;
 }
 
+function renderTags(entry) {
+  const tags = document.createElement('div');
+  tags.className = 'cite__tags not-content';
+
+  if (PREPRINT.test(metaOf(entry.card))) {
+    const badge = document.createElement('span');
+    badge.className = 'cite-tag cite-tag--preprint';
+    badge.textContent = 'Preprint';
+    tags.append(badge);
+  }
+
+  const chips = [
+    ...entry.population.map((value) => ['population', value]),
+    ...entry.method.map((value) => ['method', value]),
+  ];
+  for (const [field, value] of chips) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = `cite-tag cite-tag--${field}`;
+    chip.dataset.field = field;
+    chip.dataset.value = value;
+    chip.setAttribute('aria-pressed', 'false');
+    chip.title = `Show only ${value} publications`;
+    chip.textContent = value;
+    chip.addEventListener('click', () => setFilter(field, value, { scroll: true }));
+    tags.append(chip);
+  }
+
+  if (tags.childElementCount) entry.card.append(tags);
+}
+
+function tile(number, caption) {
+  const el = document.createElement('div');
+  el.className = 'pub-stats__tile';
+  el.innerHTML = '<span class="pub-stats__number"></span><span class="pub-stats__caption"></span>';
+  el.firstElementChild.textContent = number;
+  el.lastElementChild.textContent = caption;
+  return el;
+}
+
 if (root && entries.length) {
   const years = tally('year');
-  const latest = [...years.keys()].sort().at(-1);
+  const sortedYears = [...years.keys()].sort();
+  const latest = sortedYears.at(-1);
 
   const headline = document.createElement('div');
   headline.className = 'pub-stats__headline';
-  headline.innerHTML = `
-    <div><span class="pub-stats__number">${entries.length}</span><span class="pub-stats__caption">publications</span></div>
-    <div><span class="pub-stats__number">${years.get(latest)}</span><span class="pub-stats__caption">in ${latest}</span></div>
-    <div><span class="pub-stats__number">${tally('population').size}</span><span class="pub-stats__caption">clinical and research populations</span></div>`;
+  headline.append(
+    tile(entries.length, `publications since ${sortedYears[0]}`),
+    tile(years.get(latest), `published in ${latest}`),
+    tile(tally('population').size, 'populations studied'),
+    tile(tally('method').size, 'methods and modalities used'),
+  );
 
   const grid = document.createElement('div');
   grid.className = 'pub-stats__grid';
   grid.append(...panels.map(renderPanel));
 
   root.append(headline, grid, status);
+  entries.forEach(renderTags);
+  groups = headingGroups();
 }
