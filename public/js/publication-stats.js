@@ -118,7 +118,7 @@ function renderPanel({ field, title, sort }) {
     const tagged = entries.filter((e) => e.population.length > 0).length;
     const detail = document.createElement('span');
     detail.className = 'pub-stats__detail';
-    detail.textContent = ` (${tagged} studies, excludes methods papers)`;
+    detail.textContent = ` (${tagged} studies, excludes software papers)`;
     heading.append(detail);
   }
   panel.append(heading);
