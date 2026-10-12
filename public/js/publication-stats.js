@@ -1,10 +1,12 @@
-// Summarises the publications list by year, population and method, adds topic
-// tags to each card, and lets bars and tags filter the list. Everything comes
-// from the data-population and data-methods attributes on each .cite card, so
-// tagging a new entry is enough to keep the page current.
+// Summarises research that used Neurodesk by year, population and method, adds
+// topic tags to each card, and lets bars and tags filter the list. Everything
+// comes from the data-population and data-methods attributes on each .cite card,
+// so tagging a new entry is enough to keep the page current. The Neurodesk
+// team's own papers are left untagged, so they are not counted.
 
 const root = document.getElementById('pub-stats');
-const cards = [...document.querySelectorAll('.cite')];
+const cards = [...document.querySelectorAll('.cite[data-methods]')];
+const untagged = [...document.querySelectorAll('.cite:not([data-methods])')];
 
 const PREPRINT = /\b(bioRxiv|medRxiv|arXiv|PsyArXiv|protocols\.io|Reviewed Preprint)\b/;
 
@@ -84,6 +86,7 @@ function applyFilter() {
     entry.card.hidden = !match;
     if (match) shown += 1;
   }
+  untagged.forEach((card) => { card.hidden = Boolean(active); });
   for (const group of groups) {
     const empty = group.cards.every((card) => card.hidden);
     group.els.forEach((el) => { el.hidden = empty; });
@@ -94,7 +97,7 @@ function applyFilter() {
   });
   status.replaceChildren();
   if (active) {
-    status.append(`Showing ${shown} of ${entries.length} publications: ${active.value}. `);
+    status.append(`Showing ${shown} of ${entries.length} publications using Neurodesk: ${active.value}. `);
     const clear = document.createElement('button');
     clear.type = 'button';
     clear.className = 'pub-stats__clear';
@@ -129,7 +132,7 @@ function renderPanel({ field, title, sort }) {
   const detail = document.createElement('p');
   detail.className = 'pub-stats__detail';
   detail.textContent = field === 'population'
-    ? `${covered} studies · excludes software papers`
+    ? `${covered} studies · excludes software tools`
     : `${covered} publications · a paper can use several`;
   panel.append(heading, detail);
 
@@ -154,7 +157,7 @@ function totalTile() {
   el.innerHTML = `
     <div class="pub-stats__figure">
       <span class="pub-stats__number">${entries.length}</span>
-      <span class="pub-stats__caption">publications since ${years[0][0]}</span>
+      <span class="pub-stats__caption">publications using Neurodesk</span>
     </div>
     <div class="pub-years"></div>`;
   const chart = el.querySelector('.pub-years');
