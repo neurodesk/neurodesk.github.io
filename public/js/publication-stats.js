@@ -114,6 +114,13 @@ function renderPanel({ field, title, sort }) {
   const heading = document.createElement('p');
   heading.className = 'pub-stats__title';
   heading.textContent = title;
+  if (field === 'population') {
+    const tagged = entries.filter((e) => e.population.length > 0).length;
+    const detail = document.createElement('span');
+    detail.className = 'pub-stats__detail';
+    detail.textContent = ` (${tagged} studies, excludes methods papers)`;
+    heading.append(detail);
+  }
   panel.append(heading);
 
   for (const [value, n] of rows) {
@@ -133,13 +140,6 @@ function renderPanel({ field, title, sort }) {
     panel.append(bar);
   }
 
-  if (field === 'population') {
-    const untagged = entries.filter((e) => e.population.length === 0).length;
-    const note = document.createElement('p');
-    note.className = 'pub-stats__note';
-    note.textContent = `${untagged} methods, software or healthy-participant papers are not counted here.`;
-    panel.append(note);
-  }
   return panel;
 }
 

@@ -467,9 +467,8 @@ site-search button[data-open-modal] kbd {
 	color: var(--sl-color-white);
 }
 
-.pub-stats__note {
-	margin: 0.4rem 0.3rem 0;
-	font-size: var(--sl-text-xs);
+.pub-stats__detail {
+	font-weight: 400;
 	color: var(--sl-color-gray-3);
 }
 
