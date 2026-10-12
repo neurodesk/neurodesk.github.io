@@ -46,9 +46,8 @@ assembles the other sections for deployment.
 ## Contributing
 
 Create a branch, make your changes, run `pnpm build`, and open a
-[pull request](https://github.com/neurodesk/neurodesk.github.io/pulls). A
-[Cloudflare](https://pages.cloudflare.com/) preview link is added automatically for internal
-branches. Fork previews are built after a maintainer approves the submitted revision.
+[pull request](https://github.com/neurodesk/neurodesk.github.io/pulls). Fork previews require
+maintainer approval.
 
 - [Contributing website content](src/content/docs/developers/documentation/creating-website-content.mdx)
 - [Local development](src/content/docs/developers/documentation/local-development.mdx)
@@ -56,15 +55,14 @@ branches. Fork previews are built after a maintainer approves the submitted revi
 
 ## Preview and deployment
 
-Run [**Promote to Production**](https://github.com/neurodesk/neurodesk.github.io/actions/workflows/promote-to-prod.yml)
-manually in [GitHub Actions](https://github.com/neurodesk/neurodesk.github.io/actions):
-
-- `publish: false` builds the full site and deploys it to
-  [neurodesk.github.io](https://neurodesk.github.io) for testing.
-- `publish: true` deploys the same build to [neurodesk.org](https://neurodesk.org) through the
-  [`neurodesk.org`](https://github.com/neurodesk/neurodesk.org) repository.
-
-Do not edit the generated [`gh-pages`](https://github.com/neurodesk/neurodesk.github.io/tree/gh-pages)
-or production [`site`](https://github.com/neurodesk/neurodesk.org/tree/site) branches directly.
+- **Pull requests:** Use the Cloudflare preview link in the PR description for unmerged changes.
+  It does not include `/edu/`.
+- **Before promotion:** Check [neurodesk.github.io](https://neurodesk.github.io/) after merging.
+  [Website Staging](.github/workflows/website-staging.yml) deploys `main` there; its
+  [`/edu/`](https://neurodesk.github.io/edu/) comes from [`neurodesk/edu`](https://github.com/neurodesk/edu).
+- **Production:** Run [Promote to Production](https://github.com/neurodesk/neurodesk.github.io/actions/workflows/promote-to-prod.yml)
+  manually to publish the assembled site to [neurodesk.org](https://neurodesk.org). Every run
+  publishes. Promotion rebuilds the site and adds Neurocontainers UI, so the staging site is a
+  functional check rather than an exact production artifact.
 
 For help, use [Neurodesk Discussions](https://github.com/orgs/neurodesk/discussions).
