@@ -162,38 +162,6 @@ jobs:
             exit 1
           fi
 
-
-      # Note: Do NOT copy the production CNAME during staging deploys.
-
-      - name: Merge PR previews into artifact (preserve pr-* directories)
-        run: |
-          set -e
-          # Check if gh-pages branch exists
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            echo "Found gh-pages branch, merging preview directories..."
-
-            # Fetch gh-pages branch
-            git fetch origin gh-pages:refs/remotes/origin/gh-pages
-
-            # Create temporary worktree for gh-pages
-            mkdir -p /tmp/gh-pages-checkout
-            git worktree add /tmp/gh-pages-checkout origin/gh-pages
-
-            # Copy any pr-* directories into dist/ (preserving previews)
-            if ls /tmp/gh-pages-checkout/pr-* 1> /dev/null 2>&1; then
-              echo "Copying preview directories to dist/..."
-              cp -r /tmp/gh-pages-checkout/pr-* dist/ || true
-              echo "Previews merged successfully"
-            else
-              echo "No preview directories found (no active PRs)"
-            fi
-
-            # Clean up worktree
-            git worktree remove /tmp/gh-pages-checkout
-          else
-            echo "No gh-pages branch exists yet, skipping preview merge"
-          fi
-
       - name: Upload build artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
