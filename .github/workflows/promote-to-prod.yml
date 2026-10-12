@@ -138,7 +138,7 @@ jobs:
           destination = Path("dist/example-notebooks")
           for page in source.rglob("*.html"):
               relative = page.relative_to(source)
-              if relative.parts[0] in {".git", "build", "_static"}:
+              if relative.parts[0] in {".git", "build", "_static", "preview"}:
                   continue
               path = relative.as_posix()
               if page.name == "index.html":
@@ -166,7 +166,9 @@ jobs:
           rsync -a --delete \
             "${{ runner.temp }}/neurodeskedu/" \
             dist/edu/ \
-            --exclude=.git
+            --exclude=.git \
+            --filter='hide /preview/'
+          # A sender-only filter omits staging and lets --delete remove an old copy.
           if [ ! -f dist/edu/intro.html ] && [ ! -f dist/edu/index.html ]; then
             echo "NeurodeskEDU entry page was not found" >&2
             exit 1
@@ -213,6 +215,9 @@ jobs:
             test -d dist/edu
           fi
 
+          # Include hidden files and aliases; reject unsupported symbolic links.
+          python .github/workflows/check-site-size.py dist
+
       - name: Upload production candidate
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
@@ -241,6 +246,10 @@ jobs:
           else
             rsync -a --delete --exclude=.git --exclude=edu/ dist/ "$PROD_WORKTREE/"
           fi
+
+          # include_edu=false retains the old EDU directory. Check the final tree too,
+          # before staging, committing or pushing any production changes.
+          python .github/workflows/check-site-size.py "$PROD_WORKTREE"
 
           cd "$PROD_WORKTREE"
           git config user.name "production-promotion-bot"
