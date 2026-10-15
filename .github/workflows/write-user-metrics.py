@@ -68,6 +68,9 @@ LEGACY_WEBAPP_HOSTS = {
     "sct": "sct.neurodesk.org",
     "vesselboost": "vesselboost.neurodesk.org",
 }
+# Site-wide totals only count these hosts, excluding CI runs on 127.0.0.1 and forks.
+PRODUCTION_DOMAIN = "neurodesk.org"
+EXTRA_PRODUCTION_HOSTS = ["neurodesk.github.io"]
 
 
 def load_webapp_segments() -> list[dict[str, Any]]:
@@ -252,6 +255,20 @@ def grouped_filter(group_name: str, expressions: list[dict[str, Any]]) -> dict[s
     if len(expressions) == 1:
         return expressions[0]
     return {group_name: {"expressions": expressions}}
+
+
+def production_hosts_filter() -> dict[str, Any] | None:
+    extra_hosts = {
+        host_name
+        for segment in GA4_SEGMENTS
+        for host_name in segment.get("hostNames", [])
+        if host_name != PRODUCTION_DOMAIN and not host_name.endswith("." + PRODUCTION_DOMAIN)
+    }
+    return grouped_filter("orGroup", [
+        string_filter("hostName", PRODUCTION_DOMAIN),
+        string_filter("hostName", "." + PRODUCTION_DOMAIN, "ENDS_WITH"),
+        *(string_filter("hostName", host_name) for host_name in sorted({*extra_hosts, *EXTRA_PRODUCTION_HOSTS})),
+    ])
 
 
 def dimension_filter_for_segment(segment: dict[str, Any]) -> dict[str, Any] | None:
@@ -510,7 +527,7 @@ def main() -> int:
         return 1
 
     token = get_access_token(service_account_info)
-    aggregate = build_metrics(token, property_id, args.period_days)
+    aggregate = build_metrics(token, property_id, args.period_days, production_hosts_filter())
     print(
         f"GA4 property {property_id}: {len(aggregate['months'])} months, "
         f"{aggregate['totalUsers']} users total, {len(aggregate['countries'])} countries"
