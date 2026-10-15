@@ -192,6 +192,8 @@ def matches(expression: dict, host: str, path: str) -> bool:
         value, expected = value.lower(), expected.lower()
     if rule["stringFilter"]["matchType"] == "EXACT":
         return value == expected
+    if rule["stringFilter"]["matchType"] == "ENDS_WITH":
+        return value.endswith(expected)
     assert rule["stringFilter"]["matchType"] == "BEGINS_WITH"
     return value.startswith(expected)
 
@@ -223,6 +225,15 @@ class WebappMetricsTests(unittest.TestCase):
                 self.assertTrue(matches(expression, "sct.neurodesk.org", "/"))
                 self.assertTrue(matches(expression, "sct.neurodesk.org", "/results"))
             self.assertEqual(write_user_metrics.public_segment_config(segment)["filters"], expression)
+
+    def test_site_totals_count_only_production_hosts(self):
+        expression = write_user_metrics.production_hosts_filter()
+        for host in ["neurodesk.org", "www.neurodesk.org", "webapps.neurodesk.org", "musclemap.neurodesk.org",
+                     "play-europe.neurodesk.org", "play.neurodesk.cloud.edu.au", "neurodesk.github.io"]:
+            self.assertTrue(matches(expression, host, "/"), host)
+        for host in ["127.0.0.1", "localhost", "203.101.228.83", "someone.github.io",
+                     "notneurodesk.org", "neurodesk.org.example.com"]:
+            self.assertFalse(matches(expression, host, "/"), host)
 
     def test_invalid_catalog_fails_instead_of_publishing_partial_list(self):
         for catalog in [{}, {"apps": []}, {"apps": [None]}, {"apps": [{"title": "Tool", "path": "../tool"}]},
