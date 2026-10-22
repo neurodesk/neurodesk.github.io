@@ -183,6 +183,7 @@ def empty_metrics(
         "periodPageViews": 0,
         "months": [],
         "countries": [],
+        "periodCountries": [],
         "segments": [empty_segment(segment) for segment in GA4_SEGMENTS],
     }
     if unavailable:
@@ -382,6 +383,7 @@ def country_report(
     token: str,
     property_id: str,
     dimension_filter: dict[str, Any] | None = None,
+    start_date: str = EARLIEST_START_DATE,
 ) -> list[dict[str, Any]]:
     return run_report(
         token,
@@ -394,6 +396,7 @@ def country_report(
             },
             dimension_filter,
         ),
+        start_date=start_date,
     )
 
 
@@ -527,7 +530,11 @@ def main() -> int:
         return 1
 
     token = get_access_token(service_account_info)
-    aggregate = build_metrics(token, property_id, args.period_days, production_hosts_filter())
+    site_filter = production_hosts_filter()
+    aggregate = build_metrics(token, property_id, args.period_days, site_filter)
+    aggregate["periodCountries"] = summarize_countries(
+        country_report(token, property_id, site_filter, start_date=f"{args.period_days}daysAgo")
+    )
     print(
         f"GA4 property {property_id}: {len(aggregate['months'])} months, "
         f"{aggregate['totalUsers']} users total, {len(aggregate['countries'])} countries"

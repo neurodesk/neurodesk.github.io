@@ -154,6 +154,7 @@ class BuildMetricsTests(unittest.TestCase):
                     "build_metrics",
                     side_effect=[aggregate_metrics, segment_metrics],
                 ),
+                mock.patch.object(write_user_metrics, "country_report", return_value=[]),
                 mock.patch.object(
                     write_user_metrics,
                     "tracking_start_report",
@@ -266,6 +267,27 @@ class WebappMetricsTests(unittest.TestCase):
         self.assertEqual([s["id"] for s in apps], ["webapp-sct", "webapp-deface", "webapp-new-tool"])
         self.assertEqual([s["totalUsers"] for s in apps], [42, 42, 0])
         self.assertEqual([s["periodUsers"] for s in apps], [42, 42, 0])
+
+    def test_period_countries_use_production_hosts_and_period_window(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "metrics.json"
+            args = SimpleNamespace(property_id="123", output=str(output), period_days=30, allow_missing_token=False)
+            site_filter = write_user_metrics.production_hosts_filter()
+            def report(token, property_id, body, start_date=write_user_metrics.EARLIEST_START_DATE, end_date="today"):
+                dimensions = [dimension["name"] for dimension in body.get("dimensions", [])]
+                if dimensions != ["countryId", "country"] or body.get("dimensionFilter") != site_filter:
+                    return []
+                users = "12" if start_date == "30daysAgo" else "900"
+                return [{"dimensionValues": [{"value": "AU"}, {"value": "Australia"}], "metricValues": [{"value": users}]}]
+            with (mock.patch.dict(os.environ, {write_user_metrics.GA4_SERVICE_ACCOUNT_KEY_ENV: "{}"}),
+                  mock.patch.object(write_user_metrics, "parse_args", return_value=args),
+                  mock.patch.object(write_user_metrics, "get_access_token", return_value="token"),
+                  mock.patch.object(write_user_metrics, "load_webapp_segments", return_value=[]),
+                  mock.patch.object(write_user_metrics, "run_report", side_effect=report)):
+                self.assertEqual(write_user_metrics.main(), 0)
+            data = json.loads(output.read_text())
+        self.assertEqual(data["periodCountries"], [{"code": "AU", "name": "Australia", "users": 12}])
+        self.assertEqual(data["countries"], [{"code": "AU", "name": "Australia", "users": 900}])
 
     def test_placeholder_does_not_fetch_catalog(self):
         args = SimpleNamespace(property_id="", output="unused", period_days=30, allow_missing_token=True)
