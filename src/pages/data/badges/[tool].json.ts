@@ -27,6 +27,8 @@ function latestVersions(): Map<string, Latest> {
 		const buildDate = parts[parts.length - 1];
 		const version = parts[parts.length - 2];
 		const name = parts.slice(0, -2).join('_');
+		// A malformed date would sort above real ones and hide the newest release.
+		if (!name || !version || !/^\d{8}$/.test(buildDate)) continue;
 		const current = latest.get(name);
 		if (!current || buildDate > current.buildDate) {
 			latest.set(name, { version, buildDate });
