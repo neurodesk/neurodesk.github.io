@@ -79,6 +79,7 @@ jobs:
           retention-days: 7
 
   build:
+    needs: generate-applist
     runs-on: ubuntu-26.04
     steps:
       - name: Checkout
@@ -123,6 +124,24 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      # The Astro build reads applist.json (e.g. for /data/badges/<tool>.json),
+      # so the generated list must be in public/ before building.
+      - name: Download applist artifact
+        id: download-applist
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: applist-json
+          path: public/data
+
+      - name: Restore cached applist.json (fallback)
+        if: steps.download-applist.outcome == 'failure'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: public/data/applist.json
+          key: applist-json-${{ github.run_id }}
+          restore-keys: applist-json-
 
       - name: Build with Astro
         run: npx astro build
@@ -245,7 +264,7 @@ jobs:
           exit "$linkspector_status"
 
   deploy:
-    needs: [build, generate-applist]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
@@ -253,22 +272,6 @@ jobs:
         with:
           name: site-dist
           path: dist
-
-      - name: Download applist artifact
-        id: download-applist
-        continue-on-error: true
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: applist-json
-          path: dist/data
-
-      - name: Restore cached applist.json (fallback)
-        if: steps.download-applist.outcome == 'failure'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
-        with:
-          path: dist/data/applist.json
-          key: applist-json-${{ github.run_id }}
-          restore-keys: applist-json-
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4
@@ -280,7 +283,7 @@ jobs:
   deploy-github-pages:
     name: Deploy main site to neurodesk.github.io
     if: github.repository == 'neurodesk/neurodesk.github.io' && github.ref == 'refs/heads/main'
-    needs: [build, generate-applist]
+    needs: build
     runs-on: ubuntu-26.04
     permissions:
       contents: read
@@ -295,22 +298,6 @@ jobs:
         with:
           name: site-dist
           path: dist
-
-      - name: Download applist artifact
-        id: download-applist
-        continue-on-error: true
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: applist-json
-          path: dist/data
-
-      - name: Restore cached applist.json (fallback)
-        if: steps.download-applist.outcome == 'failure'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
-        with:
-          path: dist/data/applist.json
-          key: applist-json-${{ github.run_id }}
-          restore-keys: applist-json-
 
       - name: Prepare GitHub Pages artifact
         run: |
