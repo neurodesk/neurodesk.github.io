@@ -139,7 +139,7 @@
         "/^src/content/docs/.*\\.mdx$/"
       ],
       "matchStrings": [
-        "MATLAB-extension-for-vscode/releases/download/v(?<currentValue>[0-9.]+)/"
+        "MATLAB-extension-for-vscode/releases/download/v(?<currentValue>[0-9.]+)/language-matlab-[0-9.]+\\.vsix"
       ],
       "depNameTemplate": "mathworks/MATLAB-extension-for-vscode",
       "datasourceTemplate": "github-releases",
