@@ -1,4 +1,4 @@
-name: Cloudflare Pages
+name: Website Staging
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
-          python-version: '3.14'
+          python-version: '3.15'
 
       - name: Install Python dependencies
         run: pip install requests
@@ -71,7 +71,7 @@ jobs:
           key: applist-json-${{ github.run_id }}
 
       - name: Upload applist artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: always()
         with:
           name: applist-json
@@ -90,7 +90,7 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
-          python-version: '3.14'
+          python-version: '3.15'
 
       - name: Install Python dependencies
         run: |
@@ -130,7 +130,7 @@ jobs:
       - name: Download applist artifact
         id: download-applist
         continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: applist-json
           path: public/data
@@ -181,40 +181,8 @@ jobs:
             exit 1
           fi
 
-
-      # Note: Do NOT copy the production CNAME during staging deploys.
-
-      - name: Merge PR previews into artifact (preserve pr-* directories)
-        run: |
-          set -e
-          # Check if gh-pages branch exists
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            echo "Found gh-pages branch, merging preview directories..."
-
-            # Fetch gh-pages branch
-            git fetch origin gh-pages:refs/remotes/origin/gh-pages
-
-            # Create temporary worktree for gh-pages
-            mkdir -p /tmp/gh-pages-checkout
-            git worktree add /tmp/gh-pages-checkout origin/gh-pages
-
-            # Copy any pr-* directories into dist/ (preserving previews)
-            if ls /tmp/gh-pages-checkout/pr-* 1> /dev/null 2>&1; then
-              echo "Copying preview directories to dist/..."
-              cp -r /tmp/gh-pages-checkout/pr-* dist/ || true
-              echo "Previews merged successfully"
-            else
-              echo "No preview directories found (no active PRs)"
-            fi
-
-            # Clean up worktree
-            git worktree remove /tmp/gh-pages-checkout
-          else
-            echo "No gh-pages branch exists yet, skipping preview merge"
-          fi
-
       - name: Upload build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: site-dist
           path: dist/
@@ -226,8 +194,21 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - name: Download built site for link checks
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Serve built site for link checks
+        run: |
+          nohup python3 -m http.server 4321 --bind 127.0.0.1 --directory dist \
+            > "$RUNNER_TEMP/link-check-server.log" 2>&1 &
+          curl --fail --silent --show-error --retry 5 --retry-connrefused --retry-delay 1 \
+            http://127.0.0.1:4321/ > /dev/null
+
       - name: Set up Node.js for Linkspector
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: "24"
           package-manager-cache: false
@@ -287,14 +268,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: site-dist
           path: dist
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=neurodesk-preview --branch=${{ github.ref_name }}
+
+  deploy-github-pages:
+    name: Deploy main site to neurodesk.github.io
+    if: github.repository == 'neurodesk/neurodesk.github.io' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Prepare GitHub Pages artifact
+        run: |
+          rm -f dist/CNAME
+          touch dist/.nojekyll
+          test -f dist/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

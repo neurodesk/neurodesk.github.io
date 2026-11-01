@@ -52,18 +52,18 @@ site-search button[data-open-modal] kbd {
 /* Desktop header only: search right-aligned beside the socials, divider between.
    Starts at 55rem, where the section links appear and the toggle goes away. */
 @media (min-width: 55rem) {
-	.header {
+	div.header {
 		grid-template-columns: auto 1fr auto auto !important;
 	}
-	.header > div:has(site-search) {
+	div.header > div:has(> site-search) {
 		grid-column: 3;
 		justify-self: end;
 	}
-	.header > .right-group {
+	div.header > .right-group {
 		grid-column: 4;
 		margin-inline-start: -0.75rem;
 	}
-	.header > .right-group::before {
+	div.header > .right-group::before {
 		content: '';
 		align-self: center;
 		height: 1.25rem;
@@ -347,6 +347,336 @@ site-search button[data-open-modal] kbd {
 .cite__copy--ok {
 	color: var(--sl-color-text-accent);
 	opacity: 1 !important;
+}
+
+/* Publications summary — headline tiles and filterable bar charts */
+.pub-stats {
+	container-type: inline-size;
+	margin-top: 1.75rem;
+}
+
+.pub-stats__header {
+	margin-bottom: 0.9rem;
+}
+
+.pub-stats__heading {
+	margin: 0;
+	font-size: var(--sl-text-h4);
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+.pub-stats__lede {
+	margin: 0.2rem 0 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-2);
+}
+
+.pub-stats__lede a {
+	color: var(--sl-color-text-accent);
+}
+
+.pub-stats__headline {
+	display: grid;
+	gap: 0.75rem;
+	grid-template-columns: minmax(0, 1fr);
+	margin-bottom: 0.75rem;
+}
+
+.pub-stats__tile {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem 1.1rem;
+	border-radius: 0.6rem;
+	background: var(--sl-color-accent-low);
+}
+
+.pub-stats__figure {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.pub-stats__number {
+	font-size: var(--sl-text-4xl);
+	font-weight: 600;
+	color: var(--sl-color-accent-high);
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.pub-stats__caption {
+	font-size: var(--sl-text-sm);
+	line-height: 1.3;
+	color: var(--sl-color-gray-2);
+}
+
+/* Mini column chart of publications per year inside the total tile */
+.pub-years {
+	display: flex;
+	align-items: flex-end;
+	gap: 0.5rem;
+	height: 5.25rem;
+}
+
+.pub-year {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.2rem;
+	width: 2.5rem;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	background: none;
+	font: inherit;
+	cursor: pointer;
+}
+
+.pub-year__slot {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.2rem;
+	min-height: 0;
+}
+
+/* Bar height is its share of the slot after reserving room for the count. */
+.pub-year__bar {
+	width: 1.25rem;
+	height: calc((100% - 1rem) * var(--share));
+	border-radius: 4px 4px 0 0;
+	background: var(--sl-color-accent);
+	transition: opacity 0.15s ease;
+}
+
+.pub-year__count,
+.pub-year__label {
+	font-size: var(--sl-text-xs);
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.pub-year__count {
+	color: var(--sl-color-white);
+	font-weight: 600;
+}
+
+.pub-year__label {
+	color: var(--sl-color-gray-2);
+}
+
+.pub-years:has(.pub-year[aria-pressed='true']) .pub-year:not([aria-pressed='true']) .pub-year__bar,
+.pub-years:hover .pub-year:not(:hover) .pub-year__bar {
+	opacity: 0.45;
+}
+
+.pub-stats__grid {
+	display: grid;
+	gap: 0.75rem;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: start;
+}
+
+@container (min-width: 34rem) {
+	.pub-stats__headline {
+		grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+	}
+
+	.pub-stats__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.pub-stats__panel {
+	padding: 1rem 1.1rem 0.75rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.6rem;
+}
+
+.pub-stats__title {
+	margin: 0;
+	font-size: var(--sl-text-base);
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+.pub-stats__detail {
+	margin: 0.1rem 0 0.75rem;
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+}
+
+.pub-bar {
+	display: block;
+	width: calc(100% + 0.8rem);
+	margin: 0 -0.4rem;
+	padding: 0.3rem 0.4rem 0.4rem;
+	border: 0;
+	border-radius: 0.35rem;
+	background: transparent;
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.pub-bar:hover,
+.pub-bar:focus-visible {
+	background: var(--sl-color-gray-6);
+}
+
+.pub-bar__head {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.75rem;
+	font-size: var(--sl-text-sm);
+	line-height: 1.3;
+}
+
+.pub-bar__label {
+	color: var(--sl-color-gray-1);
+}
+
+.pub-bar__count {
+	color: var(--sl-color-white);
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.pub-bar__track {
+	display: block;
+	height: 6px;
+	margin-top: 0.3rem;
+	border-radius: 3px;
+	background: var(--sl-color-gray-6);
+}
+
+.pub-bar:hover .pub-bar__track,
+.pub-bar:focus-visible .pub-bar__track {
+	background: var(--sl-color-gray-5);
+}
+
+.pub-bar__fill {
+	display: block;
+	height: 100%;
+	border-radius: 3px;
+	background: var(--sl-color-accent);
+}
+
+.pub-bar[aria-pressed='true'] {
+	background: var(--sl-color-accent-low);
+}
+
+.pub-bar[aria-pressed='true'] .pub-bar__label {
+	color: var(--sl-color-white);
+	font-weight: 600;
+}
+
+.pub-stats__status {
+	min-height: 1.5rem;
+	margin: 0.75rem 0 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-2);
+}
+
+.pub-stats__clear {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--sl-color-text-accent);
+	font: inherit;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* Neurodesk team papers, framed, with the main paper featured */
+.pub-team {
+	margin-top: 1.25rem;
+	padding: 0.25rem 1.5rem 1.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.75rem;
+	background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+}
+
+.pub-team > .sl-heading-wrapper {
+	margin-top: 1.25rem;
+}
+
+.cite.cite--featured {
+	margin: 1rem 0 1.25rem;
+	padding: 1rem 3rem 1rem 1.1rem;
+	border-left: 3px solid var(--sl-color-accent);
+	border-radius: 0 0.5rem 0.5rem 0;
+	background: var(--sl-color-accent-low);
+}
+
+.cite--featured > p:first-of-type strong {
+	font-size: var(--sl-text-lg);
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.cite--featured .cite__meta {
+	color: var(--sl-color-gray-2);
+}
+
+.cite__badge {
+	margin-bottom: 0.35rem;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--sl-color-text-accent);
+}
+
+/* Topic tags on each publication card */
+.cite .cite__tags {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.3rem;
+	margin-top: 0.5rem;
+}
+
+.cite-tag {
+	padding: 0.05rem 0.55rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+	font: inherit;
+	font-size: 0.72rem;
+	line-height: 1.6;
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.cite-tag:hover,
+.cite-tag:focus-visible,
+.cite-tag[aria-pressed='true'] {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-text-accent);
+}
+
+.cite-tag--population {
+	border-color: transparent;
+	background: var(--sl-color-accent-low);
+	color: var(--sl-color-accent-high);
+}
+
+.cite-tag--preprint {
+	border-style: dashed;
+	color: var(--sl-color-gray-3);
+	cursor: default;
+}
+
+.cite-tag--preprint:hover {
+	border-color: var(--sl-color-gray-5);
+	color: var(--sl-color-gray-3);
 }
 
 /* Repository metrics grid (overview/metrics) */
@@ -1209,6 +1539,12 @@ site-search button[data-open-modal] kbd {
 	--um-ink: var(--sl-color-white);
 	--um-ink-secondary: var(--sl-color-gray-2);
 	--um-landmass: var(--sl-color-gray-6);
+	/* Choropleth ramp: dim to bright on dark backgrounds. */
+	--um-map-0: #2e4320;
+	--um-map-1: #3f6424;
+	--um-map-2: #578a2a;
+	--um-map-3: #7cb33a;
+	--um-map-4: #b4e070;
 
 	display: flex;
 	flex-direction: column;
@@ -1222,6 +1558,12 @@ site-search button[data-open-modal] kbd {
 	--um-series-wash: rgba(106, 163, 41, 0.12);
 	--um-surface: #fff;
 	--um-landmass: #f0efec;
+	/* Choropleth ramp: light to dark on light backgrounds. */
+	--um-map-0: #dcecc4;
+	--um-map-1: #b2d585;
+	--um-map-2: #82b64a;
+	--um-map-3: #568a26;
+	--um-map-4: #315a16;
 }
 
 .user-metrics {
