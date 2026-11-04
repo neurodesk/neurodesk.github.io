@@ -42,12 +42,13 @@ for your first trial.
 
 ## Install the prototype helper
 
-Download the helper from the specific commit that introduced the prototype:
+Download the helper from the tested recovery-fix commit
+([Neurodesktop PR #1263](https://github.com/neurodesk/neurodesktop/pull/1263)):
 
 ```bash
 mkdir -p "$HOME/.local/share/neurodesk"
 curl --fail --location \
-  https://raw.githubusercontent.com/neurodesk/neurodesktop/a8f835d9127e027c66b16e9fd037919f04014452/config/jupyter/uv_kernel_prototype.py \
+  https://raw.githubusercontent.com/neurodesk/neurodesktop/587c607c7d4f10727b95bfe118f26197bf9c5917/config/jupyter/uv_kernel_prototype.py \
   --output "$HOME/.local/share/neurodesk/uv-kernel-prototype.py"
 ```
 
@@ -67,11 +68,14 @@ This creates or updates:
 - `pyproject.toml`, which declares the project's dependencies.
 - `uv.lock`, which records the resolved package versions.
 - `.venv`, which contains the project's Python environment.
+- `.neurodesk_uv_prototype.json`, a local ownership record beside `.venv`.
 - A user kernel registration named **Python (uv prototype: demo)**.
 
 The helper records `ipykernel` as a development dependency. A new project uses
 version 6.31.0, the compatibility version selected for this prototype. Running
-`init` again reuses the registration rather than creating a duplicate.
+`init` again reuses the registration rather than creating a duplicate. Existing
+projects without `uv.lock` get a lockfile, including projects that already declare
+ipykernel.
 
 Open or create a notebook in the analysis folder. Click its kernel name and select
 **Python (uv prototype: demo)**. If it is not listed, reload JupyterLab and reopen
@@ -116,7 +120,11 @@ workflow needs software distributed through those systems.
 
 Keep your notebooks, `pyproject.toml`, and `uv.lock` together, and commit the latter
 two files if you use Git. Do not commit `.venv`; it can be recreated and is tied to
-its filesystem location. Kernel registration is local to your Neurodesktop user
+its filesystem location. Keep `.neurodesk_uv_prototype.json` with the folder when moving it. This record
+contains a local absolute path; keep it out of version control. It lives outside
+`.venv` so uv can recreate the environment without losing ownership information.
+
+Kernel registration is local to your Neurodesktop user
 and is not carried by the notebook or lockfile.
 
 Preserve the helper and Jupyter's user data directory across container replacement,
@@ -134,6 +142,32 @@ uv sync --project "$HOME/analyses/demo" --locked --group dev
 
 `--locked` fails if the manifest and lockfile disagree. Prefer `uv add` for normal
 package changes so both files stay in step.
+
+## Upgrade an older prototype installation
+
+If you installed the original helper, repeat the download command above to replace
+it at the same path. Shut down affected notebook kernels, then run `init` on each
+project at its current location to migrate the ownership record:
+
+```bash
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  init "$HOME/analyses/demo"
+```
+
+If uv recreated `.venv` after an interpreter change and the original helper now
+reports **Existing .venv is unmanaged**, the updated helper can recover using the
+project's existing kernel registration. Run `rebuild` with the updated helper at
+the original project path before moving the folder or removing its registration:
+
+```bash
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  rebuild "$HOME/analyses/demo"
+```
+
+Recovery requires either a prototype ownership record or a matching registration,
+and the existing environment must be uv-created. The helper continues to refuse
+unmanaged and symlinked environments. Do not remove ownership records as a
+troubleshooting step.
 
 ## Rebuild or move an environment
 
@@ -174,6 +208,10 @@ registrations continue to refer to the old path until removed.
   remove "$HOME/analyses/demo"
 ```
 
-This removes only the kernel registration. It retains notebooks, dependency files,
+If no registration matches the path, the command reports **No prototype
+registration** and exits with status 1. Check the old path after a move rather than
+assuming its kernel was removed.
+
+A successful removal deletes only the kernel registration. It retains notebooks, dependency files,
 and `.venv`. Switch affected notebooks to another kernel. If you no longer use any
 prototype kernels, you can also remove the downloaded helper.
