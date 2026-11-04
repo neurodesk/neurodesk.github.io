@@ -1,0 +1,179 @@
+---
+title: Python notebook environments with uv
+description: Try an isolated, reproducible Python environment for each analysis folder in Neurodesktop.
+sidebar:
+  label: Python environments (uv prototype)
+  order: 8
+---
+
+Use a separate Python environment for an analysis when its notebooks need their own
+package versions. The uv prototype creates an environment in your analysis folder
+and registers it as a kernel you can select in JupyterLab. Several notebooks in the
+same folder can share that environment.
+
+:::caution[Experimental, opt-in feature]
+The helper is not preinstalled in Neurodesktop. These instructions install the
+prototype introduced in [Neurodesktop PR #1259](https://github.com/neurodesk/neurodesktop/pull/1259).
+It does not replace the default Python kernel, Conda environments, or Neurodesk's
+containerised tools. There is no automatic kernel selection or folder-menu action.
+:::
+
+## Before you start
+
+Open a **Terminal** in Neurodesktop's JupyterLab and run the commands as your normal
+notebook user, without `sudo`. You need a recent Neurodesktop image with uv, the
+image's Python, and the Neurodesk kernel wrapper:
+
+```bash
+uv --version
+/opt/conda/bin/python -c 'import tomllib, jupyter_core'
+test -x /opt/neurodesktop/kernel_wrapper.sh
+```
+
+If a check fails, use a newer Neurodesktop image before trying the prototype.
+The helper requires Python 3.11 or newer. Initial setup and installing new packages
+need access to the package index.
+
+Choose a folder on [persistent storage](/getting-started/neurodesktop/storage/).
+Use an analysis subfolder, such as `~/analyses/demo`, rather than your home directory
+or the root of a mounted drive. The prototype refuses existing unmanaged `.venv`
+directories and projects inside uv workspaces; start with a fresh analysis folder
+for your first trial.
+
+## Install the prototype helper
+
+Download the helper from the specific commit that introduced the prototype:
+
+```bash
+mkdir -p "$HOME/.local/share/neurodesk"
+curl --fail --location \
+  https://raw.githubusercontent.com/neurodesk/neurodesktop/a8f835d9127e027c66b16e9fd037919f04014452/config/jupyter/uv_kernel_prototype.py \
+  --output "$HOME/.local/share/neurodesk/uv-kernel-prototype.py"
+```
+
+Keep this file at the same path while using its kernels. Each registration refers
+to this helper and the image's Python interpreter.
+
+## Create an environment and select its kernel
+
+```bash
+mkdir -p "$HOME/analyses/demo"
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  init "$HOME/analyses/demo"
+```
+
+This creates or updates:
+
+- `pyproject.toml`, which declares the project's dependencies.
+- `uv.lock`, which records the resolved package versions.
+- `.venv`, which contains the project's Python environment.
+- A user kernel registration named **Python (uv prototype: demo)**.
+
+The helper records `ipykernel` as a development dependency. A new project uses
+version 6.31.0, the compatibility version selected for this prototype. Running
+`init` again reuses the registration rather than creating a duplicate.
+
+Open or create a notebook in the analysis folder. Click its kernel name and select
+**Python (uv prototype: demo)**. If it is not listed, reload JupyterLab and reopen
+the kernel selector. Confirm the environment from a notebook cell:
+
+```python
+import sys
+print(sys.executable)
+```
+
+The path should end in `analyses/demo/.venv/bin/python`. Selecting a kernel does not
+move a notebook into that folder; save related notebooks alongside the project files.
+
+## Add Python packages
+
+In the JupyterLab terminal, run:
+
+```bash
+uv add --project "$HOME/analyses/demo" numpy nibabel
+```
+
+Restart the notebook kernel after changing packages. You can then import them in
+a cell:
+
+```python
+import numpy as np
+import nibabel as nib
+```
+
+Use `uv add` to keep dependency changes in `pyproject.toml` and `uv.lock`. The
+prototype does not install pip by default, so `%pip install` is not its supported
+package-management workflow. Ad hoc installations would not update the lockfile.
+
+Packages from Neurodesktop's default Python environment are not automatically
+available in this environment. For interactive widgets, add their Python packages
+(for example, `uv add --project "$HOME/analyses/demo" ipywidgets`). Neurodesk's
+kernel wrapper still initializes its tool/module paths when the kernel starts.
+Use [Conda](/edu/tutorials/programming/conda.html) or Neurodesk containers when your
+workflow needs software distributed through those systems.
+
+## Save and reproduce an analysis
+
+Keep your notebooks, `pyproject.toml`, and `uv.lock` together, and commit the latter
+two files if you use Git. Do not commit `.venv`; it can be recreated and is tied to
+its filesystem location. Kernel registration is local to your Neurodesktop user
+and is not carried by the notebook or lockfile.
+
+Preserve the helper and Jupyter's user data directory across container replacement,
+as well as your project folder. The default Jupyter data location is
+`~/.local/share/jupyter`; installations can override it. Keeping uv's cache and any
+uv-managed Python installations persistent also avoids repeated downloads.
+
+Kernel startup runs the prepared environment directly. It does not download
+packages, synchronize dependencies, or update the lockfile. After manually editing
+dependencies, synchronize explicitly before restarting your kernel:
+
+```bash
+uv sync --project "$HOME/analyses/demo" --locked --group dev
+```
+
+`--locked` fails if the manifest and lockfile disagree. Prefer `uv add` for normal
+package changes so both files stay in step.
+
+## Rebuild or move an environment
+
+:::caution[Shut down affected kernels first]
+Rebuild deletes and recreates the prototype-owned `.venv`. Stop every notebook
+kernel using it before running this command. The prototype does not check for
+active kernels for you.
+:::
+
+To recreate the environment from its existing manifest and lockfile:
+
+```bash
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  rebuild "$HOME/analyses/demo"
+```
+
+A rebuild needs both `pyproject.toml` and `uv.lock`. It can work offline if the
+required Python interpreter and packages are already available locally; a lockfile
+alone does not contain those packages.
+
+After moving the folder, rebuild at the **new** path and remove the **old** kernel
+registration. For example, after moving `demo` to `renamed-demo`:
+
+```bash
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  rebuild "$HOME/analyses/renamed-demo"
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  remove "$HOME/analyses/demo"
+```
+
+Select **Python (uv prototype: renamed-demo)** in each affected notebook. Old
+registrations continue to refer to the old path until removed.
+
+## Remove a registration
+
+```bash
+/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
+  remove "$HOME/analyses/demo"
+```
+
+This removes only the kernel registration. It retains notebooks, dependency files,
+and `.venv`. Switch affected notebooks to another kernel. If you no longer use any
+prototype kernels, you can also remove the downloaded helper.
