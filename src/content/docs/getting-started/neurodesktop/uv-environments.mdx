@@ -12,8 +12,8 @@ and registers it as a kernel you can select in JupyterLab. Several notebooks in 
 same folder can share that environment.
 
 :::caution[Experimental, opt-in feature]
-The helper is not preinstalled in Neurodesktop. These instructions install the
-prototype introduced in [Neurodesktop PR #1259](https://github.com/neurodesk/neurodesktop/pull/1259).
+The helper is included as `neurodesk-uv` in new Neurodesktop image builds.
+Older images need updating before this command is available.
 It does not replace the default Python kernel, Conda environments, or Neurodesk's
 containerised tools. There is no automatic kernel selection or folder-menu action.
 :::
@@ -25,13 +25,12 @@ notebook user, without `sudo`. You need a recent Neurodesktop image with uv, the
 image's Python, and the Neurodesk kernel wrapper:
 
 ```bash
+neurodesk-uv --help
 uv --version
-/opt/conda/bin/python -c 'import tomllib, jupyter_core'
-test -x /opt/neurodesktop/kernel_wrapper.sh
 ```
 
 If a check fails, use a newer Neurodesktop image before trying the prototype.
-The helper requires Python 3.11 or newer. Initial setup and installing new packages
+The helper uses the image's Python automatically. Initial setup and installing new packages
 need access to the package index.
 
 Choose a folder on [persistent storage](/getting-started/neurodesktop/storage/).
@@ -40,27 +39,11 @@ or the root of a mounted drive. The prototype refuses existing unmanaged `.venv`
 directories and projects inside uv workspaces; start with a fresh analysis folder
 for your first trial.
 
-## Install the prototype helper
-
-Download the helper from the tested recovery-fix commit
-([Neurodesktop PR #1263](https://github.com/neurodesk/neurodesktop/pull/1263)):
-
-```bash
-mkdir -p "$HOME/.local/share/neurodesk"
-curl --fail --location \
-  https://raw.githubusercontent.com/neurodesk/neurodesktop/587c607c7d4f10727b95bfe118f26197bf9c5917/config/jupyter/uv_kernel_prototype.py \
-  --output "$HOME/.local/share/neurodesk/uv-kernel-prototype.py"
-```
-
-Keep this file at the same path while using its kernels. Each registration refers
-to this helper and the image's Python interpreter.
-
 ## Create an environment and select its kernel
 
 ```bash
 mkdir -p "$HOME/analyses/demo"
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  init "$HOME/analyses/demo"
+neurodesk-uv init "$HOME/analyses/demo"
 ```
 
 This creates or updates:
@@ -127,8 +110,8 @@ contains a local absolute path; keep it out of version control. It lives outside
 Kernel registration is local to your Neurodesktop user
 and is not carried by the notebook or lockfile.
 
-Preserve the helper and Jupyter's user data directory across container replacement,
-as well as your project folder. The default Jupyter data location is
+Preserve Jupyter's user data directory and your project folder across container
+replacement. The helper is supplied by the image. The default Jupyter data location is
 `~/.local/share/jupyter`; installations can override it. Keeping uv's cache and any
 uv-managed Python installations persistent also avoids repeated downloads.
 
@@ -145,14 +128,17 @@ package changes so both files stay in step.
 
 ## Upgrade an older prototype installation
 
-If you installed the original helper, repeat the download command above to replace
-it at the same path. Shut down affected notebook kernels, then run `init` on each
-project at its current location to migrate the ownership record:
+If you previously downloaded the helper, first update to an image that provides
+`neurodesk-uv`. Shut down affected notebook kernels, then run `init` on each
+project at its current location. This updates its kernel registration to the
+installed command and migrates its ownership record:
 
 ```bash
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  init "$HOME/analyses/demo"
+neurodesk-uv init "$HOME/analyses/demo"
 ```
+
+Keep the downloaded helper until you have updated every project registration
+that uses it. You can then delete that downloaded file.
 
 If uv recreated `.venv` after an interpreter change and the original helper now
 reports **Existing .venv is unmanaged**, the updated helper can recover using the
@@ -160,8 +146,7 @@ project's existing kernel registration. Run `rebuild` with the updated helper at
 the original project path before moving the folder or removing its registration:
 
 ```bash
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  rebuild "$HOME/analyses/demo"
+neurodesk-uv rebuild "$HOME/analyses/demo"
 ```
 
 Recovery requires either a prototype ownership record or a matching registration,
@@ -180,8 +165,7 @@ active kernels for you.
 To recreate the environment from its existing manifest and lockfile:
 
 ```bash
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  rebuild "$HOME/analyses/demo"
+neurodesk-uv rebuild "$HOME/analyses/demo"
 ```
 
 A rebuild needs both `pyproject.toml` and `uv.lock`. It can work offline if the
@@ -192,10 +176,8 @@ After moving the folder, rebuild at the **new** path and remove the **old** kern
 registration. For example, after moving `demo` to `renamed-demo`:
 
 ```bash
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  rebuild "$HOME/analyses/renamed-demo"
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  remove "$HOME/analyses/demo"
+neurodesk-uv rebuild "$HOME/analyses/renamed-demo"
+neurodesk-uv remove "$HOME/analyses/demo"
 ```
 
 Select **Python (uv prototype: renamed-demo)** in each affected notebook. Old
@@ -204,8 +186,7 @@ registrations continue to refer to the old path until removed.
 ## Remove a registration
 
 ```bash
-/opt/conda/bin/python "$HOME/.local/share/neurodesk/uv-kernel-prototype.py" \
-  remove "$HOME/analyses/demo"
+neurodesk-uv remove "$HOME/analyses/demo"
 ```
 
 If no registration matches the path, the command reports **No prototype
@@ -213,5 +194,4 @@ registration** and exits with status 1. Check the old path after a move rather t
 assuming its kernel was removed.
 
 A successful removal deletes only the kernel registration. It retains notebooks, dependency files,
-and `.venv`. Switch affected notebooks to another kernel. If you no longer use any
-prototype kernels, you can also remove the downloaded helper.
+and `.venv`. Switch affected notebooks to another kernel.
