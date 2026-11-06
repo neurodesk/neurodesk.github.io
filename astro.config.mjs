@@ -15,6 +15,7 @@ export default defineConfig({
 		}),
 	},
 	redirects: {
+		'/getting-started/hosted/webapps': 'https://webapps.neurodesk.org/',
 		'/applications': '/overview/applications/',
 		// Pages that moved so the content tree mirrors the sidebar. /support/faq
 		// previously redirected the other way; the FAQ now lives at that URL, which

@@ -2534,3 +2534,47 @@ a.add-tool-button:hover {
 	}
 
 }
+
+/* Browser-native tools featured between the homepage badges and shortcuts. */
+.webapps-feature {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
+	align-items: center;
+	padding: 2rem;
+	margin: 1.5rem 0 2rem;
+	border: 1px solid var(--sl-color-accent);
+	border-radius: 0.5rem;
+	background: var(--sl-color-accent-low);
+}
+.webapps-feature h2 {
+	font-size: 1.8rem;
+	margin: 0 0 0.7rem;
+}
+.webapps-feature p { margin: 0.5rem 0 1rem; }
+.webapps-feature .webapps-feature__label {
+	color: var(--sl-color-accent-high);
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	text-transform: uppercase;
+}
+.webapps-feature__badge {
+	display: inline-block;
+	padding: 0.2rem 0.5rem;
+	margin-inline-end: 0.5rem;
+	border-radius: 0.25rem;
+	background: var(--sl-color-accent-high);
+	color: var(--sl-color-accent-low);
+}
+.webapps-feature .sl-link-button {
+	margin-top: 0.5rem;
+	border-radius: 0.5rem;
+}
+.sl-markdown-content .webapps-feature img {
+	margin: 0;
+	width: 100%;
+	border-radius: 0.3rem;
+}
+@media (max-width: 43.75rem) {
+	.webapps-feature { grid-template-columns: 1fr; padding: 1.5rem; }
+}
