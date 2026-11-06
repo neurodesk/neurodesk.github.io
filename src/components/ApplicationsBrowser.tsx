@@ -164,10 +164,16 @@ function AppCard({ app }: { app: GroupedApp }) {
                 rel="noopener noreferrer"
                 className="ab-doi-link"
               >
-                DOI
+                Container DOI
               </a>
             )}
           </div>
+        </DetailRow>
+
+        <DetailRow label="Tool citations">
+          <a href="/overview/how-to-cite-us/#citing-specific-tools">
+            Find the references for {app.name}
+          </a>
         </DetailRow>
 
         {hasMultiple && (
@@ -207,7 +213,7 @@ function AppCard({ app }: { app: GroupedApp }) {
                         rel="noopener noreferrer"
                         className="ab-doi-link"
                       >
-                        DOI
+                        Container DOI
                       </a>
                     )}
                   </div>
