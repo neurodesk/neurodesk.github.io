@@ -41,6 +41,7 @@ export const axes: Axis[] = [
 		label: 'Interface',
 		options: [
 			{ id: 'gui', label: 'Desktop' },
+			{ id: 'browser', label: 'Browser' },
 			{ id: 'cmd', label: 'Command line' },
 			{ id: 'container', label: 'Container' },
 			{ id: 'vscode', label: 'VS Code' },
@@ -65,8 +66,9 @@ export const constraints: Record<string, Constraint> = {
 	gui: { platform: ['local', 'hpc', 'cloud'] },
 	cmd: { platform: ['local', 'hpc', 'cloud'] },
 	vscode: { platform: ['local', 'hpc', 'cloud'] },
-	// ARM is local desktop only.
-	arm: { platform: ['local'], os: ['linux', 'macos'], interface: ['gui'] },
+	browser: { platform: ['local'] },
+	// ARM supports local desktops and browser-native apps.
+	arm: { platform: ['local'], os: ['linux', 'macos'], interface: ['gui', 'browser'] },
 };
 
 export const defaults: Record<AxisId, string> = {
@@ -79,7 +81,7 @@ export const defaults: Record<AxisId, string> = {
 /**
  * Axes that drive a Starlight synced-tab group. Keyed by tab LABEL TEXT, so
  * these must match the MDX exactly; SetupChooser.astro checks that at build
- * time. Values with no entry (container, vscode) have no tab group.
+ * time. Values with no entry (browser, container, vscode) have no tab group.
  */
 export const syncedTabs: Partial<
 	Record<AxisId, { syncKey: string; labels: Record<string, string> }>
@@ -112,6 +114,17 @@ export interface Outcome {
 
 /** Additive: every matching entry renders, so GPU and ARM layer extra cards. */
 export const outcomes: Outcome[] = [
+	{
+		id: 'webapps',
+		when: { interface: ['browser'], platform: ['local'] },
+		cards: [
+			{
+				title: 'Neurodesk Webapps',
+				description: 'Run individual imaging tools locally in your browser, without a desktop installation. Browser and GPU requirements vary by app.',
+				href: 'https://webapps.neurodesk.org/',
+			},
+		],
+	},
 	{
 		id: 'app',
 		when: { interface: ['gui'], platform: ['local'] },
@@ -300,7 +313,7 @@ export const outcomes: Outcome[] = [
 	},
 	{
 		id: 'arm-linux',
-		when: { processor: ['arm'], os: ['linux'] },
+		when: { processor: ['arm'], os: ['linux'], interface: ['gui'] },
 		cards: [
 			{
 				title: 'ARM64 on Linux',
@@ -312,7 +325,7 @@ export const outcomes: Outcome[] = [
 	},
 	{
 		id: 'arm-macos',
-		when: { processor: ['arm'], os: ['macos'] },
+		when: { processor: ['arm'], os: ['macos'], interface: ['gui'] },
 		cards: [
 			{
 				title: 'Apple Silicon',

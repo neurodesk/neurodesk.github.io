@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-import { Steps } from '@astrojs/starlight/components';
+import { Steps, LinkCard } from '@astrojs/starlight/components';
 
 Neurodesk Play provides access to our neuroimaging analysis environment directly through your web browser. This service allows you to:
 
@@ -17,6 +17,16 @@ Neurodesk Play provides access to our neuroimaging analysis environment directly
 :::note
 Neurodesk Play is free but comes with resource limits. For more intensive workloads, consider [installing Neurodesk locally](/getting-started/app/) or using one of our [other hosting options](/getting-started/hosted/).
 :::
+
+## Alternative: run a Webapp on your own computer
+
+For individual imaging tasks, Neurodesk Webapps run directly in your browser using your local computer. Play provides a complete desktop on a hosted server; Webapps let you open a tool without starting a Play session or installing Neurodesktop. Available tools include segmentation, registration and quality control. Browser and GPU requirements vary by app.
+
+<LinkCard
+	title="Browse Neurodesk Webapps"
+	description="Choose an imaging tool and run it locally in your browser."
+	href="https://webapps.neurodesk.org/"
+/>
 
 ## Launch Neurodesk Play
 
