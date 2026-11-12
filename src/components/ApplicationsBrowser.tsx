@@ -10,6 +10,40 @@ interface AppListEntry {
   openrecon?: boolean;
 }
 
+interface AppsJsonApp {
+  version: string;
+  image: string;
+  doi?: string;
+  license?: string[];
+  show_in_applist?: boolean;
+}
+
+interface AppsJsonTool {
+  apps: Record<string, AppsJsonApp>;
+  categories: string[];
+}
+
+function transformAppsJson(data: Record<string, AppsJsonTool>): AppListEntry[] {
+  const entries: AppListEntry[] = [];
+  const seen = new Set<string>();
+
+  for (const tool of Object.values(data)) {
+    for (const app of Object.values(tool.apps)) {
+      if (app.show_in_applist === false) continue;
+      const application = `${app.image}_${app.version}`;
+      if (seen.has(application)) continue;
+      seen.add(application);
+      entries.push({
+        application,
+        categories: tool.categories,
+        doi_url: app.doi,
+        license: app.license?.join(", "),
+      });
+    }
+  }
+  return entries;
+}
+
 interface AppVersion {
   version: string;
   buildDate: string;
@@ -236,13 +270,13 @@ export default function ApplicationsBrowser() {
   const [openreconOnly, setOpenreconOnly] = useState(false);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/applist.json`)
+    fetch("https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json")
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        setEntries(data.list || []);
+        setEntries(transformAppsJson(data));
         setLoading(false);
       })
       .catch((err) => {
