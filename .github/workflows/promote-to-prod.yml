@@ -55,27 +55,6 @@ jobs:
       - name: Test user metrics generator
         run: python -m unittest tests/test_write_user_metrics.py
 
-      - name: Generate applications list
-        env:
-          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
-          FAIL_ON_APPLIST_ERROR: ${{ vars.FAIL_ON_APPLIST_ERROR }}
-        run: |
-          if [ -z "$ZENODO_TOKEN" ]; then
-            echo "ZENODO_TOKEN is required for a production candidate" >&2
-            exit 1
-          fi
-
-          EXTRA_ARGS=()
-          case "${FAIL_ON_APPLIST_ERROR,,}" in
-            true|1|yes)
-              EXTRA_ARGS+=(--fail-on-error)
-              ;;
-          esac
-
-          python .github/workflows/write-app-json.py \
-            --zenodo_token "$ZENODO_TOKEN" \
-            "${EXTRA_ARGS[@]}"
-
       - name: Generate user metrics
         env:
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
@@ -102,10 +81,6 @@ jobs:
 
       - name: Build Astro production site
         run: pnpm build
-
-      - name: Verify applications data
-        run: |
-          node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('dist/data/applist.json','utf8'));const n=Array.isArray(d.list)?d.list.length:0;console.log('Applications:',n);if(n<=1)process.exit(1)"
 
       - name: Checkout NeurodeskEDU
         run: |

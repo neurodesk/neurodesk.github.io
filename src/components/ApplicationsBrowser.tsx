@@ -5,9 +5,43 @@ interface AppListEntry {
   categories: string[];
   doi?: string;
   doi_url?: string;
-  license?: string;
+  license?: string[];
   description?: string;
   openrecon?: boolean;
+}
+
+interface AppsJsonApp {
+  version: string;
+  image: string;
+  doi?: string;
+  license?: string[];
+  show_in_applist?: boolean;
+}
+
+interface AppsJsonTool {
+  apps: Record<string, AppsJsonApp>;
+  categories: string[];
+}
+
+function transformAppsJson(data: Record<string, AppsJsonTool>): AppListEntry[] {
+  const entries: AppListEntry[] = [];
+  const seen = new Set<string>();
+
+  for (const tool of Object.values(data)) {
+    for (const app of Object.values(tool.apps)) {
+      if (app.show_in_applist === false) continue;
+      const application = `${app.image}_${app.version}`;
+      if (seen.has(application)) continue;
+      seen.add(application);
+      entries.push({
+        application,
+        categories: tool.categories,
+        doi_url: app.doi,
+        license: app.license,
+      });
+    }
+  }
+  return entries;
 }
 
 interface AppVersion {
@@ -15,7 +49,7 @@ interface AppVersion {
   buildDate: string;
   doi?: string;
   doiUrl?: string;
-  license?: string;
+  license?: string[];
 }
 
 interface GroupedApp {
@@ -117,8 +151,7 @@ function AppCard({ app }: { app: GroupedApp }) {
   const [expanded, setExpanded] = useState(false);
   const latestVersion = app.versions[0];
   const hasMultiple = app.versions.length > 1;
-  // Collect any license from the versions (they typically share the same license)
-  const license = app.versions.find((v) => v.license)?.license;
+  const licenses = app.versions.find((v) => v.license?.length)?.license ?? [];
 
   return (
     <div className="ab-card">
@@ -147,9 +180,11 @@ function AppCard({ app }: { app: GroupedApp }) {
           </div>
         </DetailRow>
 
-        {license && (
+        {licenses.length > 0 && (
           <DetailRow label="License">
-            <Badge>{license}</Badge>
+            <div className="ab-badge-list">
+              {licenses.map((l) => <Badge key={l}>{l}</Badge>)}
+            </div>
           </DetailRow>
         )}
 
@@ -236,13 +271,13 @@ export default function ApplicationsBrowser() {
   const [openreconOnly, setOpenreconOnly] = useState(false);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/applist.json`)
+    fetch("https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json")
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        setEntries(data.list || []);
+        setEntries(transformAppsJson(data));
         setLoading(false);
       })
       .catch((err) => {

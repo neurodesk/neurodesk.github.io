@@ -1,13 +1,19 @@
 // Static shields.io endpoint badges, one per Neurodesk application:
 //   https://img.shields.io/endpoint?url=https://neurodesk.org/data/badges/<tool>.json
-// Generated at build time from public/data/applist.json, so the badge message
+// Generated at build time from the remote apps.json, so the badge message
 // always shows the newest container version listed on /overview/applications/.
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import type { APIRoute, GetStaticPaths } from 'astro';
 
-interface AppListEntry {
-	application: string;
+const APPS_JSON_URL = 'https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json';
+
+interface AppsJsonApp {
+	version: string;
+	image: string;
+	show_in_applist?: boolean;
+}
+
+interface AppsJsonTool {
+	apps: Record<string, AppsJsonApp>;
 }
 
 interface Latest {
@@ -15,30 +21,33 @@ interface Latest {
 	buildDate: string;
 }
 
-function latestVersions(): Map<string, Latest> {
-	const raw = readFileSync(join(process.cwd(), 'public', 'data', 'applist.json'), 'utf8');
-	const entries: AppListEntry[] = JSON.parse(raw).list ?? [];
+async function latestVersions(): Promise<Map<string, Latest>> {
+	const res = await fetch(APPS_JSON_URL);
+	if (!res.ok) throw new Error(`Failed to fetch apps.json: HTTP ${res.status}`);
+	const data: Record<string, AppsJsonTool> = await res.json();
 	const latest = new Map<string, Latest>();
 
-	for (const { application } of entries) {
-		// Same convention as ApplicationsBrowser: name_version_YYYYMMDD.
-		const parts = application.split('_');
-		if (parts.length < 3) continue;
-		const buildDate = parts[parts.length - 1];
-		const version = parts[parts.length - 2];
-		const name = parts.slice(0, -2).join('_');
-		// A malformed date would sort above real ones and hide the newest release.
-		if (!name || !version || !/^\d{8}$/.test(buildDate)) continue;
-		const current = latest.get(name);
-		if (!current || buildDate > current.buildDate) {
-			latest.set(name, { version, buildDate });
+	for (const tool of Object.values(data)) {
+		for (const app of Object.values(tool.apps)) {
+			if (app.show_in_applist === false) continue;
+			// image is "name_version", version (buildDate) is "YYYYMMDD"
+			const parts = app.image.split('_');
+			if (parts.length < 2) continue;
+			const semver = parts[parts.length - 1];
+			const name = parts.slice(0, -1).join('_');
+			const buildDate = app.version;
+			if (!name || !semver || !/^\d{8}$/.test(buildDate)) continue;
+			const current = latest.get(name);
+			if (!current || buildDate > current.buildDate) {
+				latest.set(name, { version: semver, buildDate });
+			}
 		}
 	}
 	return latest;
 }
 
-export const getStaticPaths: GetStaticPaths = () =>
-	Array.from(latestVersions(), ([tool, { version }]) => ({
+export const getStaticPaths: GetStaticPaths = async () =>
+	Array.from(await latestVersions(), ([tool, { version }]) => ({
 		params: { tool },
 		props: { version },
 	}));
