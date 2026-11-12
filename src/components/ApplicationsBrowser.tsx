@@ -1,5 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import type { AppListEntry } from "../lib/appsCatalog";
+import { jupyterNeurodeskVersion } from "../config/neurodesktop";
+
+const NEURODESK_REFERENCE =
+  "Renton, A.I., Dao, T.T., Johnstone, T., Civier, O., Sullivan, R. P., White, D. J., ... Narayanan, A. & Bollmann, S. Neurodesk: an accessible, flexible and portable data analysis environment for reproducible neuroimaging. Nat Methods (2024). https://doi.org/10.1038/s41592-023-02145-x";
 
 interface AppVersion {
   version: string;
@@ -11,6 +15,7 @@ interface AppVersion {
 interface GroupedApp {
   name: string;
   description?: string;
+  citation?: string;
   categories: string[];
   versions: AppVersion[];
   openrecon: boolean;
@@ -51,6 +56,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
       map.set(name, {
         name,
         description: entry.description,
+        citation: entry.citation,
         categories: [...entry.categories],
         versions: [versionEntry],
         openrecon: !!entry.openrecon,
@@ -78,6 +84,48 @@ function DetailRow({
       <span className="ab-detail-label">{label}</span>
       <div className="ab-detail-content">{children}</div>
     </div>
+  );
+}
+
+const CITATION_LINK = /(https?:\/\/[^\s<>"]+|\b10\.\d{4,9}\/[^\s<>"]+)/g;
+
+function linkify(text: string): React.ReactNode[] {
+  return text.split(CITATION_LINK).map((part, i) => {
+    if (i % 2 === 0) return part;
+    const target = part.replace(/[.,;:)\]]+$/, "");
+    const trailing = part.slice(target.length);
+    const href = target.startsWith("10.") ? `https://doi.org/${target}` : target;
+    return (
+      <span key={i}>
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {target}
+        </a>
+        {trailing}
+      </span>
+    );
+  });
+}
+
+function methodsText(app: GroupedApp): string {
+  const { version, buildDate } = app.versions[0];
+  const references = [app.citation, NEURODESK_REFERENCE].filter(Boolean);
+  return `${app.name} (v${version}, built ${buildDate}) was run in Neurodesk (v${jupyterNeurodeskVersion}, Renton et al., 2024).\n\nReferences:\n${references.join("\n\n")}`;
+}
+
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button className="ab-copy-btn" onClick={copy}>
+      {copied ? "Copied" : label}
+    </button>
   );
 }
 
@@ -144,9 +192,20 @@ function AppCard({ app }: { app: GroupedApp }) {
         </DetailRow>
 
         <DetailRow label="Tool citations">
-          <a href="/overview/how-to-cite-us/#citing-specific-tools">
-            Find the references for {app.name}
-          </a>
+          {app.citation && (
+            <div className="ab-citation">{linkify(app.citation)}</div>
+          )}
+          <div className="ab-citation-actions">
+            {app.citation && (
+              <CopyButton text={app.citation} label="Copy citation" />
+            )}
+            <CopyButton text={methodsText(app)} label="Copy methods text" />
+            <a href="/overview/how-to-cite-us/#citing-specific-tools">
+              {app.citation
+                ? "Citation guide"
+                : `Find the references for ${app.name}`}
+            </a>
+          </div>
         </DetailRow>
 
         {hasMultiple && (

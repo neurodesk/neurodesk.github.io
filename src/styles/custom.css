@@ -2222,7 +2222,8 @@ site-search button[data-open-modal] kbd {
 	color: var(--sl-color-black);
 }
 
-.ab-expand-btn {
+.ab-expand-btn,
+.ab-copy-btn {
 	font: inherit;
 	font-size: 0.8rem;
 	display: inline-flex;
@@ -2237,9 +2238,27 @@ site-search button[data-open-modal] kbd {
 	transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.ab-expand-btn:hover {
+.ab-expand-btn:hover,
+.ab-copy-btn:hover {
 	border-color: var(--sl-color-accent);
 	color: var(--sl-color-text);
+}
+
+.ab-citation {
+	white-space: pre-line;
+	overflow-wrap: anywhere;
+	margin-bottom: 0.4rem;
+}
+
+.ab-citation-actions {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.ab-citation-actions > * {
+	margin-top: 0;
 }
 
 .ab-chevron {

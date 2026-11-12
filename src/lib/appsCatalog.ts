@@ -23,6 +23,7 @@ export interface AppListEntry {
 	doi_url?: string;
 	license?: string[];
 	description?: string;
+	citation?: string;
 	openrecon?: boolean;
 }
 
@@ -40,6 +41,7 @@ interface FeedApp {
 }
 
 interface FeedTool extends ToolMetadata {
+	citation?: string;
 	apps: Record<string, FeedApp>;
 	categories: string[];
 }
@@ -67,8 +69,12 @@ export function parseAppsFeed(data: unknown): AppsFeed {
 		if (!isRecord(entry) || !isRecord(entry.apps) || !isStringArray(entry.categories)) {
 			throw new Error(`apps.json tool ${tool} needs an apps object and a categories list`);
 		}
-		if (!optional(entry.description, isString) || !optional(entry.openrecon, isBoolean)) {
-			throw new Error(`apps.json tool ${tool} has an invalid description or openrecon flag`);
+		if (
+			!optional(entry.description, isString) ||
+			!optional(entry.citation, isString) ||
+			!optional(entry.openrecon, isBoolean)
+		) {
+			throw new Error(`apps.json tool ${tool} has an invalid description, citation or openrecon flag`);
 		}
 		for (const [name, app] of Object.entries(entry.apps)) {
 			if (
@@ -102,6 +108,7 @@ export function toAppList(
 	for (const [tool, { apps, categories, ...feedMetadata }] of Object.entries(feed)) {
 		const description = feedMetadata.description || metadata[tool]?.description;
 		const openrecon = feedMetadata.openrecon ?? metadata[tool]?.openrecon;
+		const citation = feedMetadata.citation?.trim();
 		for (const app of Object.values(apps)) {
 			if (app.show_in_applist === false) continue;
 			const application = `${app.image}_${app.version}`;
@@ -118,6 +125,7 @@ export function toAppList(
 				...(app.doi ? { doi_url: app.doi } : {}),
 				...(app.license?.length ? { license: [...app.license] } : {}),
 				...(description ? { description } : {}),
+				...(citation ? { citation } : {}),
 				...(openrecon ? { openrecon } : {}),
 			});
 		}
