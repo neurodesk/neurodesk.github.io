@@ -5,7 +5,7 @@ interface AppListEntry {
   categories: string[];
   doi?: string;
   doi_url?: string;
-  license?: string;
+  license?: string[];
   description?: string;
   openrecon?: boolean;
 }
@@ -37,7 +37,7 @@ function transformAppsJson(data: Record<string, AppsJsonTool>): AppListEntry[] {
         application,
         categories: tool.categories,
         doi_url: app.doi,
-        license: app.license?.join(", "),
+        license: app.license,
       });
     }
   }
@@ -49,7 +49,7 @@ interface AppVersion {
   buildDate: string;
   doi?: string;
   doiUrl?: string;
-  license?: string;
+  license?: string[];
 }
 
 interface GroupedApp {
@@ -151,8 +151,7 @@ function AppCard({ app }: { app: GroupedApp }) {
   const [expanded, setExpanded] = useState(false);
   const latestVersion = app.versions[0];
   const hasMultiple = app.versions.length > 1;
-  // Collect any license from the versions (they typically share the same license)
-  const license = app.versions.find((v) => v.license)?.license;
+  const licenses = app.versions.find((v) => v.license?.length)?.license ?? [];
 
   return (
     <div className="ab-card">
@@ -181,9 +180,11 @@ function AppCard({ app }: { app: GroupedApp }) {
           </div>
         </DetailRow>
 
-        {license && (
+        {licenses.length > 0 && (
           <DetailRow label="License">
-            <Badge>{license}</Badge>
+            <div className="ab-badge-list">
+              {licenses.map((l) => <Badge key={l}>{l}</Badge>)}
+            </div>
           </DetailRow>
         )}
 
