@@ -50,6 +50,19 @@ test('a description in the feed wins over the snapshot', () => {
 	assert.equal(musclemap.description, 'From the feed');
 });
 
+test('every build of a tool carries its feed citation, and blank citations are dropped', () => {
+	const data = feed();
+	data.afni.citation = 'Cox RW (1996). AFNI. doi:10.1006/cbmr.1996.0014\n';
+	data.amico.citation = '   ';
+	const entries = toAppList(parseAppsFeed(data), metadata);
+	for (const entry of entries.filter((entry) => entry.name === 'afni')) {
+		assert.equal(entry.citation, 'Cox RW (1996). AFNI. doi:10.1006/cbmr.1996.0014');
+	}
+	for (const entry of entries.filter((entry) => entry.name !== 'afni')) {
+		assert.equal('citation' in entry, false);
+	}
+});
+
 test('OpenRecon tools are flagged and other tools are not', () => {
 	const flagged = list().filter((entry) => entry.openrecon).map((entry) => entry.name);
 	assert.deepEqual(flagged, ['musclemap']);
@@ -105,6 +118,7 @@ test('malformed feeds are rejected', () => {
 		['license not a list', (data) => ((data.afni.apps['afni 24.3.00'].license = 'GPL-3.0'), data)],
 		['non-boolean visibility', (data) => ((data.afni.apps['afni 24.3.00'].show_in_applist = 'no'), data)],
 		['non-string description', (data) => ((data.afni.description = 1), data)],
+		['non-string citation', (data) => ((data.afni.citation = ['x']), data)],
 	];
 	for (const [label, mutate] of cases) {
 		assert.throws(() => parseAppsFeed(mutate(feed())), Error, label);
