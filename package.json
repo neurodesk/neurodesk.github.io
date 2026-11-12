@@ -7,7 +7,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test \"tests/*.test.*\"",
+    "update:app-metadata": "node scripts/update-app-metadata.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.0",
@@ -22,5 +24,8 @@
     "react-dom": "^19.2.6",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.1"
   }
 }

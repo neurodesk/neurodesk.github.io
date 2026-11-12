@@ -66,6 +66,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run Node tests
+        run: pnpm test
+
       - name: Build with Astro
         run: npx astro build
 

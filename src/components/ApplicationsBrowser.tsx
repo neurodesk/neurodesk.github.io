@@ -1,53 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
-
-interface AppListEntry {
-  application: string;
-  categories: string[];
-  doi?: string;
-  doi_url?: string;
-  license?: string[];
-  description?: string;
-  openrecon?: boolean;
-}
-
-interface AppsJsonApp {
-  version: string;
-  image: string;
-  doi?: string;
-  license?: string[];
-  show_in_applist?: boolean;
-}
-
-interface AppsJsonTool {
-  apps: Record<string, AppsJsonApp>;
-  categories: string[];
-}
-
-function transformAppsJson(data: Record<string, AppsJsonTool>): AppListEntry[] {
-  const entries: AppListEntry[] = [];
-  const seen = new Set<string>();
-
-  for (const tool of Object.values(data)) {
-    for (const app of Object.values(tool.apps)) {
-      if (app.show_in_applist === false) continue;
-      const application = `${app.image}_${app.version}`;
-      if (seen.has(application)) continue;
-      seen.add(application);
-      entries.push({
-        application,
-        categories: tool.categories,
-        doi_url: app.doi,
-        license: app.license,
-      });
-    }
-  }
-  return entries;
-}
+import type { AppListEntry } from "../lib/appsCatalog";
 
 interface AppVersion {
   version: string;
   buildDate: string;
-  doi?: string;
   doiUrl?: string;
   license?: string[];
 }
@@ -58,24 +14,6 @@ interface GroupedApp {
   categories: string[];
   versions: AppVersion[];
   openrecon: boolean;
-}
-
-function parseApplication(entry: AppListEntry): {
-  name: string;
-  version: string;
-  buildDate: string;
-} {
-  const parts = entry.application.split("_");
-
-  // Format: name_version_YYYYMMDD — last 2 segments are version and build date
-  if (parts.length >= 3) {
-    const buildDateRaw = parts[parts.length - 1];
-    const version = parts[parts.length - 2];
-    const name = parts.slice(0, parts.length - 2).join("_");
-    const buildDate = formatDate(buildDateRaw);
-    return { name, version, buildDate };
-  }
-  return { name: entry.application, version: "", buildDate: "" };
 }
 
 function formatDate(raw: string): string {
@@ -89,13 +27,13 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
   const map = new Map<string, GroupedApp>();
 
   for (const entry of entries) {
-    const { name, version, buildDate } = parseApplication(entry);
+    const { name, version } = entry;
+    const buildDate = formatDate(entry.build_date);
     const existing = map.get(name);
 
     const versionEntry: AppVersion = {
       version,
       buildDate,
-      doi: entry.doi,
       doiUrl: entry.doi_url,
       license: entry.license,
     };
@@ -271,13 +209,13 @@ export default function ApplicationsBrowser() {
   const [openreconOnly, setOpenreconOnly] = useState(false);
 
   useEffect(() => {
-    fetch("https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json")
+    fetch(`${import.meta.env.BASE_URL}data/applist.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        setEntries(transformAppsJson(data));
+        setEntries(data.list);
         setLoading(false);
       })
       .catch((err) => {

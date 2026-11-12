@@ -32,6 +32,27 @@ pnpm preview
 `pnpm build` only builds this repository. [GitHub Actions](https://github.com/neurodesk/neurodesk.github.io/actions)
 assembles the other sections for deployment.
 
+Run the Node tests with `pnpm test` (Node.js 22.18 or newer, which runs TypeScript directly).
+
+## Application catalog
+
+The [applications page](https://neurodesk.org/overview/applications/), `/data/applist.json`
+and the `/data/badges/<tool>.json` version badges are built from the
+[apps.json feed](https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json) in
+[`src/lib/appsCatalog.ts`](src/lib/appsCatalog.ts). The build fails if the feed is
+unreachable, malformed or lists no applications, so the previous deployment keeps serving.
+
+The feed does not yet carry descriptions or OpenRecon flags. Until it does, they come from
+[`src/data/app-metadata.json`](src/data/app-metadata.json), generated from the
+[neurocontainers](https://github.com/neurodesk/neurocontainers) recipes. To refresh it, run:
+
+```bash
+pnpm update:app-metadata                       # clones neurocontainers into a temporary directory
+pnpm update:app-metadata ../neurocontainers    # or reads an existing checkout
+```
+
+Values in the feed take precedence over the snapshot.
+
 ## Repository structure
 
 | Path | Purpose |

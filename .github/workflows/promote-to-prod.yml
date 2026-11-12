@@ -79,6 +79,9 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run Node tests
+        run: pnpm test
+
       - name: Build Astro production site
         run: pnpm build
 
