@@ -1,0 +1,126 @@
+---
+title: The neurodesk command
+description: Use one command in a Neurodesktop terminal to cite tools, manage kernels, check the environment and run tests.
+sidebar:
+  label: neurodesk command
+  order: 7
+---
+
+Neurodesktop includes a `neurodesk` command for its helper tools. Run it in a
+JupyterLab or desktop terminal as your normal user:
+
+```bash
+neurodesk --help
+```
+
+To see the options of one command, add `--help`, for example
+`neurodesk cite --help`.
+
+:::note
+The `neurodesk` command is in new Neurodesktop image builds. If your terminal
+reports `neurodesk: command not found`, update your image, or use the older
+command names in the [table below](#older-command-names).
+:::
+
+## Analysis commands
+
+| Command | What it does |
+| --- | --- |
+| `neurodesk cite` | Writes a `CITATIONS.md` file for the Neurodesk tools you loaded. See [Generate a citation list](/overview/how-to-cite-us/#generate-a-citation-list-with-neurodesk-cite). |
+| `neurodesk kernel` | Registers the Python inside a tool container as a Jupyter kernel. |
+| `neurodesk uv` | Creates a Python environment and kernel for one analysis folder. See [Python environments with uv](/getting-started/neurodesktop/uv-environments/). |
+| `neurodesk jobs` | Sends an analysis to a remote Slurm cluster (experimental). See [Remote HPC jobs](/getting-started/neurodesktop/remote-jobs/). |
+
+### Use a tool container's Python in a notebook
+
+`neurodesk kernel` makes a notebook kernel that runs inside a Neurodesk tool
+container. Use it when a notebook needs the Python packages that ship with a
+tool, such as FSL's Python:
+
+```bash
+neurodesk kernel add fsl/6.0.7.16    # or a tool name, for its default version
+neurodesk kernel list
+neurodesk kernel remove fsl/6.0.7.16
+```
+
+Refresh JupyterLab, then select the new kernel in the notebook's kernel menu.
+To use another Python that the tool provides, add `--python`, for example
+`neurodesk kernel add fsl --python fslpython`.
+
+## Environment commands
+
+| Command | What it does |
+| --- | --- |
+| `neurodesk update` | Updates the Neurodesk application menu to the latest tool list. |
+| `neurodesk check` | Checks that CVMFS, the GPU, Slurm and T3 remote access work. |
+| `neurodesk info` | Shows the image version, CPU and memory limits, free storage, GPUs and the CVMFS server. |
+| `neurodesk test` | Runs the test suite that ships with the image. |
+| `neurodesk t3` | Sets up [T3 Code](/getting-started/agents/t3-code/) remote access through Tailscale. |
+
+### Check your environment
+
+Run all checks:
+
+```bash
+neurodesk check
+```
+
+Each check prints `PASS`, `FAIL` or `SKIP`. A check is skipped when the feature
+is not in use, for example when there is no NVIDIA GPU. To run some of the
+checks, name them:
+
+```bash
+neurodesk check cvmfs
+neurodesk check gpu slurm
+```
+
+| Check | What it tests |
+| --- | --- |
+| `cvmfs` | The Neurodesk CVMFS repository is mounted and lists modules. |
+| `gpu` | An NVIDIA GPU is visible. In a desktop terminal, it also tests OpenGL rendering. |
+| `slurm` | The Slurm scheduler answers and lists its partitions. |
+| `t3` | T3 Code remote access is set up correctly. |
+
+The command exits with status 1 when a check fails. When you ask for help in
+the [discussion forum](https://github.com/orgs/neurodesk/discussions), include
+the output of `neurodesk info` and `neurodesk check`.
+
+### Run the image tests
+
+`neurodesk test` runs the full test suite in `/opt/tests`. It takes some time,
+and some tests need network access, CVMFS or a running desktop. To run fewer
+tests, add [pytest options](https://docs.pytest.org/en/stable/how-to/usage.html):
+
+```bash
+neurodesk test -k cvmfs    # only tests whose names contain "cvmfs"
+neurodesk test -x          # stop at the first failure
+```
+
+## Commands for coding agents
+
+These commands are for AI coding agents that run analyses in Neurodesktop.
+The agent guidance in the image tells agents when to use them.
+
+| Command | What it does |
+| --- | --- |
+| `neurodesk agent preflight` | Shows the agent guidance revision, Lmod and the Slurm limits before an analysis. |
+| `neurodesk astra` | Publishes ASTRA analysis outputs (`publish`) and checks their recorded software versions (`check`). |
+| `neurodesk lightcone materialize` | Runs a Lightcone materialization on Slurm, outside `sbatch`. |
+
+## Older command names
+
+Each command was a separate tool before the `neurodesk` command existed. The
+older names still work, so you do not need to change your scripts.
+
+| Command | Older name |
+| --- | --- |
+| `neurodesk cite` | `neurodesk-cite` |
+| `neurodesk kernel` | `neurodesk-kernel` |
+| `neurodesk uv` | `neurodesk-uv` |
+| `neurodesk jobs` | `neurodesk-jobs` |
+| `neurodesk update` | `neurodesk-update` |
+| `neurodesk check gpu` | `neurodesktop-gpu-check` |
+| `neurodesk t3` | `t3_neurodesk_setup` |
+| `neurodesk agent preflight` | `neurodesk-agent-preflight` |
+| `neurodesk astra` | `neurodesk-astra-provenance` |
+| `neurodesk lightcone materialize` | `neurodesk-lc-materialize` |

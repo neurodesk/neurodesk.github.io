@@ -12,8 +12,10 @@ and registers it as a kernel you can select in JupyterLab. Several notebooks in 
 same folder can share that environment.
 
 :::caution[Experimental, opt-in feature]
-The helper is included as `neurodesk-uv` in new Neurodesktop image builds.
-Older images need updating before this command is available.
+The helper is included as `neurodesk uv` in new Neurodesktop image builds.
+Older images need updating before this command is available. Images built
+before the [`neurodesk` command](/getting-started/neurodesktop/neurodesk-cli/)
+name it `neurodesk-uv`.
 It does not replace the default Python kernel, Conda environments, or Neurodesk's
 containerised tools. There is no automatic kernel selection or folder-menu action.
 :::
@@ -25,7 +27,7 @@ notebook user, without `sudo`. You need a recent Neurodesktop image with uv, the
 image's Python, and the Neurodesk kernel wrapper:
 
 ```bash
-neurodesk-uv --help
+neurodesk uv --help
 uv --version
 ```
 
@@ -43,7 +45,7 @@ for your first trial.
 
 ```bash
 mkdir -p "$HOME/analyses/demo"
-neurodesk-uv init "$HOME/analyses/demo"
+neurodesk uv init "$HOME/analyses/demo"
 ```
 
 This creates or updates:
@@ -129,12 +131,12 @@ package changes so both files stay in step.
 ## Upgrade an older prototype installation
 
 If you previously downloaded the helper, first update to an image that provides
-`neurodesk-uv`. Shut down affected notebook kernels, then run `init` on each
+`neurodesk uv`. Shut down affected notebook kernels, then run `init` on each
 project at its current location. This updates its kernel registration to the
 installed command and migrates its ownership record:
 
 ```bash
-neurodesk-uv init "$HOME/analyses/demo"
+neurodesk uv init "$HOME/analyses/demo"
 ```
 
 Keep the downloaded helper until you have updated every project registration
@@ -146,7 +148,7 @@ project's existing kernel registration. Run `rebuild` with the updated helper at
 the original project path before moving the folder or removing its registration:
 
 ```bash
-neurodesk-uv rebuild "$HOME/analyses/demo"
+neurodesk uv rebuild "$HOME/analyses/demo"
 ```
 
 Recovery requires either a prototype ownership record or a matching registration,
@@ -165,7 +167,7 @@ active kernels for you.
 To recreate the environment from its existing manifest and lockfile:
 
 ```bash
-neurodesk-uv rebuild "$HOME/analyses/demo"
+neurodesk uv rebuild "$HOME/analyses/demo"
 ```
 
 A rebuild needs both `pyproject.toml` and `uv.lock`. It can work offline if the
@@ -176,8 +178,8 @@ After moving the folder, rebuild at the **new** path and remove the **old** kern
 registration. For example, after moving `demo` to `renamed-demo`:
 
 ```bash
-neurodesk-uv rebuild "$HOME/analyses/renamed-demo"
-neurodesk-uv remove "$HOME/analyses/demo"
+neurodesk uv rebuild "$HOME/analyses/renamed-demo"
+neurodesk uv remove "$HOME/analyses/demo"
 ```
 
 Select **Python (uv prototype: renamed-demo)** in each affected notebook. Old
@@ -186,7 +188,7 @@ registrations continue to refer to the old path until removed.
 ## Remove a registration
 
 ```bash
-neurodesk-uv remove "$HOME/analyses/demo"
+neurodesk uv remove "$HOME/analyses/demo"
 ```
 
 If no registration matches the path, the command reports **No prototype

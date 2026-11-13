@@ -6,7 +6,7 @@ sidebar:
   order: 9
 ---
 
-Use `neurodesk-jobs` from a Neurodesktop terminal to send a containerized analysis
+Use `neurodesk jobs` from a Neurodesktop terminal to send a containerized analysis
 to a remote Slurm cluster. DataLad transfers the selected inputs, software image,
 and results over SSH. You do not need Globus or a persistent cluster agent.
 
@@ -14,7 +14,9 @@ and results over SSH. You do not need Globus or a persistent cluster agent.
 This pilot is included in new Neurodesktop image builds. **The Bunya and Sherlock
 profiles are configuration templates, not validated site integrations.** Complete
 the site checks below with synthetic or public data before using research data.
-There is no graphical job submission interface.
+There is no graphical job submission interface. Images built before the
+[`neurodesk` command](/getting-started/neurodesktop/neurodesk-cli/) name it
+`neurodesk-jobs`.
 :::
 
 The workflow is:
@@ -34,7 +36,7 @@ Open a **Terminal** in Neurodesktop's JupyterLab as your normal notebook user,
 without `sudo`, and check:
 
 ```bash
-neurodesk-jobs --help
+neurodesk jobs --help
 datalad --version
 git annex version
 ```
@@ -103,8 +105,8 @@ Configure SSH using the current
 Keep passwords and private keys out of the profile. Authenticate interactively:
 
 ```bash
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" connect
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" doctor
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" connect
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" doctor
 ```
 
 `connect` opens SSH connections for subsequent commands to reuse, including after
@@ -178,7 +180,7 @@ scientific expectations pass. It should check more than file existence.
 Prepare the run, replacing the SIF path with your actual image:
 
 ```bash
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" prepare \
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" prepare \
   --dataset "$PROJECT/dataset" \
   --image /absolute/path/to/python.sif \
   --request "$PROJECT/request.json"
@@ -197,10 +199,10 @@ Copy the `run_id` returned by `prepare`:
 
 ```bash
 RUN_ID=REPLACE_WITH_RUN_ID
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" stage "$RUN_ID"
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" submit "$RUN_ID"
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" status "$RUN_ID"
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" logs "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" stage "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" submit "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" status "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" logs "$RUN_ID"
 ```
 
 `stage` transfers the snapshot over SSH. `submit` asks Slurm to schedule it; a job
@@ -211,7 +213,7 @@ attempt. Submitted jobs do not need the desktop to stay open.
 To request cancellation, run this separately:
 
 ```bash
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" cancel "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" cancel "$RUN_ID"
 ```
 
 Check `status` afterwards: cancellation is not complete until Slurm confirms it.
@@ -236,8 +238,8 @@ because some output files exist.
 After the job completes, reconnect if needed, then run:
 
 ```bash
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" collect "$RUN_ID"
-neurodesk-jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" archive "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" collect "$RUN_ID"
+neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" archive "$RUN_ID"
 ```
 
 Collection verifies the result content and execution inputs. Results are under
@@ -254,7 +256,7 @@ can be archived even after cluster accounting expires.
 Use the archive path returned by `archive` to restore to a new directory:
 
 ```bash
-neurodesk-jobs restore /mounted/archive/neurodesk-RUN-ATTEMPT.tar.gz "$PROJECT/restored"
+neurodesk jobs restore /mounted/archive/neurodesk-RUN-ATTEMPT.tar.gz "$PROJECT/restored"
 ```
 
 Restoration needs DataLad, Git, and git-annex, but no cluster connection or original
