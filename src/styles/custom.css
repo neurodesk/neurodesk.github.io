@@ -2604,8 +2604,9 @@ a.add-tool-button:hover {
    content grow into the freed space, and centre it in what is left. Pages
    without a TOC (see MIN_TOC_HEADINGS in src/starlightRouteData.ts) are mostly
    short pages or wide widgets like the applications browser, so they get
-   Starlight's full-width cap. Unlayered, so these beat starlight.core. */
-@media (min-width: 72rem) {
+   Starlight's full-width cap. Screen only: print.css already reclaims the
+   TOC space for paper. Unlayered, so these beat starlight.core. */
+@media screen and (min-width: 72rem) {
 	:root {
 		--nd-toc-width: 15rem;
 		--sl-content-width: 56rem;
