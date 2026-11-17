@@ -2597,3 +2597,30 @@ a.add-tool-button:hover {
 @media (max-width: 43.75rem) {
 	.webapps-feature { grid-template-columns: 1fr; padding: 1.5rem; }
 }
+
+/* Desktop column layout. Starlight caps content at 45rem and gives the "On this
+   page" column everything else, half the spare width, so on a wide screen the
+   column is mostly empty. Instead give the TOC a fixed narrow column, let the
+   content grow into the freed space, and centre it in what is left. Pages
+   without a TOC (see MIN_TOC_HEADINGS in src/starlightRouteData.ts) are mostly
+   short pages or wide widgets like the applications browser, so they get
+   Starlight's full-width cap. Unlayered, so these beat starlight.core. */
+@media (min-width: 72rem) {
+	:root {
+		--nd-toc-width: 15rem;
+		--sl-content-width: 56rem;
+	}
+
+	:root:not([data-has-toc]) {
+		--sl-content-width: 67.5rem;
+	}
+
+	.right-sidebar-container {
+		width: var(--nd-toc-width);
+	}
+
+	[data-has-sidebar][data-has-toc] .main-pane {
+		--sl-content-margin-inline: auto;
+		width: calc(100% - var(--nd-toc-width));
+	}
+}
