@@ -22,11 +22,21 @@ interface GroupedApp {
   arm64: boolean;
 }
 
-// arm64 builds are published as separate `<tool>_arm64` tools in apps.json.
+// arm64 builds are published either as separate `<tool>_arm64` tools or as
+// `<version>_arm64` builds of an unsuffixed tool, so classify each build.
 const ARM64_SUFFIX = "_arm64";
 
-function isArm64(name: string): boolean {
-  return name.endsWith(ARM64_SUFFIX);
+function isArm64Build(entry: AppListEntry): boolean {
+  return (
+    entry.name.endsWith(ARM64_SUFFIX) || entry.version.endsWith(ARM64_SUFFIX)
+  );
+}
+
+/** Card name for a build: `amico_arm64` and `amico` share the `amico` card. */
+function displayName(name: string): string {
+  return name.endsWith(ARM64_SUFFIX)
+    ? name.slice(0, -ARM64_SUFFIX.length)
+    : name;
 }
 
 function formatDate(raw: string): string {
@@ -36,11 +46,12 @@ function formatDate(raw: string): string {
   return raw;
 }
 
-function groupApps(entries: AppListEntry[]): GroupedApp[] {
+function groupApps(entries: AppListEntry[], arm64: boolean): GroupedApp[] {
   const map = new Map<string, GroupedApp>();
 
   for (const entry of entries) {
-    const { name, version } = entry;
+    const { version } = entry;
+    const name = displayName(entry.name);
     const buildDate = formatDate(entry.build_date);
     const existing = map.get(name);
 
@@ -54,6 +65,8 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
     if (existing) {
       existing.versions.push(versionEntry);
       if (entry.openrecon) existing.openrecon = true;
+      if (!existing.description) existing.description = entry.description;
+      if (!existing.citation) existing.citation = entry.citation;
       // Merge categories
       for (const cat of entry.categories) {
         if (!existing.categories.includes(cat)) {
@@ -68,7 +81,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
         categories: [...entry.categories],
         versions: [versionEntry],
         openrecon: !!entry.openrecon,
-        arm64: isArm64(name),
+        arm64,
       });
     }
   }
@@ -295,12 +308,14 @@ export default function ApplicationsBrowser() {
       });
   }, []);
 
-  const grouped = useMemo(() => groupApps(entries), [entries]);
-
   // Apps for the selected architecture: x86 by default, arm64 when ticked.
   const available = useMemo(
-    () => grouped.filter((app) => app.arm64 === arm64Only),
-    [grouped, arm64Only],
+    () =>
+      groupApps(
+        entries.filter((entry) => isArm64Build(entry) === arm64Only),
+        arm64Only,
+      ),
+    [entries, arm64Only],
   );
 
   const allCategories = useMemo(() => {
@@ -312,6 +327,15 @@ export default function ApplicationsBrowser() {
     }
     return Array.from(cats).sort();
   }, [available]);
+
+  // Drop selected categories the current architecture does not offer, so no
+  // hidden filter stays active after switching.
+  useEffect(() => {
+    setSelectedCategories((prev) => {
+      const kept = prev.filter((cat) => allCategories.includes(cat));
+      return kept.length === prev.length ? prev : kept;
+    });
+  }, [allCategories]);
 
   const filtered = useMemo(() => {
     return available.filter((app) => {
