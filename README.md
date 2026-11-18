@@ -38,7 +38,7 @@ Run the Node tests with `pnpm test` (Node.js 22.18 or newer, which runs TypeScri
 
 The [applications page](https://neurodesk.org/overview/applications/), `/data/applist.json`
 and the `/data/badges/<tool>.json` version badges are built from the
-[apps.json feed](https://apps-json.scigetorg.workers.dev/neuroimaging/apps.json) in
+[apps.json feed](https://apps-catalog.scigetorg.workers.dev/neuroimaging/apps.json) in
 [`src/lib/appsCatalog.ts`](src/lib/appsCatalog.ts). The build fails if the feed is
 unreachable, malformed or lists no applications, so the previous deployment keeps serving.
 
