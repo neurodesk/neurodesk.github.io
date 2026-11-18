@@ -19,6 +19,24 @@ interface GroupedApp {
   categories: string[];
   versions: AppVersion[];
   openrecon: boolean;
+  arm64: boolean;
+}
+
+// arm64 builds are published either as separate `<tool>_arm64` tools or as
+// `<version>_arm64` builds of an unsuffixed tool, so classify each build.
+const ARM64_SUFFIX = "_arm64";
+
+function isArm64Build(entry: AppListEntry): boolean {
+  return (
+    entry.name.endsWith(ARM64_SUFFIX) || entry.version.endsWith(ARM64_SUFFIX)
+  );
+}
+
+/** Card name for a build: `amico_arm64` and `amico` share the `amico` card. */
+function displayName(name: string): string {
+  return name.endsWith(ARM64_SUFFIX)
+    ? name.slice(0, -ARM64_SUFFIX.length)
+    : name;
 }
 
 function formatDate(raw: string): string {
@@ -28,11 +46,12 @@ function formatDate(raw: string): string {
   return raw;
 }
 
-function groupApps(entries: AppListEntry[]): GroupedApp[] {
+function groupApps(entries: AppListEntry[], arm64: boolean): GroupedApp[] {
   const map = new Map<string, GroupedApp>();
 
   for (const entry of entries) {
-    const { name, version } = entry;
+    const { version } = entry;
+    const name = displayName(entry.name);
     const buildDate = formatDate(entry.build_date);
     const existing = map.get(name);
 
@@ -46,6 +65,8 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
     if (existing) {
       existing.versions.push(versionEntry);
       if (entry.openrecon) existing.openrecon = true;
+      if (!existing.description) existing.description = entry.description;
+      if (!existing.citation) existing.citation = entry.citation;
       // Merge categories
       for (const cat of entry.categories) {
         if (!existing.categories.includes(cat)) {
@@ -60,6 +81,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
         categories: [...entry.categories],
         versions: [versionEntry],
         openrecon: !!entry.openrecon,
+        arm64,
       });
     }
   }
@@ -147,6 +169,7 @@ function AppCard({ app }: { app: GroupedApp }) {
           {app.openrecon && (
             <span className="ab-badge ab-badge--openrecon">OpenRecon</span>
           )}
+          {app.arm64 && <span className="ab-badge ab-badge--arm64">arm64</span>}
         </div>
         <span className="ab-version-count">
           {app.versions.length} version{app.versions.length !== 1 ? "s" : ""}
@@ -266,6 +289,8 @@ export default function ApplicationsBrowser() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [openreconOnly, setOpenreconOnly] = useState(false);
+  // arm64 containers are hidden by default; ticking the filter shows only them.
+  const [arm64Only, setArm64Only] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/applist.json`)
@@ -283,20 +308,37 @@ export default function ApplicationsBrowser() {
       });
   }, []);
 
-  const grouped = useMemo(() => groupApps(entries), [entries]);
+  // Apps for the selected architecture: x86 by default, arm64 when ticked.
+  const available = useMemo(
+    () =>
+      groupApps(
+        entries.filter((entry) => isArm64Build(entry) === arm64Only),
+        arm64Only,
+      ),
+    [entries, arm64Only],
+  );
 
   const allCategories = useMemo(() => {
     const cats = new Set<string>();
-    for (const app of grouped) {
+    for (const app of available) {
       for (const cat of app.categories) {
         cats.add(cat);
       }
     }
     return Array.from(cats).sort();
-  }, [grouped]);
+  }, [available]);
+
+  // Drop selected categories the current architecture does not offer, so no
+  // hidden filter stays active after switching.
+  useEffect(() => {
+    setSelectedCategories((prev) => {
+      const kept = prev.filter((cat) => allCategories.includes(cat));
+      return kept.length === prev.length ? prev : kept;
+    });
+  }, [allCategories]);
 
   const filtered = useMemo(() => {
-    return grouped.filter((app) => {
+    return available.filter((app) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         const searchable = [
@@ -320,7 +362,7 @@ export default function ApplicationsBrowser() {
 
       return true;
     });
-  }, [grouped, searchQuery, selectedCategories, openreconOnly]);
+  }, [available, searchQuery, selectedCategories, openreconOnly]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -368,7 +410,7 @@ export default function ApplicationsBrowser() {
         </div>
 
         <div className="ab-result-count">
-          {filtered.length} of {grouped.length} applications
+          {filtered.length} of {available.length} applications
         </div>
       </div>
 
@@ -392,6 +434,23 @@ export default function ApplicationsBrowser() {
                   <div className="tooltip">
                     &#9432;
                     <span className="tooltiptext">Runs on MRI scanners</span>
+                  </div>
+                </div>
+              </label>
+              <label className="ab-filter-item">
+                <input
+                  type="checkbox"
+                  checked={arm64Only}
+                  onChange={() => setArm64Only((v) => !v)}
+                />
+                <div className="ab-openrecon-badge">
+                  <span className="ab-badge ab-badge--arm64">arm64</span>
+                  <div className="tooltip">
+                    &#9432;
+                    <span className="tooltiptext">
+                      Show only containers built for ARM processors (e.g. Apple
+                      Silicon)
+                    </span>
                   </div>
                 </div>
               </label>
@@ -444,6 +503,7 @@ export default function ApplicationsBrowser() {
                     setSearchQuery("");
                     setSelectedCategories([]);
                     setOpenreconOnly(false);
+                    setArm64Only(false);
                   }}
                 >
                   Clear filters
