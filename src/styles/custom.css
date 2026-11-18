@@ -2608,7 +2608,10 @@ a.add-tool-button:hover {
    TOC space for paper. Unlayered, so these beat starlight.core. */
 @media screen and (min-width: 72rem) {
 	:root {
-		--nd-toc-width: 15rem;
+		/* 16rem of text plus padding. Measured over every TOC entry on the
+		   site: 87% fit on one line; wider buys little (17rem: 90%, 20rem:
+		   95%) and the longest needs 38rem, so long entries have to wrap. */
+		--nd-toc-width: 18rem;
 		--sl-content-width: 56rem;
 	}
 
@@ -2616,8 +2619,17 @@ a.add-tool-button:hover {
 		--sl-content-width: 67.5rem;
 	}
 
-	.right-sidebar-container {
+	/* The fixed panel is otherwise viewport-wide and its text box is sized to
+	   Starlight's own sidebar width, so entries ran past the column edge and
+	   were clipped instead of wrapping. Size both to the column. */
+	.right-sidebar-container,
+	.right-sidebar {
 		width: var(--nd-toc-width);
+	}
+
+	.right-sidebar-panel .sl-container {
+		width: auto;
+		max-width: none;
 	}
 
 	[data-has-sidebar][data-has-toc] .main-pane {
