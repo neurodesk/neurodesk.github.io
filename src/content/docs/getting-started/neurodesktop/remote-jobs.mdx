@@ -1,294 +1,167 @@
 ---
 title: Submit jobs to a remote HPC
-description: Use DataLad and SSH to stage an analysis, submit it to Slurm, and retrieve verified results from Neurodesktop.
+description: Send a containerized analysis from Neurodesktop to a Slurm cluster over SSH and retrieve verified results.
 sidebar:
   label: Remote HPC jobs
   order: 9
 ---
 
-Use `neurodesk jobs` from a Neurodesktop terminal to send a containerized analysis
-to a remote Slurm cluster. DataLad transfers the selected inputs, software image,
-and results over SSH. You do not need Globus or a persistent cluster agent.
+Use `neurodesk jobs` in a Neurodesktop terminal to run a containerized analysis
+on a Slurm cluster, such as UQ's Bunya. The tool sends your inputs and Apptainer
+image over SSH, submits the job, and brings back checksummed results as a
+DataLad dataset. The cluster only needs SSH, Python 3, Slurm, and Apptainer.
+You do not need DataLad or any other software installed there.
 
-:::caution[Experimental CLI]
-This pilot is included in new Neurodesktop image builds. **The Bunya and Sherlock
-profiles are configuration templates, not validated site integrations.** Complete
-the site checks below with synthetic or public data before using research data.
-There is no graphical job submission interface. Images built before the
-[neurodesk CLI](/getting-started/neurodesktop/neurodesk-cli/) name it
-`neurodesk-jobs`.
+:::caution[Experimental]
+This pilot has run end to end on Bunya with test data. Validate it with
+synthetic or public data before you use research data. Images built before
+November 2026 use an older version that needs a site profile file; update
+your image to follow this guide.
 :::
 
-The workflow is:
+## 1. Connect to the cluster
+
+Add the cluster to `~/.ssh/config` in Neurodesktop. For Bunya:
 
 ```text
-Save inputs → prepare snapshot → stage over SSH → submit to Slurm
-  → run and validate → publish on the cluster → collect → archive
+Host bunya
+  HostName bunya.rcc.uq.edu.au
+  User YOUR_UQ_USERNAME
 ```
 
-Accepted jobs can finish and publish while Neurodesktop is closed. Staging and
-collection need an active SSH connection. Archiving runs in Neurodesktop after
-collection and can then work without a cluster connection.
-
-## Before you start
-
-Open a **Terminal** in Neurodesktop's JupyterLab as your normal notebook user,
-without `sudo`, and check:
+Check that `ssh bunya` works in a terminal; see the
+[UQ RCC documentation](https://docs.hpc.rcc.uq.edu.au/) for SSH keys. Then
+connect:
 
 ```bash
-neurodesk jobs --help
-datalad --version
-git annex version
+neurodesk jobs connect bunya
 ```
 
-If the helper is missing, update to an image that includes
-[the remote jobs feature](https://github.com/neurodesk/neurodesktop/pull/1274).
-DataLad also needs a configured Git user name and email address.
+Approve the MFA prompt if the cluster asks; on Bunya, approve the Okta push
+with the number shown. `connect` finds Python, your home directory, and your
+scratch directory on the cluster by itself, and saves them. The login lasts
+4 hours. If a later command says the connection has expired, run
+`neurodesk jobs connect` again.
 
-You need:
+## 2. Prepare an analysis
 
-- An SSH account and Slurm allocation on the cluster, including working scheduler
-  accounting through `sacct`.
-- Python 3.10 or newer, Git, git-annex, DataLad, Slurm commands, and Apptainer at
-  the cluster locations configured in your profile. Compute nodes need access
-  to the worker tools and shared storage.
-- A saved, clean DataLad dataset and a locally readable
-  [Apptainer/Singularity SIF image](/getting-started/neurocontainers/singularity/)
-  containing your analysis software. The desktop's installed packages are not
-  automatically available inside that image.
-- Persistent client storage for the profile, job records, and collected data;
-  shared cluster storage for job records and temporary data; and a persistent
-  archive destination mounted on the client.
-
-Choose a project directory on
-[persistent storage](/getting-started/neurodesktop/storage/). The examples assume
-`/neurodesktop-storage` is a persistent mount in your installation; change this
-path if your installation uses another location.
+This example calculates the mean of three numbers and checks the answer.
+Create a DataLad dataset with the inputs and scripts:
 
 ```bash
-PROJECT=/neurodesktop-storage/remote-jobs-demo
-mkdir -p "$PROJECT"
-```
+PROJECT=~/remote-jobs-demo
+mkdir -p "$PROJECT" && cd "$PROJECT"
+datalad create dataset
+printf '2\n4\n6\n' > dataset/numbers.txt
 
-## Configure the cluster
-
-Copy a template to your project:
-
-```bash
-cp /opt/neurodesktop/remote-jobs/profiles/bunya.json "$PROJECT/site.json"
-```
-
-For Sherlock, copy `sherlock.json` from the same directory instead. Edit the copy
-and replace every placeholder. The CLI rejects incomplete profiles.
-
-| Profile field | What to configure |
-| --- | --- |
-| `name` | A short name for this site profile. |
-| `host`, `transfer_host` | Aliases in your `~/.ssh/config`. They may be the same. A transfer host must permit Git and DataLad remote commands, not only SFTP. |
-| `state_root` | A private, shared **persistent cluster directory** for submission records and helpers. It must work across login nodes; do not use node-local `/tmp` or purgeable scratch. |
-| `store_root` | A private DataLad RIA directory store at the same absolute path on command, transfer, and compute nodes. RIA stores Git metadata and file content without a separate server. |
-| `work_root` | A private cluster directory for job workspaces. Keep it separate from both the store and job records. |
-| `archive_root` | A persistent directory **mounted inside Neurodesktop**, with enough space for selected inputs, the SIF, and results. A remote-only cluster path is insufficient. |
-| `path`, `python`, `apptainer` | Explicit cluster tool paths. The helper does not assume modules or CVMFS are configured. Git and git-annex must also be discoverable in the transfer host's noninteractive SSH environment. |
-| `resources` | Slurm `time`, `mem`, and `cpus-per-task`; optionally `account`, `partition`, `qos`, and `gres`. |
-| `scratch_retention_days` | The applicable retention window confirmed with your site. This setting does not prevent purging. |
-
-Use absolute paths in the JSON; shell variables such as `$HOME` are not expanded.
-The cluster state, store, and work directories must be separate, not nested.
-Confirm filesystem permissions, atomic directory operations across login nodes,
-quotas, and retention with your site. For Bunya, keep active Git/RIA work outside
-QRISdata and choose an archive destination allowed by your project's RDM policy.
-
-Configure SSH using the current
-[UQ RCC guidance](https://docs.hpc.rcc.uq.edu.au/) or
-[Sherlock connection guidance](https://www.sherlock.stanford.edu/docs/advanced-topics/connection/).
-Keep passwords and private keys out of the profile. Authenticate interactively:
-
-```bash
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" connect
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" doctor
-```
-
-`connect` opens SSH connections for subsequent commands to reuse, including after
-interactive MFA where supported. `doctor` checks login and transfer tools. It
-does **not** establish compute-node compatibility, successful MFA reuse throughout
-a transfer, or storage durability. Run `connect` again if authentication expires.
-Jobs receive no forwarded SSH agent.
-
-Keep the same profile and `--state` path for the whole run. Do not share one state
-directory among independent desktops or edit a run's profile after preparation.
-
-## Prepare an analysis
-
-The following small example calculates the mean of three numbers and checks the
-answer. Use a SIF containing `python3` for this example. Replace the sample scripts
-and validation criteria when preparing your own analysis.
-
-Create a new DataLad dataset and its three input files:
-
-```bash
-datalad create "$PROJECT/dataset"
-printf '2\n4\n6\n' > "$PROJECT/dataset/numbers.txt"
-
-cat > "$PROJECT/dataset/analyze.py" <<'PY'
-import json
-import math
+cat > dataset/analyze.py <<'PY'
+import json, math, sys
 from pathlib import Path
-import sys
-
 values = [float(line) for line in Path(sys.argv[1]).read_text().splitlines()]
-result = {"count": len(values), "mean": math.fsum(values) / len(values)}
-Path(sys.argv[2]).write_text(json.dumps(result))
+Path(sys.argv[2]).write_text(json.dumps({"count": len(values), "mean": math.fsum(values) / len(values)}))
 PY
 
-cat > "$PROJECT/dataset/validate.py" <<'PY'
-import json
-import math
+cat > dataset/validate.py <<'PY'
+import json, math, sys
 from pathlib import Path
-import sys
-
 result = json.loads(Path(sys.argv[1]).read_text())
-if result["count"] != 3 or not math.isclose(result["mean"], 4.0, abs_tol=1e-12):
+if result["count"] != 3 or not math.isclose(result["mean"], 4.0):
     raise SystemExit("Unexpected result")
 PY
 
-datalad save -d "$PROJECT/dataset" -m "Save remote job example"
+datalad save -d dataset -m "Remote job example"
 ```
 
-Save this request as `$PROJECT/request.json`, outside the input dataset:
+Get an Apptainer image that contains your software. This example only needs
+Python:
+
+```bash
+apptainer pull python.sif docker://python:3.12-slim
+```
+
+Describe the job in `request.json`, outside the dataset:
 
 ```json
 {
   "inputs": ["numbers.txt", "analyze.py", "validate.py"],
   "command": ["python3", "/inputs/analyze.py", "/inputs/numbers.txt", "/outputs/summary.json"],
   "validate": ["python3", "/inputs/validate.py", "/outputs/summary.json"],
-  "outputs": ["summary.json"]
+  "outputs": ["summary.json"],
+  "slurm": {"time": "00:10:00", "mem": "1G"}
 }
 ```
 
-Inputs and required outputs are exact relative file paths; directories and glob
-patterns are not supported. Include every script, template, and other file your
-analysis needs. Installed subdatasets and annexed files are supported; ordinary
-symlinks are rejected. Commands are argument lists, not shell snippets: put a
-pipeline in a saved script. Required outputs must be nonempty. Names including
-`execution.json`, `outcome.json`, and `worker.log` are reserved for job records.
+- `inputs` are exact file paths in the dataset; they appear read-only under
+  `/inputs`. Directories and wildcards are not supported.
+- `command` and `validate` are argument lists, not shell snippets. Put a
+  pipeline in a script.
+- The analysis writes to `/outputs`. Each listed output must be nonempty, and
+  `validate` must exit with status 0. Check the science, not just that the
+  file exists.
+- `slurm` is optional. The defaults are 1 hour, 4 GB, and 1 CPU. You can also
+  set `cpus-per-task`, `account`, `partition`, `qos`, and `gres`.
 
-The worker mounts the selected data at `/inputs` read-only and writes results to
-`/outputs`. Validation sees outputs read-only and must exit with status zero when
-scientific expectations pass. It should check more than file existence.
-
-Prepare the run, replacing the SIF path with your actual image:
-
-```bash
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" prepare \
-  --dataset "$PROJECT/dataset" \
-  --image /absolute/path/to/python.sif \
-  --request "$PROJECT/request.json"
-```
-
-Preparation saves a new snapshot with the selected input content, source Git
-histories, image, commands, and checksums. Only selected annexed content is
-included; Git bundles also retain the source repository histories and their
-Git-tracked file contents. The worker retrieves staged data from the cluster
-filesystem, rather than following upstream dataset URLs. Each run makes its own
-snapshot, so allow space for multiple copies of inputs and software.
-
-## Submit and monitor
-
-Copy the `run_id` returned by `prepare`:
+Freeze the inputs, scripts, and image into a run:
 
 ```bash
-RUN_ID=REPLACE_WITH_RUN_ID
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" stage "$RUN_ID"
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" submit "$RUN_ID"
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" status "$RUN_ID"
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" logs "$RUN_ID"
+neurodesk jobs prepare --dataset dataset --image python.sif --request request.json
 ```
 
-`stage` transfers the snapshot over SSH. `submit` asks Slurm to schedule it; a job
-ID means acceptance, not successful analysis. The worker verifies inputs before
-running, validates the analysis, and publishes a separate output dataset for each
-attempt. Submitted jobs do not need the desktop to stay open.
+This prints a `run_id`; use it in the following commands.
 
-To request cancellation, run this separately:
+## 3. Submit and monitor
 
 ```bash
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" cancel "$RUN_ID"
+RUN_ID=PASTE_THE_RUN_ID
+neurodesk jobs submit "$RUN_ID"
+neurodesk jobs status "$RUN_ID"
+neurodesk jobs logs "$RUN_ID"
 ```
 
-Check `status` afterwards: cancellation is not complete until Slurm confirms it.
+`submit` uploads the run, then submits it to Slurm. An image you used before
+is not uploaded again. The job runs even if you close Neurodesktop. In the
+`status` output, `scheduler.state` shows the Slurm state. Each attempt reaches
+`site-results-available` when its outputs have passed validation. To stop a
+job, run `neurodesk jobs cancel "$RUN_ID"`, then check `status`.
 
-| State or evidence | What it tells you |
-| --- | --- |
-| `staged` | Transfer finished; worker verification is still pending. |
-| `submission-unknown` | Slurm acceptance is uncertain. Reconnect and inspect `status`; repeating `submit` does not create another job. |
-| Attempt `inputs-missing` | Required staged content could not be verified; analysis did not start. |
-| Attempt `site-results-available` | Results were published and verified on cluster storage. |
-| Slurm `COMPLETED`, exit `0:0`, and a valid result receipt | Results are eligible for collection. |
-| `collection.json` / `archive.json` | Client retrieval / archive restoration was verified. |
+If `status` shows `submission-unknown`, Slurm may or may not have accepted the
+job. Run `submit` again: it never submits a second copy. Do not delete the run
+or prepare a new one; that could run the job twice.
 
-If submission remains uncertain, reconcile it using scheduler evidence and site
-support. Do not delete the job records to retry. A new `prepare` creates a distinct
-run and could duplicate work already accepted by Slurm. Timeout, cancellation,
-out-of-memory failure, or an unknown scheduler state cannot count as success just
-because some output files exist.
-
-## Retrieve and preserve results
-
-After the job completes, reconnect if needed, then run:
+## 4. Collect and archive the results
 
 ```bash
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" collect "$RUN_ID"
-neurodesk jobs --profile "$PROJECT/site.json" --state "$PROJECT/job-state" archive "$RUN_ID"
+neurodesk jobs collect "$RUN_ID"
+neurodesk jobs archive "$RUN_ID"
 ```
 
-Collection verifies the result content and execution inputs. Results are under
-`$PROJECT/job-state/runs/$RUN_ID/collected/output/`; the example writes
-`summary.json` there. The client selects one successful attempt and reports any
-others without merging them.
+`collect` downloads the results, checks every file against the checksums
+recorded on the cluster, and saves them as a DataLad dataset. The command
+prints the dataset's path, under
+`~/.local/state/neurodesk-jobs/runs/RUN_ID/output`. Alongside `summary.json`
+it holds `execution.json`, which records the inputs, image, command, and
+compute node.
 
-`archive` writes a bundle to the profile's `archive_root`, restores it into a fresh
-directory, and verifies content and provenance before issuing a receipt. The
-bundle includes the selected inputs, source Git histories, SIF, outputs, and job
-records. It refuses to overwrite an existing archive. Already collected results
-can be archived even after cluster accounting expires.
-
-Use the archive path returned by `archive` to restore to a new directory:
+`archive` writes one self-contained file with the inputs, image, scripts,
+results, and job records, and checks that it restores. Use `--to DIRECTORY`
+to choose where it goes. You can restore an archive without the cluster:
 
 ```bash
-neurodesk jobs restore /mounted/archive/neurodesk-RUN-ATTEMPT.tar.gz "$PROJECT/restored"
+neurodesk jobs restore ARCHIVE.tar.gz restored
 ```
 
-Restoration needs DataLad, Git, and git-annex, but no cluster connection or original
-scratch store. Verify that your archive destination has the retention and backup
-policy your project needs. This pilot does not upload to a remote-only RDM service.
-
-:::caution[Collect before scratch expires]
-Jobs can publish while the desktop is off, but collection and archiving happen
-only when you reconnect. Results can be lost if scratch is purged first. Scratch
-copies are not trusted as preservation copies, and the helper never automatically
-drops data or removes old attempts. Plan both byte and inode capacity, and retain
-an independent copy of your source inputs.
+:::caution[Collect before scratch is cleaned]
+Inputs and results wait on the cluster's scratch storage until you collect
+them. Collect soon after the job finishes, because scratch is purged on a
+schedule. Keep job records and archives on persistent storage. Your
+Neurodesktop home directory is persistent in most installations; use
+`--state DIRECTORY` with every command to keep them somewhere else.
 :::
 
-## Validate Bunya or Sherlock before research use
+## More information
 
-Use the template for your site and record tests with synthetic or public data:
-
-- One interactive login reused across staging and collection, including
-  disconnect and reauthentication, on the actual command and transfer hosts.
-- Job records visible across login nodes and concurrent submission retries
-  without automatic duplicate jobs, including a lost submission response.
-- Compute-node execution and publication from staged inputs without external
-  transfers or credentials, with a compatible SIF and working tool paths.
-- Concurrent attempts, cancellation, timeout, missing inputs, and publication
-  failure reported accurately; desktop shutdown followed by successful collection.
-- Archive restoration after the scratch copy is unavailable, with confirmed
-  permissions, retention, and capacity for each storage location.
-
-The [implementation reference and full acceptance checklist](https://github.com/neurodesk/neurodesktop/blob/main/docs/architecture/remote-jobs.md#site-acceptance-and-development)
-cover the remaining failure scenarios and cross-site comparison tolerances.
-The existing [Bunya](/getting-started/installations/bunya/) and
+The [implementation reference](https://github.com/neurodesk/neurodesktop/blob/main/docs/architecture/remote-jobs.md)
+covers recovery states, the site acceptance checklist, and the design. The
+[Bunya](/getting-started/installations/bunya/) and
 [Sherlock](/getting-started/installations/sherlock/) guides describe running
-Neurodesk on those clusters; those installations do not by themselves validate
-this remote submission workflow.
+Neurodesktop itself on those clusters, which is a separate feature.
