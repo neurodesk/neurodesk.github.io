@@ -2149,6 +2149,12 @@ site-search button[data-open-modal] kbd {
 	font-weight: 600;
 }
 
+.ab-badge--arm64 {
+	background-color: var(--sl-color-gray-5);
+	color: var(--sl-color-white);
+	font-weight: 600;
+}
+
 .ab-card-title-row {
 	display: flex;
 	align-items: center;
@@ -2156,6 +2162,9 @@ site-search button[data-open-modal] kbd {
 }
 
 .ab-filter-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
 	margin-bottom: 0.75rem;
 	padding-bottom: 0.75rem;
 	border-bottom: 1px solid var(--sl-color-gray-5);

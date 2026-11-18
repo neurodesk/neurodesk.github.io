@@ -19,6 +19,14 @@ interface GroupedApp {
   categories: string[];
   versions: AppVersion[];
   openrecon: boolean;
+  arm64: boolean;
+}
+
+// arm64 builds are published as separate `<tool>_arm64` tools in apps.json.
+const ARM64_SUFFIX = "_arm64";
+
+function isArm64(name: string): boolean {
+  return name.endsWith(ARM64_SUFFIX);
 }
 
 function formatDate(raw: string): string {
@@ -60,6 +68,7 @@ function groupApps(entries: AppListEntry[]): GroupedApp[] {
         categories: [...entry.categories],
         versions: [versionEntry],
         openrecon: !!entry.openrecon,
+        arm64: isArm64(name),
       });
     }
   }
@@ -147,6 +156,7 @@ function AppCard({ app }: { app: GroupedApp }) {
           {app.openrecon && (
             <span className="ab-badge ab-badge--openrecon">OpenRecon</span>
           )}
+          {app.arm64 && <span className="ab-badge ab-badge--arm64">arm64</span>}
         </div>
         <span className="ab-version-count">
           {app.versions.length} version{app.versions.length !== 1 ? "s" : ""}
@@ -266,6 +276,8 @@ export default function ApplicationsBrowser() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [openreconOnly, setOpenreconOnly] = useState(false);
+  // arm64 containers are hidden by default; ticking the filter shows only them.
+  const [arm64Only, setArm64Only] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/applist.json`)
@@ -285,18 +297,24 @@ export default function ApplicationsBrowser() {
 
   const grouped = useMemo(() => groupApps(entries), [entries]);
 
+  // Apps for the selected architecture: x86 by default, arm64 when ticked.
+  const available = useMemo(
+    () => grouped.filter((app) => app.arm64 === arm64Only),
+    [grouped, arm64Only],
+  );
+
   const allCategories = useMemo(() => {
     const cats = new Set<string>();
-    for (const app of grouped) {
+    for (const app of available) {
       for (const cat of app.categories) {
         cats.add(cat);
       }
     }
     return Array.from(cats).sort();
-  }, [grouped]);
+  }, [available]);
 
   const filtered = useMemo(() => {
-    return grouped.filter((app) => {
+    return available.filter((app) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         const searchable = [
@@ -320,7 +338,7 @@ export default function ApplicationsBrowser() {
 
       return true;
     });
-  }, [grouped, searchQuery, selectedCategories, openreconOnly]);
+  }, [available, searchQuery, selectedCategories, openreconOnly]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -368,7 +386,7 @@ export default function ApplicationsBrowser() {
         </div>
 
         <div className="ab-result-count">
-          {filtered.length} of {grouped.length} applications
+          {filtered.length} of {available.length} applications
         </div>
       </div>
 
@@ -392,6 +410,23 @@ export default function ApplicationsBrowser() {
                   <div className="tooltip">
                     &#9432;
                     <span className="tooltiptext">Runs on MRI scanners</span>
+                  </div>
+                </div>
+              </label>
+              <label className="ab-filter-item">
+                <input
+                  type="checkbox"
+                  checked={arm64Only}
+                  onChange={() => setArm64Only((v) => !v)}
+                />
+                <div className="ab-openrecon-badge">
+                  <span className="ab-badge ab-badge--arm64">arm64</span>
+                  <div className="tooltip">
+                    &#9432;
+                    <span className="tooltiptext">
+                      Show only containers built for ARM processors (e.g. Apple
+                      Silicon)
+                    </span>
                   </div>
                 </div>
               </label>
@@ -444,6 +479,7 @@ export default function ApplicationsBrowser() {
                     setSearchQuery("");
                     setSelectedCategories([]);
                     setOpenreconOnly(false);
+                    setArm64Only(false);
                   }}
                 >
                   Clear filters
