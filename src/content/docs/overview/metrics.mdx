@@ -29,16 +29,25 @@ The chart and map show cumulative Neurodesk users since tracking began. The tabl
 
 ## Container usage &mdash; CVMFS
 
-This dashboard shows how often Neurodesk containers are opened from the CVMFS repository `neurodesk.ardc.edu.au`, how much data the Stratum&nbsp;1 servers deliver, and which tools are used most. It is aggregated daily from all Stratum&nbsp;1 servers and only uses privacy-preserving, k-anonymous statistics (no IP addresses or cities are stored).
+This dashboard shows how Neurodesk containers are used from the CVMFS repository `neurodesk.ardc.edu.au`, aggregated daily from all Stratum&nbsp;1 servers. Only privacy-preserving, k-anonymous statistics are used: no IP addresses or cities are stored.
 
-<iframe
-  src="https://neurodesk.github.io/cvmfs-infrastructure/"
-  title="Neurodesk CVMFS usage dashboard"
-  loading="lazy"
-  height="1200"
-  width="100%"
-  style="border: 1px solid var(--sl-color-gray-5); border-radius: 0.5rem; display: block;">
-</iframe>
+**How to read the numbers**
+
+- **Container opens** count how often a computer or site cache that did *not* already have a container fetched it from a Stratum&nbsp;1 server. Running a tool again on the same computer, or on other computers behind the same institutional cache, is usually not counted. One open can therefore stand for many runs: opens show how widely a tool is pulled, not how often it is run or by how many people.
+- Opening a file or binary inside a container is not counted as an open. Those downloads appear only in **data served**, and only when they are not already cached.
+- Machines that start with an empty cache every time (CI runners, cloud VMs) count on every start and can cause spikes. Use the numbers to compare tools and trends, not as counts of users or runs.
+
+<div class="not-content">
+  <iframe
+    id="cvmfs-dashboard"
+    src="https://neurodesk.github.io/cvmfs-infrastructure/?embed=1"
+    title="Neurodesk CVMFS usage dashboard"
+    loading="lazy"
+    style="width: 100%; height: 2400px; border: 1px solid var(--sl-color-gray-5); border-radius: 0.5rem; display: block;">
+  </iframe>
+</div>
+
+<script src="/js/cvmfs-dashboard.js" defer></script>
 
 Full dashboard: [neurodesk.github.io/cvmfs-infrastructure](https://neurodesk.github.io/cvmfs-infrastructure/)
 
