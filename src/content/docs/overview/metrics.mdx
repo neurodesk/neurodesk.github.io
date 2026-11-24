@@ -31,12 +31,13 @@ The chart and map show cumulative Neurodesk users since tracking began. The tabl
 
 This dashboard shows how Neurodesk containers are used from the CVMFS repository `neurodesk.ardc.edu.au`, aggregated daily from all Stratum&nbsp;1 servers. Only privacy-preserving, k-anonymous statistics are used: no IP addresses or cities are stored.
 
-**How to read the numbers**
+### How to read the numbers
 
 - **Container opens** count how often a computer or site cache that did *not* already have a container fetched it from a Stratum&nbsp;1 server. Running a tool again on the same computer, or on other computers behind the same institutional cache, is usually not counted. One open can therefore stand for many runs: opens show how widely a tool is pulled, not how often it is run or by how many people.
-- Opening a file or binary inside a container is not counted as an open. Those downloads appear only in **data served**, and only when they are not already cached.
-- Machines that start with an empty cache every time (CI runners, cloud VMs) count on every start and can cause spikes. Use the numbers to compare tools and trends, not as counts of users or runs.
+- Using files or binaries inside a container that is already loaded does not add opens. Those downloads appear only in **data served** and **requests**, and only when they are not already cached.
+- Machines that start with an empty cache every time (CI runners, cloud VMs) count each time they load a container and can cause spikes. Use the numbers to compare tools and trends, not as counts of users or runs.
 
+{/* Loaded without defer on purpose: the listener must exist before the iframe posts its first height. */}
 <script src="/js/cvmfs-dashboard.js"></script>
 
 <div class="not-content">
