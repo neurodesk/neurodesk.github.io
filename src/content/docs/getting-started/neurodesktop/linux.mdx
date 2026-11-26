@@ -128,7 +128,7 @@ See the [Sciget App instructions](/getting-started/app/neurodeskapp/) for instal
    <Code code={podmanRun} lang="bash" mark={jupyterNeurodeskVersion} />
 
    :::caution
-   If you run Ubuntu greater than 23.10 you need to create this AppArmor profile under `/etc/apparmor.d/scigetapp`:
+   If you run Ubuntu greater than 23.10 and have not installed the Sciget App, create this AppArmor profile under `/etc/apparmor.d/scigetapp`:
 
    ```bash
    # This profile allows everything and only exists to give the
@@ -143,6 +143,12 @@ See the [Sciget App instructions](/getting-started/app/neurodeskapp/) for instal
      # Site-specific additions and overrides. See local/README for details.
      include if exists <local/scigetapp>
    }
+   ```
+
+   Then load the profile before running Docker with `--security-opt apparmor=scigetapp` (omit `--security-opt apparmor=scigetapp` on systems without this profile):
+
+   ```bash
+   sudo apparmor_parser --replace /etc/apparmor.d/scigetapp
    ```
    :::
 

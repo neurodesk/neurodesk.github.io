@@ -132,12 +132,12 @@ podman pull ghcr.io/neurodesk/neurodesktop/neurodesktop:<version>
 podman tag ghcr.io/neurodesk/neurodesktop/neurodesktop:<version> docker.io/vnmd/neurodesktop:<version>
 ```
 
-Then stop any lingering Podman processes (for example a hung pull) and Neurodesk containers, and migrate Podman. The App creates containers named `scigetapp` or `scigetapp-<port>`:
+Then stop any lingering Podman processes (for example a hung pull) and Neurodesk containers, and migrate Podman. The App creates user-scoped containers named `neurodesktop-<uid>` (or `neurodeskapp-<uid>` when using the bundled catalog fallback, and `neurodeskapp` on older versions):
 
 ```bash
 # Stop any running Neurodesk containers
-podman stop scigetapp 2>/dev/null
-podman rm -f scigetapp 2>/dev/null
+podman stop "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
+podman rm -f "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
 # Force-kill any hung podman or scigetapp processes
 pkill -9 -u <USERNAME> -f "podman|scigetapp"
 podman system migrate
@@ -169,8 +169,8 @@ If a session fails to start, delete the broken home volume and try again:
 
 ```bash
 # Stop any running Neurodesk containers
-podman stop scigetapp 2>/dev/null
-podman rm -f scigetapp 2>/dev/null
+podman stop "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
+podman rm -f "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
 # Force-kill any hung processes
 pkill -9 -u $USER -f "podman|scigetapp"
 

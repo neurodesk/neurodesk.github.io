@@ -25,7 +25,7 @@ export const dockerRunGpuCommand = `sudo docker run \\
   -p 8888:8888 \\
   -e NEURODESKTOP_VERSION=${jupyterNeurodeskVersion} vnmd/neurodesktop:${jupyterNeurodeskVersion}`;
 
-On this page we show specific examples of the different ways of how Neurodesk can be installed on a local computer. We start from the highest level using the Sciget app, then go lower level via docker, neurocommand, and down to the lowest level using neurocontainers. We also show on each level how containers can be streamed via CVMFS or downloaded locally.
+On this page we show specific examples of the different ways of how Neurodesk can be installed on a local computer. We start from the highest level using the Sciget App, then go lower level via docker, neurocommand, and down to the lowest level using neurocontainers. We also show on each level how containers can be streamed via CVMFS or downloaded locally.
 
 ## Running Neurodesk on an Ubuntu 24.04 computer
 
@@ -87,10 +87,11 @@ More information can be found at [Sciget App](/getting-started/app/neurodeskapp/
 
 ## High abstraction level: Running Neurodesktop via Docker manually
 
-If you run Ubuntu > 23.10 and you have not installed the Sciget App before you need to create this apparmor profile under `/etc/apparmor.d/scigetapp`:
+If you run Ubuntu > 23.10 and you have not installed the Sciget App before, create and load this AppArmor profile under `/etc/apparmor.d/scigetapp`:
 
 ```bash
 echo -e "# This profile allows everything and only exists to give the\n# application a name instead of having the label \"unconfined\"\n\nabi <abi/4.0>,\ninclude <tunables/global>\n\nprofile scigetapp \"/opt/ScigetApp/scigetapp\" flags=(unconfined) {\n  userns,\n\n  # Site-specific additions and overrides. See local/README for details.\n  include if exists <local/scigetapp>\n}" | sudo tee /etc/apparmor.d/scigetapp
+sudo apparmor_parser --replace /etc/apparmor.d/scigetapp
 ```
 
 You also need to create the `~/neurodesktop-storage` folder if you have not used the app before:

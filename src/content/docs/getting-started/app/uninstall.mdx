@@ -13,8 +13,8 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Find `ScigetApp.app` in Finder (in `/Applications` or `~/Applications`) and move it to Trash (<kbd>Cmd</kbd>+<kbd>Delete</kbd>). Then remove application data:
 
 ```bash
-rm -rf ~/Library/scigetapp
-rm -rf ~/Library/Application\ Support/scigetapp
+rm -rf ~/Library/neurodeskapp
+rm -rf ~/Library/Application\ Support/neurodeskapp
 ```
 
 </TabItem>
@@ -22,7 +22,7 @@ rm -rf ~/Library/Application\ Support/scigetapp
 
 Go to **Start Menu > Settings > Apps** and uninstall Sciget App.
 
-To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\scigetapp`. The AppData directory is hidden, so enable hidden items in Windows Explorer under **View > Show > Hidden Items**.
+To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\neurodeskapp`. The AppData directory is hidden, so enable hidden items in Windows Explorer under **View > Show > Hidden Items**.
 
 </TabItem>
 <TabItem label="Linux">
@@ -30,17 +30,17 @@ To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\sci
 ```bash
 # Debian / Ubuntu
 sudo apt-get purge neurodeskapp
-sudo rm /usr/bin/scigetapp
-rm -rf ~/.config/scigetapp
+sudo rm -f /usr/bin/scigetapp /usr/bin/neurodeskapp
+rm -rf ~/.config/neurodeskapp
 
 # Fedora / RHEL / SUSE
 sudo rpm -e neurodeskapp
-sudo rm /usr/bin/scigetapp
-rm -rf ~/.config/scigetapp
+sudo rm -f /usr/bin/scigetapp /usr/bin/neurodeskapp
+rm -rf ~/.config/neurodeskapp
 
 # Arch-based
 sudo pacman -Rs neurodeskapp-bin    # -Rs removes all orphaned deps
-rm -rf ~/.config/scigetapp
+rm -rf ~/.config/neurodeskapp
 ```
 
 </TabItem>
