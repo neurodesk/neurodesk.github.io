@@ -12,7 +12,7 @@ NeurodeskAppX runs Neurodesktop without Docker, Podman, or administrator privile
 It uses [CrumbleCracker](https://github.com/tinyrange/crumblecracker), a lightweight Linux virtual machine runtime that runs inside the application. You do not need to install a separate runtime or daemon.
 
 :::note
-If you have admin/root access and can install a container engine, use the [standard Neurodesk App](/getting-started/app/neurodeskapp/) instead.
+If you have admin/root access and can install a container engine, use the [standard Sciget App](/getting-started/app/neurodeskapp/) instead.
 :::
 
 ## Before you begin
@@ -105,7 +105,7 @@ Before starting, you can change the following options:
 
 - **SSH access:** Adds a managed SSH entry so you can run `ssh neurodesk` while NeurodeskAppX is open.
 - **System install:** Stores application data in your user cache. Leave this off to keep the data beside the application in portable mode. Neither option requires administrator access.
-- **Shared folder:** Selects the host folder available inside Neurodesktop. The default is `~/neurodesktop-storage`, which is also used by the standard Neurodesk App.
+- **Shared folder:** Selects the host folder available inside Neurodesktop. The default is `~/neurodesktop-storage`, which is also used by the standard Sciget App.
 - **Advanced:** Lets you change the memory and vCPU allocation. Builds with experimental GPU support also show the GPU option on Apple Silicon macOS. NeurodeskAppX remembers these settings for later launches.
 
 Once the required checks pass, select **Download & start**, **Start NeurodeskAppX**, or **Update & start**, depending on the displayed state. Select **Skip** to start without applying an available update.
@@ -169,7 +169,7 @@ These optimisations use standard OCI images and registries. See the [latest rele
 
 Inside NeurodeskAppX, the shared host folder is available at `/neurodesktop-storage` and `/home/jovyan/neurodesktop-storage`. The underlying mount is `/vmsh-neurodesktop-storage`.
 
-No extra configuration is needed to share the default folder with the standard Neurodesk App. If the standard App uses a custom storage location, select the same folder in NeurodeskAppX and make sure your account can read and write it. The standard App's optional **Additional Directory**, mounted at `/home/jovyan/data`, is separate.
+No extra configuration is needed to share the default folder with the standard Sciget App. If the standard App uses a custom storage location, select the same folder in NeurodeskAppX and make sure your account can read and write it. The standard App's optional **Additional Directory**, mounted at `/home/jovyan/data`, is separate.
 
 Save important datasets and results in the shared folder so they remain independent of the app and its downloaded desktop image. See [Data Storage](/getting-started/neurodesktop/storage/#local-storage) for more guidance.
 

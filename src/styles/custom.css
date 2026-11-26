@@ -1412,7 +1412,7 @@ site-search button[data-open-modal] kbd {
 	margin: 0.75rem 0 1.5rem;
 }
 
-/* Neurodesk App page hero image: right-floated on wide viewports, blocks on mobile. */
+/* Sciget App page hero image: right-floated on wide viewports, blocks on mobile. */
 .neurodeskapp-hero {
 	float: right;
 	margin: 0 0 1rem 1.5rem;

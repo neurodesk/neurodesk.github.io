@@ -10,7 +10,7 @@ import { jupyterNeurodeskVersion } from '../../../../config/neurodesktop';
 
 export const dockerRunDockerhub = `docker volume create neurodesk-home &&
 sudo docker run \\
-  --shm-size=1gb -it --security-opt apparmor=neurodeskapp --privileged --user=root --name neurodesktop \\
+  --shm-size=1gb -it --security-opt apparmor=scigetapp --privileged --user=root --name neurodesktop \\
   -v ~/neurodesktop-storage:/neurodesktop-storage \\
   --mount source=neurodesk-home,target=/home/jovyan \\
   --add-host=host.docker.internal:host-gateway \\
@@ -21,7 +21,7 @@ sudo docker run \\
 
 export const dockerRunGhcr = `docker volume create neurodesk-home &&
 sudo docker run \\
-  --shm-size=1gb -it --security-opt apparmor=neurodeskapp --privileged --user=root --name neurodesktop \\
+  --shm-size=1gb -it --security-opt apparmor=scigetapp --privileged --user=root --name neurodesktop \\
   -v ~/neurodesktop-storage:/neurodesktop-storage \\
   --mount source=neurodesk-home,target=/home/jovyan \\
   --add-host=host.docker.internal:host-gateway \\
@@ -100,9 +100,9 @@ Before the first run, create a local folder where the downloaded applications wi
 Choose how you want to run Neurodesktop:
 
 <Tabs syncKey="install-method">
-<TabItem label="Neurodesk App (recommended)">
+<TabItem label="Sciget App (recommended)">
 
-See the [Neurodesk App instructions](/getting-started/app/neurodeskapp/) for installing and using the app.
+See the [Sciget App instructions](/getting-started/app/neurodeskapp/) for installing and using the app.
 
 </TabItem>
 <TabItem label="Terminal">
@@ -128,7 +128,7 @@ See the [Neurodesk App instructions](/getting-started/app/neurodeskapp/) for ins
    <Code code={podmanRun} lang="bash" mark={jupyterNeurodeskVersion} />
 
    :::caution
-   If you run Ubuntu greater than 23.10 you need to create this AppArmor profile under `/etc/apparmor.d/neurodeskapp`:
+   If you run Ubuntu greater than 23.10 you need to create this AppArmor profile under `/etc/apparmor.d/scigetapp`:
 
    ```bash
    # This profile allows everything and only exists to give the
@@ -137,11 +137,11 @@ See the [Neurodesk App instructions](/getting-started/app/neurodeskapp/) for ins
    abi <abi/4.0>,
    include <tunables/global>
 
-   profile neurodeskapp "/opt/NeurodeskApp/neurodeskapp" flags=(unconfined) {
+   profile scigetapp "/opt/ScigetApp/scigetapp" flags=(unconfined) {
      userns,
 
      # Site-specific additions and overrides. See local/README for details.
-     include if exists <local/neurodeskapp>
+     include if exists <local/scigetapp>
    }
    ```
    :::

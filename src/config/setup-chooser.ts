@@ -92,7 +92,7 @@ export const syncedTabs: Partial<
 	},
 	interface: {
 		syncKey: 'install-method',
-		labels: { gui: 'Neurodesk App (recommended)', cmd: 'Terminal' },
+		labels: { gui: 'Sciget App (recommended)', cmd: 'Terminal' },
 	},
 };
 
@@ -130,7 +130,7 @@ export const outcomes: Outcome[] = [
 		when: { interface: ['gui'], platform: ['local'] },
 		cards: [
 			{
-				title: 'Neurodesk App',
+				title: 'Sciget App',
 				description:
 					'Cross-platform desktop installer that manages the container for you. The recommended starting point.',
 				href: '/getting-started/app/neurodeskapp/',

@@ -1,6 +1,6 @@
 ---
 title: Uninstalling
-description: How to uninstall the Neurodesk App.
+description: How to uninstall the Sciget App.
 sidebar:
   order: 4
 ---
@@ -10,19 +10,19 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs>
 <TabItem label="macOS">
 
-Find `NeurodeskApp.app` in Finder (in `/Applications` or `~/Applications`) and move it to Trash (<kbd>Cmd</kbd>+<kbd>Delete</kbd>). Then remove application data:
+Find `ScigetApp.app` in Finder (in `/Applications` or `~/Applications`) and move it to Trash (<kbd>Cmd</kbd>+<kbd>Delete</kbd>). Then remove application data:
 
 ```bash
-rm -rf ~/Library/neurodeskapp
-rm -rf ~/Library/Application\ Support/neurodeskapp
+rm -rf ~/Library/scigetapp
+rm -rf ~/Library/Application\ Support/scigetapp
 ```
 
 </TabItem>
 <TabItem label="Windows">
 
-Go to **Start Menu > Settings > Apps** and uninstall Neurodesk App.
+Go to **Start Menu > Settings > Apps** and uninstall Sciget App.
 
-To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\neurodeskapp`. The AppData directory is hidden, so enable hidden items in Windows Explorer under **View > Show > Hidden Items**.
+To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\scigetapp`. The AppData directory is hidden, so enable hidden items in Windows Explorer under **View > Show > Hidden Items**.
 
 </TabItem>
 <TabItem label="Linux">
@@ -30,17 +30,17 @@ To remove the application cache, delete `C:\Users\<username>\AppData\Roaming\neu
 ```bash
 # Debian / Ubuntu
 sudo apt-get purge neurodeskapp
-sudo rm /usr/bin/neurodeskapp
-rm -rf ~/.config/neurodeskapp
+sudo rm /usr/bin/scigetapp
+rm -rf ~/.config/scigetapp
 
 # Fedora / RHEL / SUSE
 sudo rpm -e neurodeskapp
-sudo rm /usr/bin/neurodeskapp
-rm -rf ~/.config/neurodeskapp
+sudo rm /usr/bin/scigetapp
+rm -rf ~/.config/scigetapp
 
 # Arch-based
 sudo pacman -Rs neurodeskapp-bin    # -Rs removes all orphaned deps
-rm -rf ~/.config/neurodeskapp
+rm -rf ~/.config/scigetapp
 ```
 
 </TabItem>

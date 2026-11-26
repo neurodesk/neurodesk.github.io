@@ -5,14 +5,14 @@ description: Programmatic interfaces to Neurodesk.
 
 ## Connecting to a running Neurodesktop session via a plain shell
 
-You can start a Neurodesktop container using Docker or the Neurodesk App. If you want to connect to this running session using a shell you can do this as well:
+You can start a Neurodesktop container using Docker or the Sciget App. If you want to connect to this running session using a shell you can do this as well:
 
 ```bash
 docker ps
-# note the name of the running container, e.g. neurodeskapp-49977
+# note the name of the running container, e.g. scigetapp-49977
 
 # now connect to this container
-docker exec --user=jovyan -ti neurodeskapp-49977 bash
+docker exec --user=jovyan -ti scigetapp-49977 bash
 ```
 
 ## API interface to Jupyter
