@@ -305,7 +305,7 @@ export default defineConfig({
 							collapsed: true,
 							items: [
 								{ autogenerate: { directory: 'getting-started/neurodesktop' } },
-								{ label: 'Neurodesk App', link: '/getting-started/app/neurodeskapp/' },
+								{ label: 'Sciget App', link: '/getting-started/app/neurodeskapp/' },
 								{ label: 'NeurodeskAppX', link: '/getting-started/app/neurodeskappx/' },
 							],
 						},

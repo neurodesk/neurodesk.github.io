@@ -10,7 +10,7 @@ import { jupyterNeurodeskVersion } from '../../../../config/neurodesktop';
 
 export const dockerRunCommand = `docker volume create neurodesk-home &&
 sudo docker run \\
-  --shm-size=1gb -it --security-opt apparmor=neurodeskapp --privileged --user=root --name neurodesktop \\
+  --shm-size=1gb -it --security-opt apparmor=scigetapp --privileged --user=root --name neurodesktop \\
   -v ~/neurodesktop-storage:/neurodesktop-storage \\
   --mount source=neurodesk-home,target=/home/jovyan \\
   -e NB_UID="$(id -u)" -e NB_GID="$(id -g)" \\
@@ -25,25 +25,25 @@ export const dockerRunGpuCommand = `sudo docker run \\
   -p 8888:8888 \\
   -e NEURODESKTOP_VERSION=${jupyterNeurodeskVersion} vnmd/neurodesktop:${jupyterNeurodeskVersion}`;
 
-On this page we show specific examples of the different ways of how Neurodesk can be installed on a local computer. We start from the highest level using the Neurodesk app, then go lower level via docker, neurocommand, and down to the lowest level using neurocontainers. We also show on each level how containers can be streamed via CVMFS or downloaded locally.
+On this page we show specific examples of the different ways of how Neurodesk can be installed on a local computer. We start from the highest level using the Sciget App, then go lower level via docker, neurocommand, and down to the lowest level using neurocontainers. We also show on each level how containers can be streamed via CVMFS or downloaded locally.
 
 ## Running Neurodesk on an Ubuntu 24.04 computer
 
 On a Linux machine you have multiple options to use Neurodesk:
 
-1. **Highest abstraction level, and easiest option:** Neurodeskapp. Provides a full Linux desktop with everything configured for you. No need to think about Docker or Singularity containers. This is the recommended option.
+1. **Highest abstraction level, and easiest option:** Sciget App. Provides a full Linux desktop with everything configured for you. No need to think about Docker or Singularity containers. This is the recommended option.
 2. **High abstraction level:** Running Neurodesktop via Docker manually. You still get the desktop with everything configured, but you now have to manage the Docker container yourself. Useful when the app does not work well, for example in a remote SSH setup.
 3. **Middle abstraction level:** Use the containers through wrapper scripts on the terminal through Neurocommand. Great if you do not need a full desktop environment and want to use the Neurodesk tools in your scripts. Neurocommand handles multiple containers for you and you just run your tools as you are used to without having to think about the fact that they are running in singularity/apptainer containers.
 4. **Low abstraction level:** Use the containers on the terminal directly. If you just want to use the containers directly and you want to do everything yourself, that is the best option for you.
 
-## Highest abstraction level: Neurodeskapp
+## Highest abstraction level: Sciget App
 
-Download Neurodeskapp: [NeurodeskApp-Setup-Debian-x64.deb](https://github.com/neurodesk/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Debian-x64.deb)
+Download Sciget App: [ScigetApp-Setup-Debian-x64.deb](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Debian-x64.deb)
 
 and install:
 
 ```bash
-sudo apt install ./NeurodeskApp-Setup-Debian-x64.deb
+sudo apt install ./ScigetApp-Setup-Debian-x64.deb
 ```
 
 Install Docker:
@@ -79,18 +79,19 @@ After installation run the following command to verify that Docker is working co
 docker run hello-world
 ```
 
-The Neurodeskapp can be launched directly from the application menu, or by running the `neurodeskapp` command in the command line.
+The Sciget App can be launched directly from the application menu, or by running the `scigetapp` command in the command line.
 
-In the Neurodeskapp settings you can choose if you want to stream or download containers to your system.
+In the Sciget App settings you can choose if you want to stream or download containers to your system.
 
-More information can be found at [Neurodesk App](/getting-started/app/neurodeskapp/).
+More information can be found at [Sciget App](/getting-started/app/neurodeskapp/).
 
 ## High abstraction level: Running Neurodesktop via Docker manually
 
-If you run Ubuntu > 23.10 and you have not installed the Neurodeskapp before you need to create this apparmor profile under `/etc/apparmor.d/neurodeskapp`:
+If you run Ubuntu > 23.10 and you have not installed the Sciget App before, create and load this AppArmor profile under `/etc/apparmor.d/scigetapp`:
 
 ```bash
-echo -e "# This profile allows everything and only exists to give the\n# application a name instead of having the label \"unconfined\"\n\nabi <abi/4.0>,\ninclude <tunables/global>\n\nprofile neurodeskapp \"/opt/NeurodeskApp/neurodeskapp\" flags=(unconfined) {\n  userns,\n\n  # Site-specific additions and overrides. See local/README for details.\n  include if exists <local/neurodeskapp>\n}" | sudo tee /etc/apparmor.d/neurodeskapp
+echo -e "# This profile allows everything and only exists to give the\n# application a name instead of having the label \"unconfined\"\n\nabi <abi/4.0>,\ninclude <tunables/global>\n\nprofile scigetapp \"/opt/ScigetApp/scigetapp\" flags=(unconfined) {\n  userns,\n\n  # Site-specific additions and overrides. See local/README for details.\n  include if exists <local/scigetapp>\n}" | sudo tee /etc/apparmor.d/scigetapp
+sudo apparmor_parser --replace /etc/apparmor.d/scigetapp
 ```
 
 You also need to create the `~/neurodesktop-storage` folder if you have not used the app before:
@@ -99,7 +100,7 @@ You also need to create the `~/neurodesktop-storage` folder if you have not used
 mkdir -p ~/neurodesktop-storage
 ```
 
-Make sure you have Docker installed and configured correctly (see Neurodeskapp for instructions), then run in a terminal:
+Make sure you have Docker installed and configured correctly (see Sciget App for instructions), then run in a terminal:
 
 <Code code={dockerRunCommand} lang="bash" mark={jupyterNeurodeskVersion} />
 

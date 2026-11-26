@@ -1,6 +1,6 @@
 ---
-title: Neurodesk App
-description: A cross-platform desktop application for Neurodesk, the easiest way to use Neurodesktop.
+title: Sciget App
+description: A cross-platform desktop application for scientific computing, the easiest way to use Neurodesktop.
 sidebar:
   order: 1
 ---
@@ -9,7 +9,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Step 1: Download and install
 
-Download the Neurodesk App for your operating system, then follow the install instructions below.
+Download the Sciget App for your operating system, then follow the install instructions below.
 
 :::note[No admin/root access?]
 Use [NeurodeskAppX](/getting-started/app/neurodeskappx/) to run Neurodesktop without installing Docker or Podman.
@@ -20,24 +20,18 @@ Use [NeurodeskAppX](/getting-started/app/neurodeskappx/) to run Neurodesktop wit
 
 **Download:**
 
-- [macOS Apple silicon (M1/M2/M3/M4)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-macOS-arm64.dmg)
-- [macOS Intel](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-macOS-x64.dmg)
+- [macOS Apple silicon (M1/M2/M3/M4)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-macOS-arm64.dmg)
+- [macOS Intel](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-macOS-x64.dmg)
 
 **Install:**
-Double-click the downloaded `.dmg` file and drag NeurodeskApp into your Applications folder. To open it, right-click `NeurodeskApp.app` and select "Open".
-
-Alternatively, install with Homebrew:
-
-```bash
-brew install neurodesk/homebrew-neurodesk/neurodeskapp
-```
+Double-click the downloaded `.dmg` file and drag ScigetApp into your Applications folder. To open it, right-click `ScigetApp.app` and select "Open".
 
 </TabItem>
 <TabItem label="Windows">
 
 **Download:**
 
-- [Windows Installer](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Windows.exe)
+- [Windows Installer](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Windows.exe)
 
 :::note[Microsoft Edge]
 On Microsoft Edge, follow these steps to download the executable file:
@@ -46,7 +40,7 @@ On Microsoft Edge, follow these steps to download the executable file:
 :::
 
 **Install:**
-Double-click the downloaded `.exe` file. Windows will show an "Unknown publisher" warning because the installer is not code-signed. This is expected: the installer is an official release from the [neurodesk-app GitHub repository](https://github.com/neurodesk/neurodesk-app/releases). Click "Yes" to proceed, then accept the licence agreement and click "Finish".
+Double-click the downloaded `.exe` file. Windows will show an "Unknown publisher" warning because the installer is not code-signed. This is expected: the installer is an official release from the [neurodesk-app GitHub repository](https://github.com/scigetorg/neurodesk-app/releases). Click "Yes" to proceed, then accept the licence agreement and click "Finish".
 
 </TabItem>
 <TabItem label="Linux">
@@ -55,18 +49,18 @@ Double-click the downloaded `.exe` file. Windows will show an "Unknown publisher
 
 | Distribution | x64 | arm64 |
 | --- | --- | --- |
-| Debian / Ubuntu | [.deb (x64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Debian-x64.deb) | [.deb (arm64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Debian-arm64.deb) |
-| Fedora / RHEL / SUSE | [.rpm (x64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Fedora-x64.rpm) | [.rpm (arm64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/NeurodeskApp-Setup-Fedora-arm64.rpm) |
+| Debian / Ubuntu | [.deb (x64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Debian-x64.deb) | [.deb (arm64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Debian-arm64.deb) |
+| Fedora / RHEL / SUSE | [.rpm (x64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Fedora-x64.rpm) | [.rpm (arm64)](https://github.com/scigetorg/neurodesk-app/releases/latest/download/ScigetApp-Setup-Fedora-arm64.rpm) |
 
 **Install:**
 Replace `<arch>` in the following commands with the architecture of the file you downloaded (x64 or arm64).
 
 ```bash
 # Debian / Ubuntu
-sudo apt install -f ./NeurodeskApp-Setup-Debian-<arch>.deb
+sudo apt install -f ./ScigetApp-Setup-Debian-<arch>.deb
 
 # Fedora / RHEL / SUSE
-sudo rpm -i NeurodeskApp-Setup-Fedora-<arch>.rpm
+sudo rpm -i ScigetApp-Setup-Fedora-<arch>.rpm
 
 # Arch-based
 yay neurodesk
@@ -76,9 +70,9 @@ yay neurodesk
 </Tabs>
 
 :::note[Already have GitHub Store installed?]
-Search [GitHub Store](https://komistore.app/) for `Neurodesk-app` to install directly. This works on all operating systems.
+Search [GitHub Store](https://komistore.app/) for `neurodesk-app` to install directly. This works on all operating systems.
 
-![Neurodesk App in GitHub Store](/docs/getting-started/neurodeskapp/github-store.png)
+![Sciget App in GitHub Store](/docs/getting-started/neurodeskapp/github-store.png)
 :::
 
 ### Minimum system requirements
@@ -88,7 +82,7 @@ Search [GitHub Store](https://komistore.app/) for `Neurodesk-app` to install dir
 
 ## Step 2: Set up a container engine
 
-The Neurodesk App needs a container engine to run neuroimaging tools. Docker is recommended, and Podman is also supported. Both generally require admin/root access for installation.
+The Sciget App needs a container engine to run neuroimaging tools. Docker is recommended, and Podman is also supported. Both generally require admin/root access for installation.
 
 <Tabs>
 <TabItem label="Docker (recommended)">
@@ -117,14 +111,14 @@ docker run hello-world
 
 Podman is a drop-in replacement for Docker. Install it using your system's package manager or from [podman.io](https://podman.io/docs/installation).
 
-After installing Podman, configure the Neurodesk App to use it before starting a local session:
+After installing Podman, configure the Sciget App to use it before starting a local session:
 
-1. Open the Neurodesk App's **Settings**.
+1. Open the Sciget App's **Settings**.
 2. Select **General** in the sidebar.
 3. Under **Engine Options**, select **Podman**.
 4. Click **Apply & restart**.
 
-![Neurodesk App General settings with Podman selected under Engine Options](/docs/getting-started/neurodeskapp/settings-podman.png)
+![Sciget App General settings with Podman selected under Engine Options](/docs/getting-started/neurodeskapp/settings-podman.png)
 
 </TabItem>
 </Tabs>
@@ -134,27 +128,27 @@ If you cannot install a container engine, use [NeurodeskAppX](/getting-started/a
 
 ## Step 3: Launch the app
 
-Open the Neurodesk App from your operating system's application menu, or run `neurodeskapp` from the command line.
+Open the Sciget App from your operating system's application menu, or run `scigetapp` from the command line.
 
-On the Welcome Page you have two options:
+On the Welcome Page, find the Neurodesk card. You have two options:
 
-- **Open Local Neurodesk** starts a Neurodesk session on your machine.
-- **Connect to remote Neurodesk server** connects to an existing Neurodesk server running elsewhere.
+- **Launch Local** starts a Neurodesk session on your machine.
+- **Launch Remote** connects to an existing Neurodesk server running elsewhere.
 
 ![Start session](/docs/getting-started/neurodeskapp/neurodesk-desktop.png)
 
 ### Local sessions
 
-Click "Open Local Neurodesk" to launch a local session. This opens a JupyterLab interface with two ways to use Neurodesk:
+Click **Launch Local** to launch a local session. This opens a JupyterLab interface with two ways to use Neurodesk:
 
-- Click the **NeurodeskApp** icon to launch the full desktop interface in a new window.
+- Click the **Neurodesktop** icon to launch the full desktop interface in a new window.
 - Use the **command line** in JupyterLab and load tools via the module system in the left sidebar.
 
 ![Connect to local](/docs/getting-started/neurodeskapp/connect-to-local.png)
 
 ### Remote sessions
 
-Click "Connect to remote Neurodesk server" to connect to a server running elsewhere.
+Click **Launch Remote** to connect to a server running elsewhere.
 
 Select one of the provided servers in the list, or enter the URL of the server and press <kbd>Enter</kbd> to connect.
 
@@ -180,7 +174,7 @@ podman machine init --rootful --now -v /Volumes:/Volumes -v $HOME:$HOME podman-m
 
 **Warning:** `podman machine reset -f` will delete all existing Podman machines, containers, and their data. Back up any important data stored inside Podman containers before running this command.
 
-Then set the path in the Neurodesk App settings.
+Then set the path in the Sciget App settings.
 :::
 
 :::tip

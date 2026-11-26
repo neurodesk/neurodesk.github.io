@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Neurodesk App release-download figure from GitHub data."""
+"""Generate the Sciget App release-download figure from GitHub data."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, FixedLocator
 
 
-API_URL = "https://api.github.com/repos/neurodesk/neurodesk-app/releases?per_page=100"
+API_URL = "https://api.github.com/repos/scigetorg/neurodesk-app/releases?per_page=100"
 DEFAULT_OUTPUT = Path("public/docs/overview/neurodeskapp_metrics.png")
 
 
@@ -193,7 +193,7 @@ def generate_figure(releases: list[ReleaseDownloads], output: Path) -> None:
         fontsize=9,
     )
     axis.set_ylabel("Downloads per release (log scale)")
-    axis.set_xlabel("Neurodesk App release and published date")
+    axis.set_xlabel("Sciget App release and published date")
 
     for spine in ("top", "right"):
         axis.spines[spine].set_visible(False)
@@ -201,7 +201,7 @@ def generate_figure(releases: list[ReleaseDownloads], output: Path) -> None:
     axis.spines["bottom"].set_color("#AEB6BF")
 
     axis.set_title(
-        "Neurodesk App downloads per release and operating system",
+        "Sciget App downloads per release and operating system",
         loc="left",
         pad=30,
     )

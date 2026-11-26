@@ -14,9 +14,9 @@ export const dockerRunExtraMount = `docker run --shm-size=1gb -it --privileged -
 
 How your data is stored in Neurodesk depends on where you are running it:
 
-- **Local (Neurodesk App on your own machine):** Storage is directly linked to your host computer through the `/neurodesktop-storage` directory. Your data persists for as long as you keep it: nothing is automatically deleted. The amount of available space depends on your local disk setup.
+- **Local (Sciget App on your own machine):** Storage is directly linked to your host computer through the `/neurodesktop-storage` directory. Your data persists for as long as you keep it: nothing is automatically deleted. The amount of available space depends on your local disk setup.
 
-- **Play (Neurodesk App cloud-hosted):** Each user is allocated a fixed amount of storage space. You can check how much of your allocation you are using from within the Play environment. Be aware that data on Play is **deleted after 30 days of inactivity**, so make sure to back up any important files using the cloud storage or data transfer methods described below.
+- **Play (cloud-hosted Neurodesktop):** Each user is allocated a fixed amount of storage space. You can check how much of your allocation you are using from within the Play environment. Be aware that data on Play is **deleted after 30 days of inactivity**, so make sure to back up any important files using the cloud storage or data transfer methods described below.
 
 - **HPC (high-performance computing):** Storage depends entirely on your institution and how Neurodesk has been set up by your system administrators. Typically, Neurodesk will be configured to bind-mount your institution's existing storage infrastructure (e.g. scratch, group, or project directories).
 
@@ -103,7 +103,7 @@ You can also mount additional directories by adding another `-v` parameter set (
 The mountpoint inside Neurodesktop needs to be named `/data`, otherwise the applications will not see the files without modifying the `SINGULARITY_BINDPATH` variable in your `.bashrc`.
 :::
 
-If you are using the Neurodesk App, you can set an additional storage location through the [settings](/getting-started/app/neurodeskapp/#add-a-custom-data-directory).
+If you are using the Sciget App, you can set an additional storage location through the [settings](/getting-started/app/neurodeskapp/#add-a-custom-data-directory).
 
 If you are starting Neurodesk through the command line, here is an example for Windows adding another storage directory:
 

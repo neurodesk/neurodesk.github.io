@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Solutions for common Neurodesk App issues.
+description: Solutions for common Sciget App issues.
 sidebar:
   order: 3
 ---
@@ -36,7 +36,7 @@ If you see `/var/run/docker.sock: connect: permission denied`:
 
 ## AppArmor sandbox error (Ubuntu 24.04)
 
-If you see `FATAL:setuid_sandbox_host.cc(158)] The SUID sandbox helper binary was found, but is not configured correctly`, create the file `/etc/apparmor.d/neurodeskapp` with this content:
+If you see `FATAL:setuid_sandbox_host.cc(158)] The SUID sandbox helper binary was found, but is not configured correctly`, create the file `/etc/apparmor.d/scigetapp` with this content:
 
 ```txt
 # This profile allows everything and only exists to give the
@@ -45,11 +45,11 @@ If you see `FATAL:setuid_sandbox_host.cc(158)] The SUID sandbox helper binary wa
 abi <abi/4.0>,
 include <tunables/global>
 
-profile neurodeskapp "/opt/NeurodeskApp/neurodeskapp" flags=(unconfined) {
+profile scigetapp "/opt/ScigetApp/scigetapp" flags=(unconfined) {
   userns,
 
   # Site-specific additions and overrides. See local/README for details.
-  include if exists <local/neurodeskapp>
+  include if exists <local/scigetapp>
 }
 ```
 
@@ -58,7 +58,7 @@ Then restart your computer and launch the app again.
 ## Running with Podman on restricted Linux systems
 
 :::caution
-This is an **advanced** guide for getting the Neurodesk App working with **Podman** (instead of Docker) on locked-down Linux machines, for example hosts that use **Active Directory (AD)** accounts, an **NFS-mounted** home or data directory, and where image pulls through the App tend to time out. On a standard desktop with Docker or rootful Podman you should **not** need any of this.
+This is an **advanced** guide for getting the Sciget App working with **Podman** (instead of Docker) on locked-down Linux machines, for example hosts that use **Active Directory (AD)** accounts, an **NFS-mounted** home or data directory, and where image pulls through the App tend to time out. On a standard desktop with Docker or rootful Podman you should **not** need any of this.
 
 The steps below were validated with **Podman 3.4.4 on Ubuntu 22**. Replace every `<placeholder>` with your own values.
 :::
@@ -132,14 +132,14 @@ podman pull ghcr.io/neurodesk/neurodesktop/neurodesktop:<version>
 podman tag ghcr.io/neurodesk/neurodesktop/neurodesktop:<version> docker.io/vnmd/neurodesktop:<version>
 ```
 
-Then stop any lingering Podman processes (for example a hung pull) and Neurodesk containers, and migrate Podman. The App creates containers named `neurodeskapp` or `neurodeskapp-<port>`:
+Then stop any lingering Podman processes (for example a hung pull) and Neurodesk containers, and migrate Podman. The App creates user-scoped containers named `neurodesktop-<uid>` (or `neurodeskapp-<uid>` when using the bundled catalog fallback, and `neurodeskapp` on older versions):
 
 ```bash
 # Stop any running Neurodesk containers
-podman stop neurodeskapp 2>/dev/null
-podman rm -f neurodeskapp 2>/dev/null
-# Force-kill any hung podman or neurodeskapp processes
-pkill -9 -u <USERNAME> -f "podman|neurodeskapp"
+podman stop "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
+podman rm -f "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
+# Force-kill any hung podman or scigetapp processes
+pkill -9 -u <USERNAME> -f "podman|scigetapp"
 podman system migrate
 ```
 
@@ -148,13 +148,13 @@ podman system migrate
 Edit the application shortcut so it uses your `~/.local/bin` `PATH`:
 
 ```bash
-sudo nano /usr/share/applications/neurodeskapp.desktop
+sudo nano /usr/share/applications/scigetapp.desktop
 ```
 
 Set the `Exec` line to:
 
 ```
-Exec=bash -c "PATH=\"$HOME/.local/bin:$PATH\" /opt/NeurodeskApp/neurodeskapp" %U
+Exec=bash -c "PATH=\"$HOME/.local/bin:$PATH\" /opt/ScigetApp/scigetapp" %U
 ```
 
 :::note
@@ -169,10 +169,10 @@ If a session fails to start, delete the broken home volume and try again:
 
 ```bash
 # Stop any running Neurodesk containers
-podman stop neurodeskapp 2>/dev/null
-podman rm -f neurodeskapp 2>/dev/null
+podman stop "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
+podman rm -f "neurodesktop-$(id -u)" "neurodeskapp-$(id -u)" neurodeskapp 2>/dev/null
 # Force-kill any hung processes
-pkill -9 -u $USER -f "podman|neurodeskapp"
+pkill -9 -u $USER -f "podman|scigetapp"
 
 # Delete the broken home volume
 podman volume rm neurodesk-home
@@ -187,7 +187,7 @@ podman system reset -f
 :::danger[Warning]
 `podman system reset -f` will delete all existing Podman machines, containers, and their data. Back up any important data stored inside Podman containers before running this command.
 
-Then set the path in the Neurodesk App settings.
+Then set the path in the Sciget App settings.
 :::
 
 If that still does not work, remove the stale storage config:

@@ -65,7 +65,7 @@ jobs:
         run: |
           python -c 'import json; data = json.load(open("public/data/user-metrics.json")); assert not data.get("unavailable") and data.get("months"), "Generated user metrics are unavailable or empty"'
 
-      - name: Generate Neurodesk App download metrics
+      - name: Generate Sciget App download metrics
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/workflows/write-neurodeskapp-metrics.py --output public/docs/overview/neurodeskapp_metrics.png
